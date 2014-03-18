@@ -19,7 +19,7 @@ define(
                     this.resize( this.options.width, this.options.height );
                 },
 
-                addLayer: function( id, el ){
+                addLayer: function( id, el, opts ){
 
                     var self = this
                         ,bodies = []
@@ -27,6 +27,9 @@ define(
                         ,layer = {
                             id: id
                             ,el: el || document.createElement('canvas')
+                            ,options: Physics.util.extend({
+                                manual: false
+                            }, opts)
                         }
                         ;
 
@@ -70,6 +73,10 @@ define(
                     layer.render = function(){
 
                         var body;
+
+                        if ( layer.options.manual ){
+                            return;
+                        }
 
                         layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);
 
