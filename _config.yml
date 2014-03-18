@@ -1,0 +1,20 @@
+permalink: /:year-:month-:day/:title
+markdown: rdiscount
+exclude: ["README.md", "CNAME", "LICENSE", "build", "config.rb", "Gruntfile.js", "package.json", "jshint.json"]
+
+title : "Title of the Lab" # changeme
+id : "" # changeme
+description : "Short description" # changeme
+thumb: "http://minutelabs.io/assets/THUMB_IMAGE" # changem
+version: "0.0.1"
+
+ml_url: "http://minutelabs.io"
+ml_library: "http://labs.minutelabs.io/library"
+ml_assets: "http://labs.minutelabs.io/assets"
+library_path: "library" # changeme
+
+show :
+  branding: true
+  details: true
+  comments: true
+

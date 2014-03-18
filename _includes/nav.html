@@ -1,0 +1,44 @@
+<nav id="nav-widget" role="navigation" class="{% unless site.show.branding %}no-branding{% endunless %}">
+  {% if site.show.branding %}
+  <a href="{{ site.ml_url }}" class="logo"><img width="40" src="{{ site.ml_assets }}/images/logos/logo-minutelabs-no-text-40x40.jpg" alt="MinuteLabs.io"></a>
+  {% endif %}
+  <div class="top">
+    <h1 class="title">{{ site.title }}</h1>
+    {% if site.show.details and site.show.branding == false %}
+    <a id="nav-toggle" href="#details" class="btn-details" data-offcanvas="toggle">details...</a>
+    {% endif %}
+    <ul>
+      <li><a href="{{ site.ml_url }}" class="btn-index">back to labs</a></li>
+      <li><a href="{{ site.ml_url }}" id="lab-nav-prev" class="btn-prev" title="previous Lab">prev</a></li>
+      <li><a href="{{ site.ml_url }}" id="lab-nav-next" class="btn-next" title="next Lab">next</a></li>
+      <li><a href="{{ site.ml_url }}/subscribe" class="btn-subscribe">subscribe!</a></li>
+    </ul>
+  </div>
+  {% if site.show.branding and site.show.details %}
+  <div class="bottom">
+    <a id="nav-toggle" href="#details" class="btn-details" data-offcanvas="toggle">details...</a>
+  </div>
+  {% endif %}
+</nav>
+{% if site.show.details %}
+<div id="details" data-offcanvas="offcanvas">
+  <header>
+    <h1 class="title">{{ site.title }}</h1>
+    <h2 class="title-by"><a href="{{ site.ml_url }}"><span>by</span> MinuteLabs<span>.io</span></a></h2>
+  </header>
+
+  <div class="desc">
+    {% capture description %}{% include description.md %}{% endcapture %}
+    {{ description | markdownify }}
+
+  </div>
+
+  {% if site.show.comments %}
+  <aside class="comments">
+
+    <div id="disqus_thread"></div>
+    
+  </aside>
+  {% endif %}
+</div>
+{% endif %}
