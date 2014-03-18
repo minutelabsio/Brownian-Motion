@@ -1,0 +1,12 @@
+/* line 6, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+html, body, #wrap-outer {
+  height: 100%;
+}
+
+/* line 10, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#sim canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
