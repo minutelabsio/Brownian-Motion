@@ -38,6 +38,7 @@ define(
                     }
 
                     this.el.parentNode.appendChild( layer.el );
+                    layer.el.className += ' physics-layer-' + layer.id;
                     layer.ctx = layer.el.getContext('2d');
                     layer.el.width = this.el.width;
                     layer.el.height = this.el.height;

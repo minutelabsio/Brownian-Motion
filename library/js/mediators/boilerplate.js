@@ -3,12 +3,14 @@ define(
         'jquery',
         'moddef',
         'physicsjs',
+        'dat',
         'modules/multicanvas-renderer'
     ],
     function(
         $,
         M,
         Physics,
+        dat,
         _mcr
     ) {
 
@@ -80,6 +82,7 @@ define(
                 var self = this;
 
                 // standard deviation of velocities
+                self.energyScale = 1;
                 this.velSigma = 0.1;
                 this.tinyDensity = 8e-4;
                 this.largeDensity = 5e-6;
@@ -110,6 +113,40 @@ define(
                     if ( self.posTracker ){
                         self.posTracker.applyTo( self.largeParticles );
                     }
+                });
+
+                self.on({
+                    'settings:tiny-opacity': function( e, val ){
+                        self.renderer.layers.tiny.el.style.opacity = '' + val;
+                    },
+                    'settings:paths': function( e, val ){
+                        var layer = self.renderer.layers.paths;
+                        if ( val === false ){
+                            layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);   
+                            self.world.remove( self.posTracker );
+                        } else {
+                            self.world.add( self.posTracker );
+                        }
+
+                        layer.enabled = val;
+                    },
+                    'settings:energy': Physics.util.throttle(function( e, val ){
+
+                        // because... energy ~ v^2
+                        val = Math.sqrt( val );
+
+                        var scale = val / self.energyScale
+                            ,bodies = self.world._bodies
+                            ;
+                        self.energyScale = val;
+
+                        self.world.one('step', function(){
+                            for ( var i = 0, l = bodies.length; i < l; ++i ){
+                                
+                                bodies[ i ].state.vel.mult( scale );
+                            }
+                        });
+                    }, 100)
                 });
             },
 
@@ -195,7 +232,7 @@ define(
                     });
                 }
 
-                for ( var i = 0, l = parseInt(this.largeDensity * viewWidth * viewHeight); i < l; ++i ){
+                for ( var i = 0, l = Math.max(1, parseInt(this.largeDensity * viewWidth * viewHeight)); i < l; ++i ){
                     
                     this.addLargeParticle({
                         x: Math.random() * viewWidth,
@@ -209,11 +246,11 @@ define(
                 }));
 
                 renderer.layers.main.addToStack( world.find({
-                    tags: { $in: [ 'large'] }
+                    tags: { $in: [ 'large' ] }
                 }));
 
                 var pathLayer = renderer.addLayer( 'paths' );
-
+                var clearNext = false;
                 pathLayer.render = function(){
 
                     var bodies = self.largeParticles
@@ -223,24 +260,36 @@ define(
                         ,pt
                         ;
 
+                    if ( !pathLayer.enabled ){
+                        clearNext = true;
+                        return;
+                    }
+
                     for ( var i = 0, l = bodies.length; i < l; ++i ){
                         
                         body = bodies[ i ];
                         list = body.positionBuffer;
+
                         if ( list ){
-                            for ( var j = 0, ll = list.length - 1; j < ll; ++j ){
-                                
-                                renderer.drawLine( list[ j ], list[ j + 1 ], {
-                                    strokeStyle: body.color,
-                                    lineWidth: 2,
-                                    fillStyle: 'none'
-                                }, ctx );
+                            if ( clearNext ) {
+                                list.length = 0;
+                            } else {
+                                for ( var j = 0, ll = list.length - 1; j < ll; ++j ){
+                                    
+                                    renderer.drawLine( list[ j ], list[ j + 1 ], {
+                                        strokeStyle: body.color,
+                                        lineWidth: 2,
+                                        fillStyle: 'none'
+                                    }, ctx );
+                                }
+                                pt = list.pop();
+                                list.length = 0;
+                                list.push( pt );
                             }
-                            pt = list.pop();
-                            list.length = 0;
-                            list.push( pt );
                         }
                     }
+
+                    clearNext = false;
                 };
             },
 
@@ -286,15 +335,45 @@ define(
                 this.emit('add:large', p);
             },
 
+            initControls: function(){
+
+                var self = this
+                    ,gui = new dat.GUI()
+                    ,settings = {
+
+                    }
+                    ;
+
+                function addSetting( id, name, def, min, max ){
+
+                    var ctrl;
+                    settings[ name ] = def;
+                    ctrl = gui.add( settings, name, min, max );
+                    ctrl.onChange(function(){
+
+                        self.emit('settings:' + id, settings[ name ]);
+                    });
+                    self.emit('settings:' + id, settings[ name ]);
+                    return ctrl;
+                }
+
+                addSetting('paths', 'Draw Paths', false);
+                addSetting('tiny-opacity', 'Particle Fade', 0.01, 0, 1).step(0.1);
+                addSetting('energy', 'Energy', 1, 0.1, 10).step(0.1);
+
+            },
+
             /**
              * DomReady Callback
              * @return {void}
              */
             onDomReady : function(){
 
-                var self = this;
+                var self = this
+                    ;
 
                 Physics(self.initPhysics.bind(self));
+                self.initControls();
 
             }
 

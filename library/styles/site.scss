@@ -7,9 +7,33 @@ html, body, #wrap-outer {
     height: 100%;
 }
 
+.dg {
+    input {
+        line-height: 1.4;
+    }
+
+    .save-row {
+        display: none;
+    }
+
+    &.main.a.has-save > ul {
+        margin-top: 0;
+    }
+}
+
 #sim canvas {
     position: absolute;
     top: 0;
     left: 0;
     z-index: 1;
+}
+
+#sim .physics-layer-tiny {
+    z-index: 1;
+}
+#sim .physics-layer-paths {
+    z-index: 2;
+}
+#sim .physics-layer-main {
+    z-index: 3;
 }

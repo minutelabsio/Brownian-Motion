@@ -1,5 +1,5 @@
 /**
- * PhysicsJS v1.0.0-rc1 - 2014-03-13
+ * PhysicsJS v1.0.0-rc1 - 2014-03-18
  * A modular, extendable, and easy-to-use physics engine for javascript
  * http://wellcaffeinated.net/PhysicsJS
  *
@@ -3293,7 +3293,6 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             this._integrator = null;
             this._renderer = null;
             this._paused = false;
-            this._opts = {};
 
             // set options
             this.options = Physics.util.options( defaults );
@@ -3551,7 +3550,7 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
 
                 this._dt = dt;
                 // calculate the maximum jump in time over which to do iterations
-                this._maxJump = dt * this._opts.maxIPF;
+                this._maxJump = dt * this.options.maxIPF;
 
                 return this;
             }

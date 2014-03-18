@@ -3,10 +3,38 @@ html, body, #wrap-outer {
   height: 100%;
 }
 
-/* line 10, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 11, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+.dg input {
+  line-height: 1.4;
+}
+/* line 15, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+.dg .save-row {
+  display: none;
+}
+/* line 19, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+.dg.main.a.has-save > ul {
+  margin-top: 0;
+}
+
+/* line 24, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim canvas {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
+}
+
+/* line 31, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#sim .physics-layer-tiny {
+  z-index: 1;
+}
+
+/* line 34, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#sim .physics-layer-paths {
+  z-index: 2;
+}
+
+/* line 37, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#sim .physics-layer-main {
+  z-index: 3;
 }
