@@ -30,7 +30,10 @@ require.config({
         'moddef': 'util/module',
         
         // jQuery
-        'jquery': 'vendor/jquery'
+        'jquery': 'vendor/jquery',
+
+        // physics
+        'physicsjs': 'vendor/physicsjs-full-0.6.0rc1'
     },
 
     packages: [
