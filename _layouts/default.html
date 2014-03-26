@@ -51,10 +51,23 @@
   {% if site.show.comments and site.show.details %}
   <script type="text/javascript">
       var disqus_shortname = 'minutelabsio';
-      (function() {
+      var load_disqus = function() {
           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
           dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      };
+
+      (function(){
+        var el = document.getElementById('nav-toggle');
+        function cb(){
+          load_disqus();
+          el.removeEventListener('click', cb);
+          el.removeEventListener('touchstart', cb);
+        }
+        if ( el ){
+          el.addEventListener('click', cb);
+          el.addEventListener('touchstart', cb);
+        }
       })();
   </script>
   {% endif %}

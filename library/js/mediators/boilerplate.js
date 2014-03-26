@@ -275,7 +275,7 @@ define(
                                 list.length = 0;
                             } else {
                                 for ( var j = 0, ll = list.length - 1; j < ll; ++j ){
-                                    
+                                    // TODO: optimize this
                                     renderer.drawLine( list[ j ], list[ j + 1 ], {
                                         strokeStyle: body.color,
                                         lineWidth: 2,
@@ -324,6 +324,7 @@ define(
                     radius: 15,
                     restitution: 1,
                     cof: 0,
+                    mass: 30,
                     color: '#125497'
                 }, opts);
 
