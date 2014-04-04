@@ -24,6 +24,14 @@ define(
             ,'rgb(159, 80, 31)' // orange-dark
             ,'rgb(64, 128, 0)' // green-dark
             ,'rgb(139, 129, 23)' // yellow-dark
+
+            // external
+            
+            ,'#542437'
+            ,'#53777A'
+            ,'#ECD078'
+            ,'#D95B43'
+            ,'#C02942'
         ];
 
         function logerr( err ){
@@ -85,7 +93,7 @@ define(
                 self.energyScale = 1;
                 this.velSigma = 0.1;
                 this.tinyDensity = 8e-4;
-                this.largeDensity = 5e-6;
+                this.largeDensity = 9e-6;
                 this.maxParticles = 500;
                 this.tinyParticles = [];
                 this.largeParticles = [];
@@ -228,7 +236,9 @@ define(
                     
                     this.addTinyParticle({
                         x: Math.random() * viewWidth,
-                        y: Math.random() * viewHeight
+                        y: Math.random() * viewHeight,
+                        radius: 5,
+                        view: this.tinyParticleView || (this.tinyParticleView = renderer.createView(Physics.geometry('circle',{radius: 5}), 'black'))
                     });
                 }
 
@@ -258,6 +268,10 @@ define(
                         ,list
                         ,ctx = pathLayer.ctx
                         ,pt
+                        ,styles = {
+                            lineWidth: 2
+                            ,fillStyle: 'rgba(0,0,0,0)'
+                        }
                         ;
 
                     if ( !pathLayer.enabled ){
@@ -265,10 +279,13 @@ define(
                         return;
                     }
 
+                    ctx.lineCap = 'round';
+
                     for ( var i = 0, l = bodies.length; i < l; ++i ){
                         
                         body = bodies[ i ];
                         list = body.positionBuffer;
+                        styles.strokeStyle = body.color;
 
                         if ( list ){
                             if ( clearNext ) {
@@ -276,11 +293,7 @@ define(
                             } else {
                                 for ( var j = 0, ll = list.length - 1; j < ll; ++j ){
                                     // TODO: optimize this
-                                    renderer.drawLine( list[ j ], list[ j + 1 ], {
-                                        strokeStyle: body.color,
-                                        lineWidth: 2,
-                                        fillStyle: 'none'
-                                    }, ctx );
+                                    renderer.drawLine( list[ j ], list[ j + 1 ], styles, ctx );
                                 }
                                 pt = list.pop();
                                 list.length = 0;
@@ -319,9 +332,9 @@ define(
                 opts = Physics.util.extend({
                     x: 50,
                     y: 50,
-                    vx: gauss(0, this.velSigma),
-                    vy: gauss(0, this.velSigma),
-                    radius: 15,
+                    vx: gauss(0, this.velSigma/10),
+                    vy: gauss(0, this.velSigma/10),
+                    radius: 25,
                     restitution: 1,
                     cof: 0,
                     mass: 30,
