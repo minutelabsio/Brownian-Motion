@@ -1,5 +1,5 @@
 /**
- * PhysicsJS v1.0.0-rc1 - 2014-04-03
+ * PhysicsJS v1.0.0-rc1 - 2014-04-04
  * A modular, extendable, and easy-to-use physics engine for javascript
  * http://wellcaffeinated.net/PhysicsJS
  *
@@ -838,13 +838,11 @@ var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La
         return this;
     };
 
-    /** deprecated: 0.6.0..1.0.0
+    /**
      * Physics.vector#get( idx ) -> Number
-     * - n (Number): The coordinate index (0 or 1)
+     * - idx (Number): The coordinate index (0 or 1)
      * 
      * Get the x or y component by index.
-     *
-     * Deprecated.
      **/
     Vector.prototype.get = function( n ){
 
@@ -969,7 +967,7 @@ var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La
 
 
     /**
-     * Physics.vector#proj( v ) -> this
+     * Physics.vector#vproj( v ) -> this
      * - v (Physics.vector): The other vector
      * 
      * Compute the [vector projection](http://en.wikipedia.org/wiki/Vector_projection#Vector_projection_2) of this along `v` and copy the result into this vector.
@@ -1473,7 +1471,7 @@ var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La
     ];
 
     /**
-     * Physics.vector.zero = Physics.vector(0, 0)
+     * Physics.vector.zero = zeroVector
      * 
      * Read-only zero vector for reference
      **/
@@ -6659,24 +6657,22 @@ Physics.behavior('sweep-prune', function( parent ){
 
     // add z: 2 to get this to work in 3D
     var dof = { x: 0, y: 1 }; // degrees of freedom
+    var maxDof = 2;
 
-    /**
-     * return hash for a pair of ids
-     * @param  {Number} id1 First id
-     * @param  {Number} id2 Second id
-     * @return {Number}     Hash id
-     */
+    
     function pairHash( id1, id2 ){
+        id1 = id1|0;
+        id2 = id2|0;
 
-        if ( id1 === id2 ){
+        if ( (id1|0) == (id2|0) ){
 
-            return false;
+            return -1;
         }
 
         // valid for values < 2^16
-        return id1 > id2? 
+        return ((id1|0) > (id2|0) ? 
             (id1 << 16) | (id2 & 0xFFFF) : 
-            (id2 << 16) | (id1 & 0xFFFF)
+            (id2 << 16) | (id1 & 0xFFFF))|0
             ;
     }
     
@@ -6706,11 +6702,11 @@ Physics.behavior('sweep-prune', function( parent ){
 
             this.tracked = [];
             this.pairs = []; // pairs selected as candidate collisions by broad phase
-            this.intervalLists = {}; // stores lists of aabb projection intervals to be sorted
+            this.intervalLists = []; // stores lists of aabb projection intervals to be sorted
             
             // init intervalLists
-            for ( var xyz in dof ){
-
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
+                
                 this.intervalLists[ xyz ] = [];
             }
         },
@@ -6776,13 +6772,13 @@ Physics.behavior('sweep-prune', function( parent ){
                 ;
 
             // for each axis...
-            for ( var xyz in dof ){
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                 // get the intervals for that axis
                 list = this.intervalLists[ xyz ];
                 i = 0;
                 len = list.length;
-                axis = dof[ xyz ];
+                axis = xyz;
 
                 // for each interval bound...
                 while ( (++i) < len ){
@@ -6878,17 +6874,15 @@ Physics.behavior('sweep-prune', function( parent ){
                 ,candidates = []
                 ;
 
-            for ( var xyz in dof ){
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                 // is the x coord
-                isX = (xyz === 'x');
+                isX = (xyz === 0);
                 // get the interval list for this axis
                 list = this.intervalLists[ xyz ];
-                i = -1;
-                len = list.length;
-
+                
                 // for each interval bound
-                while ( (++i) < len ){
+                for ( i = 0, len = list.length; i < len; i++ ){
                     
                     bound = list[ i ];
                     tr1 = bound.tracker;
@@ -6899,7 +6893,7 @@ Physics.behavior('sweep-prune', function( parent ){
 
                         j = enclen;
 
-                        while ( (--j) >= 0 ){
+                        for ( j = enclen - 1; j >= 0; j-- ){
 
                             tr2 = encounters[ j ];
 
@@ -7026,7 +7020,7 @@ Physics.behavior('sweep-prune', function( parent ){
             tracker.interval = intr;
             this.tracked.push( tracker );
             
-            for ( var xyz in dof ){
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                 this.intervalLists[ xyz ].push( intr.min, intr.max );
             }
@@ -7056,7 +7050,7 @@ Physics.behavior('sweep-prune', function( parent ){
                     // remove the tracker at this index
                     trackedList.splice(i, 1);
 
-                    for ( var xyz in dof ){
+                    for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                         count = 0;
                         list = this.intervalLists[ xyz ];
@@ -8002,7 +7996,7 @@ Physics.renderer('canvas', function( proto ){
         drawBody: function( body, view, ctx, offset ){
 
             var pos = body.state.pos
-                ,aabb = body.aabb()
+                ,aabb
                 ;
 
             offset = offset || this.options.offset;
@@ -8015,6 +8009,7 @@ Physics.renderer('canvas', function( proto ){
             ctx.restore();
 
             if ( this.options.debug ){
+                aabb = body.aabb();
                 // draw bounding boxes
                 this.drawRect( aabb.x, aabb.y, 2 * aabb.hw, 2 * aabb.hh, 'rgba(0, 0, 255, 0.3)' );
                 
@@ -8278,9 +8273,10 @@ Physics.renderer('dom', function( proto ){
  * A PIXI renderer
  * Renders physics object with PIXI components
  * @module renderers/pixi
+ * @requires pixi
  */
  /* global PIXI */
-Physics.renderer('pixi', function( proto ){
+Physics.renderer('pixi', function( parent ){
 
     if ( !document ){
         // must be in node environment
@@ -8343,8 +8339,8 @@ Physics.renderer('pixi', function( proto ){
                 throw "PIXI obj not present - cannot continue ";
             }
                 
-            // call proto init
-            proto.init.call(this, options);
+            // call parent init
+            parent.init.call(this, options);
 
             // further options
             this.options = Physics.util.extend({}, defaults, this.options, deep);
@@ -8399,10 +8395,9 @@ Physics.renderer('pixi', function( proto ){
          * @param  {DisplayObject} body      The body to render
          * @return {void}
          */
-        drawBody: function( body ){
-            if (body.view !== null){
+        drawBody: function( body, view ){
+            if ( view ){
                 // Draw a body here
-                var view = body.view;
                 var x = body.state.pos.x;
                 var y = body.state.pos.y;
                 var angle = body.state.angular.pos;
@@ -8410,10 +8405,16 @@ Physics.renderer('pixi', function( proto ){
                 view.position.x = x;
                 view.position.y = y;
                 view.rotation = angle;
-                
-                this.renderer.render(this.stage);
             }
         },
+
+        render: function( bodies, meta ){
+
+            parent.render.call(this, bodies, meta);
+            this.renderer.render(this.stage);
+        },
+
+
         /**
          * Create a circle for use in PIXI stage
          * @param  {Number} x      The x coord

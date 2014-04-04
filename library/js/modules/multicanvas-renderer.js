@@ -49,6 +49,8 @@ define(
                     layer.el.width = layer.options.width;
                     layer.el.height = layer.options.height;
 
+                    layer.bodies = bodies;
+
                     layer.reset = function( arr ){
 
                         bodies = arr || [];
@@ -112,8 +114,10 @@ define(
                             layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);
                         }
 
-                        layer.ctx.save();
-                        layer.ctx.scale( scale, scale );
+                        if ( scale !== 1 ){
+                            layer.ctx.save();
+                            layer.ctx.scale( scale, scale );
+                        }
 
                         for ( var i = 0, l = bodies.length; i < l; ++i ){
                             
@@ -123,7 +127,10 @@ define(
                                 self.drawBody( body, body.view, layer.ctx, offset );
                             }
                         }
-                        layer.ctx.restore();
+
+                        if ( scale !== 1 ){
+                            layer.ctx.restore();
+                        }
 
                         scratch.done();
                         return layer;

@@ -17,6 +17,22 @@ html, body, #wrap-outer {
 }
 
 /* line 24, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#controls {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 200px;
+  margin: -100px 0 0 -200px;
+  background: #1a1a1a;
+  color: #ededed;
+  padding: 1em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 37, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim canvas {
   position: absolute;
   top: 0;
@@ -24,17 +40,17 @@ html, body, #wrap-outer {
   z-index: 1;
 }
 
-/* line 31, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 44, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-tiny {
   z-index: 1;
 }
 
-/* line 34, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 47, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-paths {
   z-index: 2;
 }
 
-/* line 37, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 50, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-main {
   z-index: 3;
 }

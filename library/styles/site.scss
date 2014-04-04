@@ -21,6 +21,19 @@ html, body, #wrap-outer {
     }
 }
 
+#controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 200px;
+    margin: -100px 0 0 -200px;
+    background: $deep-grey-dark;
+    color: $grey-light;
+    padding: 1em;
+    @include box-sizing( border-box );
+}
+
 #sim canvas {
     position: absolute;
     top: 0;
