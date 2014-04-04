@@ -24,6 +24,14 @@ define(
             ,'rgb(159, 80, 31)' // orange-dark
             ,'rgb(64, 128, 0)' // green-dark
             ,'rgb(139, 129, 23)' // yellow-dark
+
+            // external
+            
+            ,'#542437'
+            ,'#53777A'
+            ,'#ECD078'
+            ,'#D95B43'
+            ,'#C02942'
         ];
 
         function logerr( err ){
@@ -66,6 +74,32 @@ define(
             };
         });
 
+        // faster rendering method
+        var fastRender = function( clear ){
+            var body
+                ,layer = this
+                ,bodies = layer.bodies
+                ,ctx = layer.ctx
+                ,pos
+                ,view
+                ;
+
+            if ( clear !== false ){
+                layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);
+            }
+
+            for ( var i = 0, l = bodies.length; i < l; ++i ){
+                
+                body = bodies[ i ];
+                if ( !body.hidden ){
+                    pos = body.state.pos;
+                    view = body.view || ( body.view = self.createView(body.geometry, body.styles || styles[ body.geometry.name ]) );
+                    ctx.drawImage(view, pos.x-view.width/2, pos.y-view.height/2);
+                }
+            }
+            return layer;
+        }
+
         /**
          * Page-level Mediator
          * @module Boilerplate
@@ -84,9 +118,9 @@ define(
                 // standard deviation of velocities
                 self.energyScale = 1;
                 this.velSigma = 0.1;
-                this.tinyDensity = 8e-4;
-                this.largeDensity = 5e-6;
-                this.maxParticles = 500;
+                this.tinyDensity = 4e-4;
+                this.largeDensity = 9e-6;
+                this.maxParticles = 300;
                 this.tinyParticles = [];
                 this.largeParticles = [];
 
@@ -117,7 +151,7 @@ define(
 
                 self.on({
                     'settings:tiny-opacity': function( e, val ){
-                        self.renderer.layers.tiny.el.style.opacity = '' + val;
+                        self.renderer.layers.tiny.el.style.opacity = '' + (Math.exp(val)-1)/(Math.E-1);
                     },
                     'settings:paths': function( e, val ){
                         var layer = self.renderer.layers.paths;
@@ -224,11 +258,27 @@ define(
                 // start the ticker
                 Physics.util.ticker.start();
 
+                // add controls boundary
+                world.add(Physics.body('convex-polygon', {
+                    hidden: true,
+                    x: viewWidth * 0.5,
+                    y: viewHeight * 0.5,
+                    vertices: [
+                        { x: 0, y: 0 },
+                        { x: 0, y: 200 },
+                        { x: 400, y: 200 },
+                        { x: 400, y: 0 }
+                    ],
+                    treatment: 'static'
+                }));
+
                 for ( var i = 0, l = Math.min(this.maxParticles, parseInt(this.tinyDensity * viewWidth * viewHeight)); i < l; ++i ){
                     
                     this.addTinyParticle({
                         x: Math.random() * viewWidth,
-                        y: Math.random() * viewHeight
+                        y: Math.random() * viewHeight,
+                        radius: 5,
+                        view: this.tinyParticleView || (this.tinyParticleView = renderer.createView(Physics.geometry('circle',{radius: 5}), 'grey'))
                     });
                 }
 
@@ -243,11 +293,11 @@ define(
 
                 renderer.addLayer( 'tiny' ).addToStack( world.find({
                     tags: { $in: [ 'tiny' ] }
-                }));
+                })).render = fastRender;
 
                 renderer.layers.main.addToStack( world.find({
                     tags: { $in: [ 'large' ] }
-                }));
+                })).render = fastRender;
 
                 var pathLayer = renderer.addLayer( 'paths' );
                 var clearNext = false;
@@ -258,6 +308,10 @@ define(
                         ,list
                         ,ctx = pathLayer.ctx
                         ,pt
+                        ,styles = {
+                            lineWidth: 2
+                            ,fillStyle: 'rgba(0,0,0,0)'
+                        }
                         ;
 
                     if ( !pathLayer.enabled ){
@@ -265,22 +319,21 @@ define(
                         return;
                     }
 
+                    ctx.lineCap = 'round';
+
                     for ( var i = 0, l = bodies.length; i < l; ++i ){
                         
                         body = bodies[ i ];
                         list = body.positionBuffer;
+                        styles.strokeStyle = body.color;
 
                         if ( list ){
                             if ( clearNext ) {
                                 list.length = 0;
                             } else {
                                 for ( var j = 0, ll = list.length - 1; j < ll; ++j ){
-                                    
-                                    renderer.drawLine( list[ j ], list[ j + 1 ], {
-                                        strokeStyle: body.color,
-                                        lineWidth: 2,
-                                        fillStyle: 'none'
-                                    }, ctx );
+                                    // TODO: optimize this
+                                    renderer.drawLine( list[ j ], list[ j + 1 ], styles, ctx );
                                 }
                                 pt = list.pop();
                                 list.length = 0;
@@ -319,11 +372,12 @@ define(
                 opts = Physics.util.extend({
                     x: 50,
                     y: 50,
-                    vx: gauss(0, this.velSigma),
-                    vy: gauss(0, this.velSigma),
-                    radius: 15,
+                    vx: gauss(0, this.velSigma/10),
+                    vy: gauss(0, this.velSigma/10),
+                    radius: 25,
                     restitution: 1,
                     cof: 0,
+                    mass: 30,
                     color: '#125497'
                 }, opts);
 
@@ -372,7 +426,7 @@ define(
                 var self = this
                     ;
 
-                Physics(self.initPhysics.bind(self));
+                Physics({ timestep: 10 }, self.initPhysics.bind(self));
                 self.initControls();
 
             }

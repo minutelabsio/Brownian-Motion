@@ -27,9 +27,14 @@ define(
                         ,layer = {
                             id: id
                             ,el: el || document.createElement('canvas')
-                            ,options: Physics.util.extend({
-                                manual: false
-                            }, opts)
+                            ,options: Physics.util.options({
+                                width: this.el.width,
+                                height: this.el.height,
+                                manual: false,
+                                autoResize: true,
+                                follow: null,
+                                scale: 1
+                            })( opts )
                         }
                         ;
 
@@ -40,8 +45,11 @@ define(
                     this.el.parentNode.appendChild( layer.el );
                     layer.el.className += ' physics-layer-' + layer.id;
                     layer.ctx = layer.el.getContext('2d');
-                    layer.el.width = this.el.width;
-                    layer.el.height = this.el.height;
+                    layer.ctx.scale( 1, 1 );
+                    layer.el.width = layer.options.width;
+                    layer.el.height = layer.options.height;
+
+                    layer.bodies = bodies;
 
                     layer.reset = function( arr ){
 
@@ -55,38 +63,77 @@ define(
                         } else {
                             bodies.push( thing );
                         }
+                        return layer;
                     };
 
-                    layer.drawBody = function( body ){
-                        var ctx = layer.ctx
-                            ,pos = body.state.pos
-                            ,offset = self.options.offset
-                            ,aabb = body.aabb()
+                    layer.removeFromStack = function( thing ){
+
+                        var i, l;
+
+                        if ( Physics.util.isArray( thing ) ){
+                            for ( i = 0, l = thing.length; i < l; ++i ){
+                                
+                                layer.removeFromStack(thing[ i ]);
+                            }
+                        } else {
+                            i = Physics.util.indexOf( bodies, thing );
+                            if ( i > -1 ){
+                                bodies.splice( i, 1 );
+                            }
+                        }
+                        return layer;
+                    };
+
+                    layer.render = function( clear ){
+
+                        var body
+                            ,scratch = Physics.scratchpad()
+                            ,offset = scratch.vector().set(0, 0)
+                            ,scale = layer.options.scale
+                            ,view
                             ;
 
-                        ctx.save();
-                        ctx.translate(pos.get(0) + offset.get(0), pos.get(1) + offset.get(1));
-                        ctx.rotate(body.state.angular.pos);
-                        ctx.drawImage(view, -view.width/2, -view.height/2);
-                        ctx.restore();
-                    };
-
-                    layer.render = function(){
-
-                        var body;
-
                         if ( layer.options.manual ){
-                            return;
+                            scratch.done();
+                            return layer;
                         }
 
-                        layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);
+                        if ( layer.options.offset ){
+                            if ( layer.options.offset === 'center' ){
+                                offset.add( layer.el.width * 0.5, layer.el.height * 0.5 ).mult( 1/scale );
+                            } else {
+                                offset.vadd( layer.options.offset ).mult( 1/scale );
+                            }
+                        }
+
+                        if ( layer.options.follow ){
+                            offset.vsub( layer.options.follow.state.pos );
+                        }
+
+                        if ( clear !== false ){
+                            layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);
+                        }
+
+                        if ( scale !== 1 ){
+                            layer.ctx.save();
+                            layer.ctx.scale( scale, scale );
+                        }
 
                         for ( var i = 0, l = bodies.length; i < l; ++i ){
                             
                             body = bodies[ i ];
-                            view = body.view || ( body.view = self.createView(body.geometry, styles[ body.geometry.name ]) );
-                            layer.drawBody( body );
+                            if ( !body.hidden ){
+                                view = body.view || ( body.view = self.createView(body.geometry, body.styles || styles[ body.geometry.name ]) );
+                                self.drawBody( body, body.view, layer.ctx, offset );
+                            }
                         }
+
+                        if ( scale !== 1 ){
+                            layer.ctx.restore();
+                        }
+
+                        scratch.done();
+                        return layer;
                     };
 
                     // remember layer
@@ -102,8 +149,10 @@ define(
                     for ( var id in this.layers ){
                         
                         layer = this.layers[ id ];
-                        layer.el.width = width;
-                        layer.el.height = height;
+                        if ( layer.options.autoResize ){
+                            layer.el.width = width;
+                            layer.el.height = height;
+                        }
                     }
                 },
 

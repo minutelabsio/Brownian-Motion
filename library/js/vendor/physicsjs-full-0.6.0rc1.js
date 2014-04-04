@@ -1,5 +1,5 @@
 /**
- * PhysicsJS v1.0.0-rc1 - 2014-03-18
+ * PhysicsJS v1.0.0-rc1 - 2014-04-04
  * A modular, extendable, and easy-to-use physics engine for javascript
  * http://wellcaffeinated.net/PhysicsJS
  *
@@ -28,12 +28,51 @@
 var window = this;
 var document = window.document;
 
+/** related to: Physics.world
+ * Physics
+ *
+ * The top-level namespace. All of PhysicsJS is contained in
+ * the `Physics` namespace.
+ *
+ * It may (and should) be invoked as a function to create a world instance. For all intensive purposes, [[Physics]] and [[Physics.world]] are the same thing.
+ *
+ * See [[new Physics.world]] for config options and function signature.
+ *
+ * Example:
+ *
+ * ```javascript
+ * Physics( cfg, function( world ) {
+ *     // use world
+ * }); // -> world
+ * ```
+ **/
 var Physics = function Physics(){
 
     return Physics.world.apply(Physics, arguments);
 };
 
+/**
+ * Physics.util
+ * 
+ * Namespace for utility functions. It contains a subset of
+ * the [lodash API](http://lodash.com/docs).
+ **/
 Physics.util = {};
+
+/**
+ * == Classes ==
+ *
+ * This section contains classes that are used in PhysicsJS
+ * but aren't available through the main namespace directly.
+ * Usually this means they were created by a factory function
+ * using a [[Physics.util.decorator]].
+ **/
+
+/**
+ * == Special ==
+ *
+ * This section contains miscellaneous functionality. 
+ **/
 
 
 // ---
@@ -42,800 +81,30 @@ Physics.util = {};
 /**
  * @license
  * Lo-Dash 2.2.1 (Custom Build) lodash.com/license | Underscore.js 1.5.2 underscorejs.org/LICENSE
- * Build: `lodash modern exports="none" iife="(function(window){%output%;lodash.extend(Physics.util, lodash);}(this));" include="isObject,isFunction,isArray,isPlainObject,uniqueId,uniq,filter,find,each,random,extend,transform,clone,throttle,bind,sortedIndex,shuffle" --minify --output lib/lodash.js`
+ * Build: `lodash modern exports="none" iife="(function(window){%output%;lodash.extend(Physics.util, lodash);}(this));" include="isObject,isFunction,isArray,isPlainObject,uniqueId,uniq,filter,find,each,random,defaults,extend,transform,clone,throttle,bind,sortedIndex,shuffle" --minify --output lib/lodash.js`
  */
-;(function(H){function N(a,b,c){c=(c||0)-1;for(var d=a?a.length:0;++c<d;)if(a[c]===b)return c;return-1}function Da(a,b){var c=typeof b;a=a.l;if("boolean"==c||null==b)return a[b]?0:-1;"number"!=c&&"string"!=c&&(c="object");var d="number"==c?b:na+b;a=(a=a[c])&&a[d];return"object"==c?a&&-1<N(a,b)?0:-1:a?0:-1}function Ea(a){var b=this.l,c=typeof a;if("boolean"==c||null==a)b[a]=!0;else{"number"!=c&&"string"!=c&&(c="object");var d="number"==c?a:na+a,b=b[c]||(b[c]={});"object"==c?(b[d]||(b[d]=[])).push(a):
-b[d]=!0}}function I(){return ba.pop()||[]}function oa(){return ca.pop()||{k:null,l:null,"false":!1,"null":!1,number:null,object:null,push:null,string:null,"true":!1,undefined:!1}}function O(){}function z(a){a.length=0;ba.length<pa&&ba.push(a)}function qa(a){var b=a.l;b&&qa(b);a.k=a.l=a.object=a.number=a.string=null;ca.length<pa&&ca.push(a)}function Fa(a,b,c){b||(b=0);typeof c=="undefined"&&(c=a?a.length:0);var d=-1;c=c-b||0;for(var e=Array(0>c?0:c);++d<c;)e[d]=a[b+d];return e}function f(){}function ra(a,
-b,c,d,e){if(c){var g=c(a);if(typeof g!="undefined")return g}if(t(a)){var k=A.call(a);if(!q[k])return a;var l=u[k];switch(k){case P:case Q:return new l(+a);case R:case S:return new l(a);case T:return g=l(a.source,Ga.exec(a)),g.lastIndex=a.lastIndex,g}}else return a;k=da(a);if(b){var h=!d;d||(d=I());e||(e=I());for(var p=d.length;p--;)if(d[p]==a)return e[p];g=k?l(a.length):{}}else g=k?Fa(a):ea({},a);k&&(v.call(a,"index")&&(g.index=a.index),v.call(a,"input")&&(g.input=a.input));if(!b)return g;d.push(a);
-e.push(g);(k?J:F)(a,function(a,k){g[k]=ra(a,b,c,d,e)});h&&(z(d),z(e));return g}function B(a,b,c){if(typeof a!="function")return fa;if(typeof b=="undefined")return a;var d=a.__bindData__||x.funcNames&&!a.name;if(typeof d=="undefined"){var e=ga&&Ha.call(a);x.funcNames||!e||Ia.test(e)||(d=!0);if(x.funcNames||!d)d=!x.funcDecomp||ga.test(e),sa(a,d)}if(true!==d&&d&&d[1]&1)return a;switch(c){case 1:return function(c){return a.call(b,c)};case 2:return function(c,d){return a.call(b,c,d)};case 3:return function(c,
-d,e){return a.call(b,c,d,e)};case 4:return function(c,d,e,h){return a.call(b,c,d,e,h)}}return ta(a,b)}function K(a,b,c,d,e,g){if(c){var k=c(a,b);if(typeof k!="undefined")return!!k}if(a===b)return 0!==a||1/a==1/b;if(a===a&&!(a&&n[typeof a]||b&&n[typeof b]))return!1;if(null==a||null==b)return a===b;var l=A.call(a),h=A.call(b);l==ha&&(l=C);h==ha&&(h=C);if(l!=h)return!1;switch(l){case P:case Q:return+a==+b;case R:return a!=+a?b!=+b:0==a?1/a==1/b:a==+b;case T:case S:return a==String(b)}h=l==U;if(!h){if(v.call(a,
-"__wrapped__")||v.call(b,"__wrapped__"))return K(a.__wrapped__||a,b.__wrapped__||b,c,d,e,g);if(l!=C)return!1;var l=a.constructor,p=b.constructor;if(l!=p&&!(D(l)&&l instanceof l&&D(p)&&p instanceof p))return!1}p=!e;e||(e=I());g||(g=I());for(l=e.length;l--;)if(e[l]==a)return g[l]==b;var f=0,k=!0;e.push(a);g.push(b);if(h){l=a.length;f=b.length;k=f==a.length;if(!k&&!d)return k;for(;f--;)if(h=l,p=b[f],d)for(;h--&&!(k=K(a[h],p,c,d,e,g)););else if(!(k=K(a[f],p,c,d,e,g)))break;return k}V(b,function(b,h,l){if(v.call(l,
-h))return f++,k=v.call(a,h)&&K(a[h],b,c,d,e,g)});k&&!d&&V(a,function(a,b,c){if(v.call(c,b))return k=-1<--f});p&&(z(e),z(g));return k}function W(a,b,c,d,e,g){var k=b&1,l=b&2,h=b&4,f=b&8,s=b&16,r=b&32,Ja=a;if(!l&&!D(a))throw new TypeError;s&&!c.length&&(b&=-17,s=c=!1);r&&!d.length&&(b&=-33,r=d=!1);var m=a&&a.__bindData__;if(m)return!k||m[1]&1||(m[4]=e),!k&&m[1]&1&&(b|=8),!h||m[1]&4||(m[5]=g),s&&X.apply(m[2]||(m[2]=[]),c),r&&X.apply(m[3]||(m[3]=[]),d),m[1]|=b,W.apply(null,m);if(!k||l||h||r||!(x.fastBind||
-y&&s))q=function(){var m=arguments,n=k?e:this;if(h||s||r)if(m=ia.call(m),s&&Ka.apply(m,c),r&&X.apply(m,d),h&&m.length<g)return b|=16,W(a,f?b:b&-4,m,null,e,g);l&&(a=n[Ja]);return this instanceof q?(n=ja(a.prototype),m=a.apply(n,m),t(m)?m:n):a.apply(n,m)};else{if(s){var n=[e];X.apply(n,c)}var q=s?y.apply(a,n):y.call(a,e)}sa(q,ia.call(arguments));return q}function ja(a){return t(a)?Y(a):{}}function La(a){var b,c;if(!a||A.call(a)!=C||(b=a.constructor,D(b)&&!(b instanceof b)))return!1;V(a,function(a,b){c=
+;(function(H){function O(a,b,c){c=(c||0)-1;for(var d=a?a.length:0;++c<d;)if(a[c]===b)return c;return-1}function Da(a,b){var c=typeof b;a=a.l;if("boolean"==c||null==b)return a[b]?0:-1;"number"!=c&&"string"!=c&&(c="object");var d="number"==c?b:na+b;a=(a=a[c])&&a[d];return"object"==c?a&&-1<O(a,b)?0:-1:a?0:-1}function Ea(a){var b=this.l,c=typeof a;if("boolean"==c||null==a)b[a]=!0;else{"number"!=c&&"string"!=c&&(c="object");var d="number"==c?a:na+a,b=b[c]||(b[c]={});"object"==c?(b[d]||(b[d]=[])).push(a):
+b[d]=!0}}function I(){return ba.pop()||[]}function oa(){return ca.pop()||{k:null,l:null,"false":!1,"null":!1,number:null,object:null,push:null,string:null,"true":!1,undefined:!1}}function P(){}function z(a){a.length=0;ba.length<pa&&ba.push(a)}function qa(a){var b=a.l;b&&qa(b);a.k=a.l=a.object=a.number=a.string=null;ca.length<pa&&ca.push(a)}function Fa(a,b,c){b||(b=0);typeof c=="undefined"&&(c=a?a.length:0);var d=-1;c=c-b||0;for(var e=Array(0>c?0:c);++d<c;)e[d]=a[b+d];return e}function f(){}function ra(a,
+b,c,d,e){if(c){var g=c(a);if(typeof g!="undefined")return g}if(t(a)){var h=A.call(a);if(!q[h])return a;var l=u[h];switch(h){case Q:case R:return new l(+a);case S:case T:return new l(a);case U:return g=l(a.source,Ga.exec(a)),g.lastIndex=a.lastIndex,g}}else return a;h=da(a);if(b){var k=!d;d||(d=I());e||(e=I());for(var p=d.length;p--;)if(d[p]==a)return e[p];g=h?l(a.length):{}}else g=h?Fa(a):ea({},a);h&&(v.call(a,"index")&&(g.index=a.index),v.call(a,"input")&&(g.input=a.input));if(!b)return g;d.push(a);
+e.push(g);(h?J:F)(a,function(a,h){g[h]=ra(a,b,c,d,e)});k&&(z(d),z(e));return g}function B(a,b,c){if(typeof a!="function")return fa;if(typeof b=="undefined")return a;var d=a.__bindData__||x.funcNames&&!a.name;if(typeof d=="undefined"){var e=ga&&Ha.call(a);x.funcNames||!e||Ia.test(e)||(d=!0);if(x.funcNames||!d)d=!x.funcDecomp||ga.test(e),sa(a,d)}if(true!==d&&d&&d[1]&1)return a;switch(c){case 1:return function(c){return a.call(b,c)};case 2:return function(c,d){return a.call(b,c,d)};case 3:return function(c,
+d,e){return a.call(b,c,d,e)};case 4:return function(c,d,e,k){return a.call(b,c,d,e,k)}}return ta(a,b)}function K(a,b,c,d,e,g){if(c){var h=c(a,b);if(typeof h!="undefined")return!!h}if(a===b)return 0!==a||1/a==1/b;if(a===a&&!(a&&n[typeof a]||b&&n[typeof b]))return!1;if(null==a||null==b)return a===b;var l=A.call(a),k=A.call(b);l==ha&&(l=C);k==ha&&(k=C);if(l!=k)return!1;switch(l){case Q:case R:return+a==+b;case S:return a!=+a?b!=+b:0==a?1/a==1/b:a==+b;case U:case T:return a==String(b)}k=l==V;if(!k){if(v.call(a,
+"__wrapped__")||v.call(b,"__wrapped__"))return K(a.__wrapped__||a,b.__wrapped__||b,c,d,e,g);if(l!=C)return!1;var l=a.constructor,p=b.constructor;if(l!=p&&!(D(l)&&l instanceof l&&D(p)&&p instanceof p))return!1}p=!e;e||(e=I());g||(g=I());for(l=e.length;l--;)if(e[l]==a)return g[l]==b;var f=0,h=!0;e.push(a);g.push(b);if(k){l=a.length;f=b.length;h=f==a.length;if(!h&&!d)return h;for(;f--;)if(k=l,p=b[f],d)for(;k--&&!(h=K(a[k],p,c,d,e,g)););else if(!(h=K(a[f],p,c,d,e,g)))break;return h}W(b,function(b,k,l){if(v.call(l,
+k))return f++,h=v.call(a,k)&&K(a[k],b,c,d,e,g)});h&&!d&&W(a,function(a,b,c){if(v.call(c,b))return h=-1<--f});p&&(z(e),z(g));return h}function X(a,b,c,d,e,g){var h=b&1,l=b&2,k=b&4,f=b&8,s=b&16,r=b&32,Ja=a;if(!l&&!D(a))throw new TypeError;s&&!c.length&&(b&=-17,s=c=!1);r&&!d.length&&(b&=-33,r=d=!1);var m=a&&a.__bindData__;if(m)return!h||m[1]&1||(m[4]=e),!h&&m[1]&1&&(b|=8),!k||m[1]&4||(m[5]=g),s&&Y.apply(m[2]||(m[2]=[]),c),r&&Y.apply(m[3]||(m[3]=[]),d),m[1]|=b,X.apply(null,m);if(!h||l||k||r||!(x.fastBind||
+y&&s))q=function(){var m=arguments,n=h?e:this;if(k||s||r)if(m=ia.call(m),s&&Ka.apply(m,c),r&&Y.apply(m,d),k&&m.length<g)return b|=16,X(a,f?b:b&-4,m,null,e,g);l&&(a=n[Ja]);return this instanceof q?(n=ja(a.prototype),m=a.apply(n,m),t(m)?m:n):a.apply(n,m)};else{if(s){var n=[e];Y.apply(n,c)}var q=s?y.apply(a,n):y.call(a,e)}sa(q,ia.call(arguments));return q}function ja(a){return t(a)?Z(a):{}}function La(a){var b,c;if(!a||A.call(a)!=C||(b=a.constructor,D(b)&&!(b instanceof b)))return!1;W(a,function(a,b){c=
 b});return typeof c=="undefined"||v.call(a,c)}function D(a){return typeof a=="function"}function t(a){return!(!a||!n[typeof a])}function ua(a,b,c){var d=[];b=f.createCallback(b,c,3);c=-1;var e=a?a.length:0;if(typeof e=="number")for(;++c<e;){var g=a[c];b(g,c,a)&&d.push(g)}else F(a,function(a,c,e){b(a,c,e)&&d.push(a)});return d}function ka(a,b,c){b=f.createCallback(b,c,3);c=-1;var d=a?a.length:0;if(typeof d=="number")for(;++c<d;){var e=a[c];if(b(e,c,a))return e}else{var g;F(a,function(a,c,d){if(b(a,c,
-d))return g=a,!1});return g}}function J(a,b,c){var d=-1,e=a?a.length:0;b=b&&typeof c=="undefined"?b:B(b,c,3);if(typeof e=="number")for(;++d<e&&false!==b(a[d],d,a););else F(a,b);return a}function va(a,b,c){if(typeof c=="number"){var d=a?a.length:0;c=0>c?la(0,d+c):c||0}else if(c)return c=wa(a,b),a[c]===b?c:-1;return N(a,b,c)}function wa(a,b,c,d){var e=0,g=a?a.length:e;c=c?f.createCallback(c,d,1):fa;for(b=c(b);e<g;)d=e+g>>>1,c(a[d])<b?e=d+1:g=d;return e}function xa(a,b,c,d){typeof b!="boolean"&&null!=b&&
-(c=(d=c)&&d[b]===a?null:b,b=!1);null!=c&&(c=f.createCallback(c,d,3));d=-1;var e;e=(e=f.indexOf)===va?N:e;var g=a?a.length:0,k=[],l=!b&&g>=Ma&&e===N,h=c||l?I():k;if(l){var p;p=h;var s=-1,r=p.length,n=p[0],m=p[r/2|0],q=p[r-1];if(n&&typeof n=="object"&&m&&typeof m=="object"&&q&&typeof q=="object")p=!1;else{n=oa();n["false"]=n["null"]=n["true"]=n.undefined=!1;m=oa();m.k=p;m.l=n;for(m.push=Ea;++s<r;)m.push(p[s]);p=m}p?(e=Da,h=p):(l=!1,h=c?h:(z(h),k))}for(;++d<g;)if(p=a[d],s=c?c(p,d,a):p,b?!d||h[h.length-
-1]!==s:0>e(h,s))(c||l)&&h.push(s),k.push(p);l?(z(h.k),qa(h)):c&&z(h);return k}function ta(a,b){return 2<arguments.length?W(a,17,ia.call(arguments,2),null,b):W(a,1,null,null,b)}function ya(a,b,c){var d,e,g,k,l,h,f,n=0,r=!1,q=!0;if(!D(a))throw new TypeError;b=la(0,b)||0;if(true===c)var m=!0,q=!1;else t(c)&&(m=c.leading,r="maxWait"in c&&(la(b,c.maxWait)||0),q="trailing"in c?c.trailing:q);var u=function(){var c=b-(G()-k);0>=c?(e&&clearTimeout(e),c=f,e=h=f=za,c&&(n=G(),g=a.apply(l,d))):h=setTimeout(u,c)},
-v=function(){h&&clearTimeout(h);e=h=f=za;if(q||r!==b)n=G(),g=a.apply(l,d)};return function(){d=arguments;k=G();l=this;f=q&&(h||!m);if(false===r)var c=m&&!h;else{e||m||(n=k);var t=r-(k-n);0>=t?(e&&(e=clearTimeout(e)),n=k,g=a.apply(l,d)):e||(e=setTimeout(v,t))}h||b===r||(h=setTimeout(u,b));c&&(g=a.apply(l,d));return g}}function fa(a){return a}function Aa(a,b,c){var d=null==a,e=null==b;null==c&&(typeof a=="boolean"&&e?(c=a,a=1):e||typeof b!="boolean"||(c=b,e=!0));d&&e&&(b=1);a=+a||0;e?(b=a,a=0):b=+b||0;
-d=Na();return c||a%1||b%1?Oa(a+d*(b-a+parseFloat("1e-"+((d+"").length-1))),b):a+Pa(d*(b-a+1))}var za,ba=[],ca=[],Qa=0,na=+new Date+"",Ma=75,pa=40,Ga=/\w*$/,Ia=/^function[ \n\r\t]+\w/,ga=/\bthis\b/,ha="[object Arguments]",U="[object Array]",P="[object Boolean]",Q="[object Date]",R="[object Number]",C="[object Object]",T="[object RegExp]",S="[object String]",q={"[object Function]":!1};q[ha]=q[U]=q[P]=q[Q]=q[R]=q[C]=q[T]=q[S]=!0;var Z={leading:!1,maxWait:0,trailing:!1},Ba={configurable:!1,enumerable:!1,
-value:null,writable:!1},n={"boolean":!1,"function":!0,object:!0,number:!1,string:!1,undefined:!1};H=n[typeof H]&&H||this;var E=[],ma=Object.prototype,w=RegExp("^"+String(ma.valueOf).replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/valueOf|for [^\]]+/g,".+?")+"$"),Pa=Math.floor,Ha=Function.prototype.toString,L=w.test(L=Object.getPrototypeOf)&&L,v=ma.hasOwnProperty,G=w.test(G=Date.now)&&G||function(){return+new Date},X=E.push,A=ma.toString,Ka=E.unshift,Ca=function(){try{var a={},b=w.test(b=Object.defineProperty)&&
-b,c=b(a,a,a)&&b}catch(d){}return c}(),y=w.test(y=A.bind)&&y,Y=w.test(Y=Object.create)&&Y,M=w.test(M=Array.isArray)&&M,$=w.test($=Object.keys)&&$,la=Math.max,Oa=Math.min,Na=Math.random,ia=E.slice,E=w.test(H.attachEvent),E=y&&!/\n|true/.test(y+E),u={};u[U]=Array;u[P]=Boolean;u[Q]=Date;u["[object Function]"]=Function;u[C]=Object;u[R]=Number;u[T]=RegExp;u[S]=String;var x=f.support={};x.fastBind=y&&!E;x.funcDecomp=!w.test(H.WinRTError)&&ga.test(function(){return this});x.funcNames=typeof Function.name=="string";
-Y||(ja=function(a){if(t(a)){O.prototype=a;var b=new O;O.prototype=null}return b||{}});var sa=Ca?function(a,b){Ba.value=b;Ca(a,"__bindData__",Ba)}:O,da=M||function(a){return a&&typeof a=="object"&&typeof a.length=="number"&&A.call(a)==U||!1},M=function(a){var b,c=[];if(!a||!n[typeof a])return c;for(b in a)v.call(a,b)&&c.push(b);return c},aa=$?function(a){return t(a)?$(a):[]}:M,ea=function(a,b,c){var d,e=a,g=e;if(!e)return g;var k=arguments,f=0,h=typeof c=="number"?2:k.length;if(3<h&&"function"==typeof k[h-
-2])var p=B(k[--h-1],k[h--],2);else 2<h&&"function"==typeof k[h-1]&&(p=k[--h]);for(;++f<h;)if((e=k[f])&&n[typeof e])for(var q=-1,r=n[typeof e]&&aa(e),t=r?r.length:0;++q<t;)d=r[q],g[d]=p?p(g[d],e[d]):e[d];return g},V=function(a,b,c){var d;if(!a||!n[typeof a])return a;b=b&&typeof c=="undefined"?b:B(b,c,3);for(d in a)if(false===b(a[d],d,a))break;return a},F=function(a,b,c){if(!a||!n[typeof a])return a;b=b&&typeof c=="undefined"?b:B(b,c,3);for(var d=-1,e=n[typeof a]&&aa(a),g=e?e.length:0;++d<g&&(c=e[d],false!==
-b(a[c],c,a)););return a};f.assign=ea;f.bind=ta;f.createCallback=function(a,b,c){var d=typeof a;if(null==a||"function"==d)return B(a,b,c);if("object"!=d)return function(b){return b[a]};var e=aa(a),g=e[0],f=a[g];return 1!=e.length||f!==f||t(f)?function(b){for(var c=e.length,d=!1;c--&&(d=K(b[e[c]],a[e[c]],null,!0)););return d}:function(a){a=a[g];return f===a&&(0!==f||1/f==1/a)}};f.debounce=ya;f.filter=ua;f.forEach=J;f.forIn=V;f.forOwn=F;f.keys=aa;f.shuffle=function(a){var b=-1,c=a?a.length:0,d=Array(typeof c=="number"?c:0);J(a,function(a){var c=Aa(++b);d[b]=d[c];d[c]=a});return d};f.throttle=function(a,b,c){var d=!0,e=!0;if(!D(a))throw new TypeError;false===c?d=!1:t(c)&&(d="leading"in c?c.leading:d,e="trailing"in c?c.trailing:e);Z.leading=d;Z.maxWait=b;Z.trailing=e;return ya(a,b,Z)};f.transform=function(a,b,c,d){var e=da(a);b=B(b,d,4);null==c&&(e?c=[]:(d=a&&a.constructor,c=ja(d&&d.prototype)));(e?J:F)(a,function(a,d,e){return b(c,a,d,e)});return c};f.uniq=xa;f.each=J;f.extend=ea;f.select=ua;f.unique=xa;f.clone=
-function(a,b,c,d){typeof b!="boolean"&&null!=b&&(d=c,c=b,b=!1);return ra(a,b,typeof c=="function"&&B(c,d,1))};f.find=ka;f.identity=fa;f.indexOf=va;f.isArray=da;f.isFunction=D;f.isObject=t;f.isPlainObject=function(a){if(!a||A.call(a)!=C)return!1;var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La(a)};f.random=Aa;f.sortedIndex=wa;f.uniqueId=function(a){var b=++Qa;return String(null==a?"":a)+b};f.detect=ka;f.findWhere=ka;f.VERSION="2.2.1";f.extend(Physics.util,f)})(this);
-
-// ---
-// inside: src/util/decorator.js
-
-/**
- * Facilitates creation of decorator service functions
- *
- * @example
- * 
- * var service = Decorator('service', {
- *      // prototype methods...
- *      method: function( args ){
- *      }
- * });
- *
- * // define
- * service( 'name', (optional)'parent-name', function decorator( parent ){
- *
- *      // extend further...
- *      return {
- *          // overrides
- *          init: function( cfg ){
- *              parent.init.call(this, cfg);
- *          }
- *      };
- * });
- * 
- * // instantiate
- * var options = { key: 'val' };
- * var instance = service( 'name', options );
- */
-var Decorator = Physics.util.decorator = function Decorator( type, baseProto ){
-
-    var registry = {}
-        ,proto = {}
-        ;
-
-    // transform callback that only extends functions
-    var transformFn = function transformFn( to, val, key, from ){
-
-        var desc = Object.getOwnPropertyDescriptor( from, key );
-        if ( desc.get || desc.set ){
-
-            Object.defineProperty( to, key, desc );
-
-        } else if ( Physics.util.isFunction( desc.value ) ){
-
-            to[ key ] = desc.value;
-        }
-    };
-
-    // extend that supports getters/setters
-    var extend = function extend( to, from ){
-
-        return Physics.util.transform( from, transformFn, to );
-    };
-
-    // http://ejohn.org/blog/objectgetprototypeof/
-    /* jshint -W103 */
-    var getProto = Object.getPrototypeOf;
-    if ( typeof getProto !== 'function' ) {
-        if ( typeof 'test'.__proto__ === 'object' ) {
-            getProto = function(object){
-                return object.__proto__;
-            };
-        } else {
-            getProto = function(object){
-                // May break if the constructor has been tampered with
-                return object.constructor.prototype;
-            };
-        }
-    }
-    /* jshint +W103 */
-
-    var objectCreate = Object.create;
-    if (typeof objectCreate !== 'function') {
-        objectCreate = function (o) {
-            function F() {}
-            F.prototype = o;
-            return new F();
-        };
-    }
-
-    /**
-     * Apply mixin methods to decorator base
-     * @param  {String|Object} key The method name. OR object with many key: fn pairs.
-     * @param  {Function} val The function to assign
-     * @return {void}
-     */
-    var mixin = function mixin( key, val ){
-
-        if ( typeof key === 'object' ){
-            proto = extend(proto, key);
-            proto.type = type;
-            return;
-        }
-
-        if ( key !== 'type' && Physics.util.isFunction( val ) ){
-            proto[ key ] = val;
-        }
-    };
-
-    // @TODO: not sure of the best way to make the constructor names
-    // transparent and readable in debug consoles...
-    mixin( baseProto );
-
-    /**
-     * Factory function for definition and instantiation of subclasses.
-     * If class with "name" is not defined, the "decorator" parameter is required to define it first.
-     * @param  {String} name       The class name
-     * @param  {String} parentName (optional) The name of parent class to extend
-     * @param  {Function} decorator (optional) The decorator function that should define and return methods to extend (decorate) the base class
-     * @param  {Object} cfg        (optional) The configuration to pass to the class initializer
-     * @return {void|Object}       If defining without the "cfg" parameter, void will be returned. Otherwise the class instance will be returned
-     */
-    var factory = function factory( name, parentName, decorator, cfg ){
-
-        var instance
-            ,result
-            ,parent = proto
-            ,tmp
-            ;
-
-        // set parent if specified
-        if ( typeof parentName !== 'string' ){
-
-            // ... otherwise reassign parameters
-            cfg = decorator;
-            decorator = parentName;
-
-        } else {
-
-            // extend the specified module
-            parent = registry[ parentName ];
-
-            if ( !parent ){
-
-                throw 'Error: "' + parentName + '" ' + type + ' not defined';
-            }
-
-            parent = parent.prototype;
-        }
-
-        if ( typeof decorator === 'function' ){
-
-            result = registry[ name ];
-
-            if ( result ){
-
-                result.prototype = extend(result.prototype, decorator( getProto(result.prototype) ));
-                
-            } else {
-                // newly defined
-                // store the new class
-                result = registry[ name ] = function constructor( opts ){
-                    if (this.init){
-                        this.init( opts );
-                    }
-                };
-
-                result.prototype = objectCreate( parent );
-                result.prototype = extend(result.prototype, decorator( parent, result.prototype ));
-            }
-
-            result.prototype.type = type;
-            result.prototype.name = name;
-            
-        } else {
-
-            cfg = decorator || {};
-            result = registry[ name ];
-            if (!result){
-
-                throw 'Error: "' + name + '" ' + type + ' not defined';
-            }
-        }
-
-        if ( cfg ) {
-
-            // create a new instance from the provided decorator
-            return new result( cfg );
-        }
-    };
-
-    factory.mixin = mixin;
-
-    return factory;
-};
-
-// ---
-// inside: src/util/helpers.js
-
-/*!
- * Fast indexOf
- * @param  {Array} arr   The array to search
- * @param  {Mixed} value The value to find
- * @return {Number}       The index OR -1
- */
-Physics.util.indexOf = function indexOf(arr, value) {
-    var fr = 0, bk = arr.length;
-    while (fr < bk) {
-        bk--;
-        if (arr[ fr ] === value) {
-            return fr;
-        }
-        if (arr[ bk ] === value) {
-            return bk;
-        }
-        fr++;
-    }
-    return -1;
-};
-
-/**
- * Options helper to keep track of options
- * @param  {Object} def Default options to set
- * @param  {Object} target   (optional) Where to copy the options to. Defaults to the returned function.
- * @return {function}        The options function
- */
-Physics.util.options = function( def, target, callback ){
-
-    var _def = Physics.util.extend( {}, def )
-        ,fn
-        ,callbacks = []
-        ;
-
-    // set options
-    fn = function fn( options ){
-
-        Physics.util.extend(target, _def, options);
-        for ( var i = 0, l = callbacks.length; i < l; ++i ){
-            callbacks[ i ]( target );
-        }
-        return target;
-    };
-
-    // add defaults
-    fn.defaults = function defaults( def ){
-        return Physics.util.extend( _def, def );
-    };
-
-    fn.onChange = function( cb ){
-        callbacks.push( cb );
-    };
-
-    target = target || fn;
-
-    return fn;
-};
-
-
-
-// ---
-// inside: src/util/noconflict.js
-
-(function( window ){
-
-    var _Physics = window.Physics;
-
-    /**
-     * Restore the original reference to the global window.Physics variable.
-     * Does nothing if PhysicsJS doesn't have a reference in global scope
-     * @return {Physics} The PhysicsJS reference
-     */
-    Physics.noConflict = function(){
-
-        if ( window.Physics === Physics ) {
-            window.Physics = _Physics;
-        }
-        
-        return Physics;
-    };
-
-})( this );
-
-// ---
-// inside: src/util/pubsub.js
-
-(function(){
-
-    /**
-     * PubSub implementation (fast)
-     */
-    var PubSub = function PubSub(){
-
-        if (!(this instanceof PubSub)){
-            return new PubSub();
-        }
-    };
-
-    PubSub.prototype = {
-
-        /**
-         * Subscribe callback(s) to a topic(s).
-         * 
-         * @param  {String|Object}   topic The topic name, or a config with key/value pairs of { topic: callbackFn, ... }
-         * @param  {Function} fn The callback function (if not using Object as previous argument)
-         * @param  {Object}   scope (optional) The scope to bind callback to
-         * @param  {Number}   priority (optional) The priority of the callback (higher = earlier)
-         * @return {this}
-         */
-        on: function( topic, fn, scope, priority ){
-
-            var listeners
-                ,orig
-                ,idx
-                ;
-
-            // ensure topics hash is initialized
-            this._topics = this._topics || (this._topics = {});
-
-            // check if we're subscribing to multiple topics
-            // with an object
-            if ( Physics.util.isObject( topic ) ){
-
-                for ( var t in topic ){
-                    
-                    this.on( t, topic[ t ], fn, scope );
-                }
-
-                return this;
-            }
-
-            listeners = this._topics[ topic ] || (this._topics[ topic ] = []);
-            orig = fn;
-
-            if ( Physics.util.isObject( scope ) ){
-                
-                fn = Physics.util.bind( fn, scope );
-                fn._bindfn_ = orig;
-                fn._one_ = orig._one_;
-
-            } else if (!priority) {
-
-                priority = scope;
-            }
-
-            fn._priority_ = priority;
-
-            idx = Physics.util.sortedIndex( listeners, fn, '_priority_' );
-
-            listeners.splice( idx, 0, fn );
-            return this;
-        },
-
-        /**
-         * Unsubscribe callback(s) from topic(s).
-         * 
-         * @param  {String|Object|Boolean}   topic The topic name, or a config with key/value pairs of { topic: callbackFn, ... }, or true to remove all listeners for all topics 
-         * @param  {Function} fn The original callback function OR true to remove all listeners for specified topic
-         * @return {this}
-         */
-        off: function( topic, fn ){
-
-            var listeners
-                ,listn
-                ;
-
-            if ( !this._topics ){
-                // nothing subscribed
-                return this;
-            }
-
-            if ( topic === true ){
-                // purge all listeners
-                this._topics = {};
-                return this;
-            }
-
-            // check if we're subscribing to multiple topics
-            // with an object
-            if ( Physics.util.isObject( topic ) ){
-
-                for ( var t in topic ){
-                    
-                    this.off( t, topic[ t ] );
-                }
-
-                return this;
-            }
-
-            listeners = this._topics[ topic ];
-
-            if (!listeners){
-                return this;
-            }
-
-            if ( fn === true ){
-                // purge all listeners for topic
-                this._topics[ topic ] = [];
-                return this;
-            }
-
-            for ( var i = 0, l = listeners.length; i < l; i++ ){
-                
-                listn = listeners[ i ];
-
-                if ( listn._bindfn_ === fn || listn === fn ){
-                    listeners.splice( i, 1 );
-                    break;
-                }
-            }
-
-            return this;
-        },
-
-        /**
-         * Publish data to a topic
-         * @param  {String} topic The topic name
-         * @param  {Object|String} data The data to send
-         * @return {this}
-         */
-        emit: function( topic, data ){
-
-            if ( !this._topics ){
-                // nothing subscribed
-                return this;
-            }
-
-            var listeners = this._topics[ topic ]
-                ,l = listeners && listeners.length
-                ,handler
-                ;
-
-            if ( !l ){
-                return this;
-            }
-
-            // reverse iterate so priorities work out correctly
-            while ( l-- ){
-                
-                handler = listeners[ l ];
-                handler( data, {
-                    // event data
-                    topic: topic,
-                    handler: handler
-                });
-
-                // if _one_ flag is set, the unsubscribe
-                if ( handler._one_ ){
-                    listeners.splice( l, 1 );
-                }
-            }
-
-            return this;
-        },
-
-        one: function( topic, fn, scope ){
-
-            // check if we're subscribing to multiple topics
-            // with an object
-            if ( Physics.util.isObject( topic ) ){
-
-                for ( var t in topic ){
-                    
-                    this.one( t, topic[ t ], fn, scope );
-                }
-
-                return this;
-            }
-
-            // set the _one_ flag
-            fn._one_ = true;
-            this.on( topic, fn, scope );
-
-            return this;
-        }
-    };
-    
-    Physics.util.pubsub = PubSub;
-})();
-
-// ---
-// inside: src/util/request-anim-frame.js
-
-// Adapted from https://gist.github.com/paulirish/1579671 which derived from 
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-
-// requestAnimationFrame polyfill by Erik Möller.
-// Fixes from Paul Irish, Tino Zijdel, Andrew Mao, Klemen Slavič, Darius Bacon
-
-// MIT license
-
-if (!Date.now){
-    Date.now = function() { return new Date().getTime(); };
-}
-
-(function() {
-    var vendors = ['webkit', 'moz'];
-    for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
-        var vp = vendors[i];
-        window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame'] || window[vp+'CancelRequestAnimationFrame']);
-    }
-    if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) || // iOS6 is buggy
-            !window.requestAnimationFrame || 
-            !window.cancelAnimationFrame
-        ) {
-        var lastTime = 0;
-        window.requestAnimationFrame = function(callback) {
-            var now = Date.now();
-            var nextTime = Math.max(lastTime + 16, now);
-            return setTimeout(function() { callback(lastTime = nextTime); },
-                              nextTime - now);
-        };
-        window.cancelAnimationFrame = clearTimeout;
-    }
-}());
-
-
-// ---
-// inside: src/util/scratchpad.js
-
-/**
- * scratchpad
- * thread-safe management of temporary (voletile)
- * objects for use in calculations
- */
-(function(){
-
-    // constants
-    var SCRATCH_MAX_SCRATCHES = 100; // maximum number of scratches
-    var SCRATCH_MAX_INDEX = 10; // maximum number of any type of temp objects
-    var SCRATCH_USAGE_ERROR = 'Error: Scratchpad used after .done() called. (Could it be unintentionally scoped?)';
-    var SCRATCH_INDEX_OUT_OF_BOUNDS = 'Error: Scratchpad usage space out of bounds. (Did you forget to call .done()?)';
-    var SCRATCH_MAX_REACHED = 'Error: Too many scratchpads created. (Did you forget to call .done()?)';
-
-    // cache previously created scratches
-    var scratches = [];
-    var numScratches = 0;
-
-    var ScratchCls = function ScratchCls(){
-
-        // private variables
-        this.objIndex = 0;
-        this.arrayIndex = 0;
-        this.vectorIndex = 0;
-        this.aabbIndex = 0;
-        this.transformIndex = 0;
-        this.objectStack = [];
-        this.arrayStack = [];
-        this.vectorStack = [];
-        this.aabbStack = [];
-        this.transformStack = [];
-
-        if (++numScratches >= SCRATCH_MAX_SCRATCHES){
-            throw SCRATCH_MAX_REACHED;
-        }
-    };
-
-    ScratchCls.prototype = {
-
-        /**
-         * Declare that your work is finished. Release temp objects for use elsewhere. Must be called when immediate work is done.
-         */
-        done: function(){
-
-            this._active = false;
-            this.objIndex = this.arrayIndex = this.vectorIndex = this.aabbIndex = this.transformIndex = 0;
-            // add it back to the scratch stack for future use
-            scratches.push(this);
-        },
-
-        /**
-         * Get a temporary object (dirty)
-         * @return {Object} The temporary (dirty) object
-         */
-        object: function(){
-
-            var stack = this.objectStack;
-
-            if (!this._active){
-                throw SCRATCH_USAGE_ERROR;
-            }
-
-            if (this.objIndex >= SCRATCH_MAX_INDEX){
-                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
-            }
-
-            return stack[ this.objIndex++ ] || stack[ stack.push({}) - 1 ];
-        },
-
-        /**
-         * Get a temporary array.
-         * @return {Array} Temporary (dirty) array
-         */
-        array: function(){
-
-            var stack = this.arrayStack;
-
-            if (!this._active){
-                throw SCRATCH_USAGE_ERROR;
-            }
-
-            if (this.arrIndex >= SCRATCH_MAX_INDEX){
-                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
-            }
-
-            return stack[ this.arrIndex++ ] || stack[ stack.push([]) - 1 ];
-        },
-
-        /**
-         * Get a temporary Vector
-         * @return {Vector} The temporary (dirty) vector.
-         */
-        vector: function(){
-
-            var stack = this.vectorStack;
-
-            if (!this._active){
-                throw SCRATCH_USAGE_ERROR;
-            }
-
-            if (this.vectorIndex >= SCRATCH_MAX_INDEX){
-                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
-            }
-
-            return stack[ this.vectorIndex++ ] || stack[ stack.push(Physics.vector()) - 1 ];
-        },
-
-        /**
-         * Get a temporary AABB
-         * @return {AABB} The temporary (dirty) AABB
-         */
-        aabb: function(){
-
-            var stack = this.aabbStack;
-
-            if (!this._active){
-                throw SCRATCH_USAGE_ERROR;
-            }
-
-            if (this.aabbIndex >= SCRATCH_MAX_INDEX){
-                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
-            }
-
-            return stack[ this.aabbIndex++ ] || stack[ stack.push(Physics.aabb()) - 1 ];
-        },
-
-        /**
-         * Get a temporary Transform
-         * @return {Transform} The temporary (dirty) transform
-         */
-        transform: function(){
-
-            var stack = this.transformStack;
-
-            if (!this._active){
-                throw SCRATCH_USAGE_ERROR;
-            }
-
-            if (this.transformIndex >= SCRATCH_MAX_INDEX){
-                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
-            }
-
-            return stack[ this.transformIndex++ ] || stack[ stack.push(Physics.transform()) - 1 ];
-        }
-    };
-    
-    /**
-     * Get a new scratchpad to work from. Call .done() when finished.
-     * @return {ScratchCls} The scratchpad
-     */
-    Physics.scratchpad = function(){
-
-        var scratch = scratches.pop() || new ScratchCls();
-        scratch._active = true;
-        return scratch;
-    };
-
-})();
-
-// ---
-// inside: src/util/ticker.js
-
-/**
- * The Ticker singleton for easily binding callbacks to requestAnimationFrame
- */
-(function(window){
-        
-    var active = false
-        ,ps = Physics.util.pubsub()
-        ,perf = window.performance
-        ;
-
-    function now(){
-        // http://updates.html5rocks.com/2012/05/requestAnimationFrame-API-now-with-sub-millisecond-precision
-        return (perf && perf.now) ?
-            (perf.now() + perf.timing.navigationStart) : 
-            Date.now();
-    }
-
-    /**
-     * Publish a tick to subscribed callbacks
-     * @private
-     * @param  {Number} time The current time
-     * @return {void}
-     */
-    function step( time ){
-
-        if (!active){
-            return;
-        }
-
-        window.requestAnimationFrame( step );
-        ps.emit( 'tick', time );
-    }
-
-    /**
-     * Start the ticker
-     * @return {this}
-     */
-    function start(){
-        
-        active = true;
-        step();
-        return this;
-    }
-
-    /**
-     * Stop the ticker
-     * @return {this}
-     */
-    function stop(){
-
-        active = false;
-        return this;
-    }
-
-    /**
-     * Subscribe a callback to the ticker
-     * @param  {Function} listener The callback function
-     * @return {this}
-     */
-    function subscribe( listener ){
-
-        ps.on('tick', listener);
-        return this;
-    }
-
-    /**
-     * Unsubscribe a callback from the ticker
-     * @param  {Function} listener Original callback added
-     * @return {this}
-     */
-    function unsubscribe( listener ){
-
-        ps.off('tick', listener);
-        return this;
-    }
-
-    /**
-     * Determine if ticker is currently running
-     * @return {Boolean} True if running
-     */
-    function isActive(){
-
-        return !!active;
-    }
-
-    // API
-    Physics.util.ticker = {
-        now: now,
-        start: start,
-        stop: stop,
-        on: subscribe,
-        off: unsubscribe,
-        isActive: isActive
-    };
-
-}(this));
+d))return g=a,!1});return g}}function J(a,b,c){var d=-1,e=a?a.length:0;b=b&&typeof c=="undefined"?b:B(b,c,3);if(typeof e=="number")for(;++d<e&&false!==b(a[d],d,a););else F(a,b);return a}function va(a,b,c){if(typeof c=="number"){var d=a?a.length:0;c=0>c?la(0,d+c):c||0}else if(c)return c=wa(a,b),a[c]===b?c:-1;return O(a,b,c)}function wa(a,b,c,d){var e=0,g=a?a.length:e;c=c?f.createCallback(c,d,1):fa;for(b=c(b);e<g;)d=e+g>>>1,c(a[d])<b?e=d+1:g=d;return e}function xa(a,b,c,d){typeof b!="boolean"&&null!=b&&
+(c=(d=c)&&d[b]===a?null:b,b=!1);null!=c&&(c=f.createCallback(c,d,3));d=-1;var e;e=(e=f.indexOf)===va?O:e;var g=a?a.length:0,h=[],l=!b&&g>=Ma&&e===O,k=c||l?I():h;if(l){var p;p=k;var s=-1,r=p.length,n=p[0],m=p[r/2|0],q=p[r-1];if(n&&typeof n=="object"&&m&&typeof m=="object"&&q&&typeof q=="object")p=!1;else{n=oa();n["false"]=n["null"]=n["true"]=n.undefined=!1;m=oa();m.k=p;m.l=n;for(m.push=Ea;++s<r;)m.push(p[s]);p=m}p?(e=Da,k=p):(l=!1,k=c?k:(z(k),h))}for(;++d<g;)if(p=a[d],s=c?c(p,d,a):p,b?!d||k[k.length-
+1]!==s:0>e(k,s))(c||l)&&k.push(s),h.push(p);l?(z(k.k),qa(k)):c&&z(k);return h}function ta(a,b){return 2<arguments.length?X(a,17,ia.call(arguments,2),null,b):X(a,1,null,null,b)}function ya(a,b,c){var d,e,g,h,l,k,f,n=0,r=!1,q=!0;if(!D(a))throw new TypeError;b=la(0,b)||0;if(true===c)var m=!0,q=!1;else t(c)&&(m=c.leading,r="maxWait"in c&&(la(b,c.maxWait)||0),q="trailing"in c?c.trailing:q);var u=function(){var c=b-(G()-h);0>=c?(e&&clearTimeout(e),c=f,e=k=f=za,c&&(n=G(),g=a.apply(l,d))):k=setTimeout(u,c)},
+v=function(){k&&clearTimeout(k);e=k=f=za;if(q||r!==b)n=G(),g=a.apply(l,d)};return function(){d=arguments;h=G();l=this;f=q&&(k||!m);if(false===r)var c=m&&!k;else{e||m||(n=h);var t=r-(h-n);0>=t?(e&&(e=clearTimeout(e)),n=h,g=a.apply(l,d)):e||(e=setTimeout(v,t))}k||b===r||(k=setTimeout(u,b));c&&(g=a.apply(l,d));return g}}function fa(a){return a}function Aa(a,b,c){var d=null==a,e=null==b;null==c&&(typeof a=="boolean"&&e?(c=a,a=1):e||typeof b!="boolean"||(c=b,e=!0));d&&e&&(b=1);a=+a||0;e?(b=a,a=0):b=+b||0;
+d=Na();return c||a%1||b%1?Oa(a+d*(b-a+parseFloat("1e-"+((d+"").length-1))),b):a+Pa(d*(b-a+1))}var za,ba=[],ca=[],Qa=0,na=+new Date+"",Ma=75,pa=40,Ga=/\w*$/,Ia=/^function[ \n\r\t]+\w/,ga=/\bthis\b/,ha="[object Arguments]",V="[object Array]",Q="[object Boolean]",R="[object Date]",S="[object Number]",C="[object Object]",U="[object RegExp]",T="[object String]",q={"[object Function]":!1};q[ha]=q[V]=q[Q]=q[R]=q[S]=q[C]=q[U]=q[T]=!0;var $={leading:!1,maxWait:0,trailing:!1},Ba={configurable:!1,enumerable:!1,
+value:null,writable:!1},n={"boolean":!1,"function":!0,object:!0,number:!1,string:!1,undefined:!1};H=n[typeof H]&&H||this;var E=[],ma=Object.prototype,w=RegExp("^"+String(ma.valueOf).replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/valueOf|for [^\]]+/g,".+?")+"$"),Pa=Math.floor,Ha=Function.prototype.toString,L=w.test(L=Object.getPrototypeOf)&&L,v=ma.hasOwnProperty,G=w.test(G=Date.now)&&G||function(){return+new Date},Y=E.push,A=ma.toString,Ka=E.unshift,Ca=function(){try{var a={},b=w.test(b=Object.defineProperty)&&
+b,c=b(a,a,a)&&b}catch(d){}return c}(),y=w.test(y=A.bind)&&y,Z=w.test(Z=Object.create)&&Z,M=w.test(M=Array.isArray)&&M,aa=w.test(aa=Object.keys)&&aa,la=Math.max,Oa=Math.min,Na=Math.random,ia=E.slice,E=w.test(H.attachEvent),E=y&&!/\n|true/.test(y+E),u={};u[V]=Array;u[Q]=Boolean;u[R]=Date;u["[object Function]"]=Function;u[C]=Object;u[S]=Number;u[U]=RegExp;u[T]=String;var x=f.support={};x.fastBind=y&&!E;x.funcDecomp=!w.test(H.WinRTError)&&ga.test(function(){return this});x.funcNames=typeof Function.name=="string";
+Z||(ja=function(a){if(t(a)){P.prototype=a;var b=new P;P.prototype=null}return b||{}});var sa=Ca?function(a,b){Ba.value=b;Ca(a,"__bindData__",Ba)}:P,da=M||function(a){return a&&typeof a=="object"&&typeof a.length=="number"&&A.call(a)==V||!1},M=function(a){var b,c=[];if(!a||!n[typeof a])return c;for(b in a)v.call(a,b)&&c.push(b);return c},N=aa?function(a){return t(a)?aa(a):[]}:M,ea=function(a,b,c){var d,e=a,g=e;if(!e)return g;var h=arguments,l=0,k=typeof c=="number"?2:h.length;if(3<k&&"function"==typeof h[k-
+2])var f=B(h[--k-1],h[k--],2);else 2<k&&"function"==typeof h[k-1]&&(f=h[--k]);for(;++l<k;)if((e=h[l])&&n[typeof e])for(var q=-1,r=n[typeof e]&&N(e),t=r?r.length:0;++q<t;)d=r[q],g[d]=f?f(g[d],e[d]):e[d];return g},W=function(a,b,c){var d;if(!a||!n[typeof a])return a;b=b&&typeof c=="undefined"?b:B(b,c,3);for(d in a)if(false===b(a[d],d,a))break;return a},F=function(a,b,c){if(!a||!n[typeof a])return a;b=b&&typeof c=="undefined"?b:B(b,c,3);for(var d=-1,e=n[typeof a]&&N(a),g=e?e.length:0;++d<g&&(c=e[d],false!==
+b(a[c],c,a)););return a};f.assign=ea;f.bind=ta;f.createCallback=function(a,b,c){var d=typeof a;if(null==a||"function"==d)return B(a,b,c);if("object"!=d)return function(b){return b[a]};var e=N(a),g=e[0],h=a[g];return 1!=e.length||h!==h||t(h)?function(b){for(var c=e.length,d=!1;c--&&(d=K(b[e[c]],a[e[c]],null,!0)););return d}:function(a){a=a[g];return h===a&&(0!==h||1/h==1/a)}};f.debounce=ya;f.defaults=function(a,b,c){var d,e=a,g=e;if(!e)return g;for(var h=arguments,f=0,k=typeof c=="number"?2:h.length;++f<
+k;)if((e=h[f])&&n[typeof e])for(var p=-1,q=n[typeof e]&&N(e),r=q?q.length:0;++p<r;)d=q[p],"undefined"==typeof g[d]&&(g[d]=e[d]);return g};f.filter=ua;f.forEach=J;f.forIn=W;f.forOwn=F;f.keys=N;f.shuffle=function(a){var b=-1,c=a?a.length:0,d=Array(typeof c=="number"?c:0);J(a,function(a){var c=Aa(++b);d[b]=d[c];d[c]=a});return d};f.throttle=function(a,b,c){var d=!0,e=!0;if(!D(a))throw new TypeError;false===c?d=!1:t(c)&&(d="leading"in c?c.leading:d,e="trailing"in c?c.trailing:e);$.leading=d;$.maxWait=b;
+$.trailing=e;return ya(a,b,$)};f.transform=function(a,b,c,d){var e=da(a);b=B(b,d,4);null==c&&(e?c=[]:(d=a&&a.constructor,c=ja(d&&d.prototype)));(e?J:F)(a,function(a,d,e){return b(c,a,d,e)});return c};f.uniq=xa;f.each=J;f.extend=ea;f.select=ua;f.unique=xa;f.clone=function(a,b,c,d){typeof b!="boolean"&&null!=b&&(d=c,c=b,b=!1);return ra(a,b,typeof c=="function"&&B(c,d,1))};f.find=ka;f.identity=fa;f.indexOf=va;f.isArray=da;f.isFunction=D;f.isObject=t;f.isPlainObject=function(a){if(!a||A.call(a)!=C)return!1;
+var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La(a)};f.random=Aa;f.sortedIndex=wa;f.uniqueId=function(a){var b=++Qa;return String(null==a?"":a)+b};f.detect=ka;f.findWhere=ka;f.VERSION="2.2.1";f.extend(Physics.util,f)})(this);
 
 // ---
 // inside: src/math/aabb.js
@@ -843,169 +112,135 @@ if (!Date.now){
 (function(){
 
     /**
-     * Axis Aligned Bounding Box implementation
-     * @param {Object|Number} minX Either an object with the aabb values, or the minimum x value
-     * @param {Number} minY Minimum y value
-     * @param {Number} maxX Maximum x value
-     * @param {Number} maxY Maximum y value
-     */
-    var AABB = function AABB( minX, minY, maxX, maxY ){
+     * Physics.aabb( minX, minY, maxX, maxY ) -> Object
+     * Physics.aabb( pt1, pt2 ) -> Object
+     * Physics.aabb( width, height[, pt] ) -> Object
+     * - minX (Number): The x coord of the "top left" point
+     * - minY (Number): The y coord of the "top left" point
+     * - maxX (Number): The x coord of the "bottom right" point
+     * - maxY (Number): The y coord of the "bottom right" point
+     * - pt1 (Vectorish): The first corner
+     * - pt2 (Vectorish): The opposite corner
+     * - width (Number): The width of the bounding box
+     * - height (Number): The height of the bounding box
+     * - pt (Vectorish): The center point of the bounding box
+     * 
+     * Create an Axis Aligned Bounding Box.
+     *
+     * Signature:
+     *
+     * ```javascript
+     * {
+     *     x: Number, // the x coord of the center point
+     *     y: Number, // the y coord of the center point
+     *     hw: Number, // the half-width
+     *     hh: Number, // the half-height
+     * }
+     * ```
+     **/
+    Physics.aabb = function( minX, minY, maxX, maxY ){
 
-        // enforce instantiation
-        if ( !(this instanceof AABB) ){
+        var aabb = {};
 
-            return new AABB( minX, minY, maxX, maxY );
+        if ( minX && minX.x !== undefined ){
+            // we have a point specified as first arg
+            maxX = minY.x;
+            maxY = minY.y;
+            minY = minX.y;
+            minX = minX.x;
         }
 
-        this._pos = Physics.vector();
-        
-        this.set( minX, minY, maxX, maxY );
+        if ( maxX && maxX.x !== undefined ){
+            // we have a point specified as the third arg
+            // so we assume it's the center point
+            aabb.x = maxX.x;
+            aabb.y = maxX.y;
+            aabb.hw = minX * 0.5;
+            aabb.hh = minY * 0.5;
+
+            // done
+            return aabb;
+        }
+
+        // here, we should have all the arguments as numbers
+        aabb.hw = Math.abs(maxX - minX) * 0.5;
+        aabb.hh = Math.abs(maxY - minY) * 0.5;
+        aabb.x = (maxX + minX) * 0.5;
+        aabb.y = (maxY + minY) * 0.5;
+
+        return aabb;
     };
 
     /**
-     * Set the aabb values
-     * @param {Object|Number} minX Either an object with the aabb values, or the minimum x value
-     * @param {Number} minY Minimum y value
-     * @param {Number} maxX Maximum x value
-     * @param {Number} maxY Maximum y value
-     * @return {this}
-     */
-    AABB.prototype.set = function set( minX, minY, maxX, maxY ){
+     * Physics.aabb.contains( aabb, pt ) -> Boolean
+     * - aabb (Object): The aabb
+     * - pt (Vectorish): The point
+     * + (Boolean): `true` if `pt` is inside `aabb`, `false` otherwise
+     * 
+     * Check if a point is inside an aabb.
+     **/
+    Physics.aabb.contains = function contains( aabb, pt ){
 
-        if ( Physics.util.isObject(minX) ){
-
-            this._pos.clone( minX.pos );
-            this._hw = minX.halfWidth;
-            this._hh = minX.halfHeight;
-            
-            return this;
-        }
-
-        this._pos.set( 0.5 * (maxX + minX), 0.5 * (maxY + minY) );
-        this._hw = 0.5 * (maxX - minX);
-        this._hh = 0.5 * (maxY - minY);
-        return this;
+        return  (pt.x > (aabb.x - aabb.hw)) && 
+                (pt.x < (aabb.x + aabb.hw)) &&
+                (pt.y > (aabb.y - aabb.hh)) &&
+                (pt.y < (aabb.y + aabb.hh));
     };
 
-    /**
-     * Get the aabb values as a plain object
-     * @return {Object} The aabb values
-     */
-    AABB.prototype.get = function get(){
-
-        var hw = this.halfWidth()
-            ,hh = this.halfHeight()
-            ;
-
+    /** 
+     * Physics.aabb.clone( aabb ) -> Object
+     * - aabb (Object): The aabb to clone
+     * + (Object): The clone
+     *
+     * Clone an aabb.
+     **/
+    Physics.aabb.clone = function( aabb ){
         return {
-            pos: this._pos.values(),
-            halfWidth: hw,
-            halfHeight: hh,
-            // useful for vector operations
-            x: hw,
-            y: hh
+            x: aabb.x,
+            y: aabb.y,
+            hw: aabb.hw,
+            hh: aabb.hh
         };
     };
 
-    /**
-     * Get the half-width measurement of the aabb
-     * @return {Number} The half-width
-     */
-    AABB.prototype.halfWidth = function halfWidth(){
+    /** 
+     * Physics.aabb.overlap( aabb1, aabb2 ) -> Boolean
+     * - aabb1 (Object): The first aabb
+     * - aabb2 (Object): The second aabb
+     * + (Boolean): `true` if they overlap, `false` otherwise
+     *
+     * Check if two AABBs overlap.
+     **/
+    Physics.aabb.overlap = function( aabb1, aabb2 ){
 
-        return this._hw;
-    };
-
-    /**
-     * Get the half-height measurement of the aabb
-     * @return {Number} The half-height
-     */
-    AABB.prototype.halfHeight = function halfHeight(){
-
-        return this._hh;
-    };
-
-    /**
-     * Check if point is inside bounds
-     * @param  {Vectorish} pt The point to check
-     * @return {Boolean}    True if point is inside aabb
-     */
-    AABB.prototype.contains = function contains( pt ){
-
-        var x = pt.x !== undefined ? pt.x : pt.get(0)
-            ,y = pt.y !== undefined ? pt.y : pt.get(1)
+        var min1 = aabb1.x - aabb1.hw
+            ,min2 = aabb2.x - aabb2.hw
+            ,max1 = aabb1.x + aabb1.hw
+            ,max2 = aabb2.x + aabb2.hw
             ;
 
-        return  (x > (this._pos.get(0) - this._hw)) && 
-                (x < (this._pos.get(0) + this._hw)) &&
-                (y > (this._pos.get(1) - this._hh)) &&
-                (y < (this._pos.get(1) + this._hh));
+        // first check x-axis
+        
+        if ( (min2 <= max1 && max1 <= max2) || (min1 <= max2 && max2 <= max1) ){
+            // overlap in x-axis
+            // check y...
+            min1 = aabb1.y - aabb1.hh;
+            min2 = aabb2.y - aabb2.hh;
+            max1 = aabb1.y + aabb1.hh;
+            max2 = aabb2.y + aabb2.hh;
+
+            return (min2 <= max1 && max1 <= max2) || (min1 <= max2 && max2 <= max1);
+        }
+
+        // they don't overlap
+        return false;
     };
 
-    /**
-     * Apply a transformation to the aabb.
-     * Rotation origin is relative to the aabb's center.
-     * @param  {Transform} trans The transformation
-     * @return {this}
-     */
-    AABB.prototype.transform = function transform( trans ){
-
-        var hw = this._hw
-            ,hh = this._hh
-            ,scratch = Physics.scratchpad()
-            ,bottomRight = scratch.vector().set( hw, hh )
-            ,topRight = scratch.vector().set( hw, -hh )
-            ;
-
-        // translate the center
-        this._pos.translate( trans );
-
-        // rotate the corners
-        bottomRight.rotate( trans );
-        topRight.rotate( trans );
-
-        // we need to keep the box oriented with the axis, but expand it to
-        // accomodate the rotation
-        this._hw = Math.max( Math.abs(bottomRight.get(0)), Math.abs(topRight.get(0)) );
-        this._hh = Math.max( Math.abs(bottomRight.get(1)), Math.abs(topRight.get(1)) );
-
-        scratch.done();
-        return this;
-    };
-
-    // Static methods
-    /**
-     * Check if a point is inside an aabb
-     * @param  {AABB|Object} aabb The aabb instance or aabb values
-     * @param  {Vectorish} pt   The point to check
-     * @return {Boolean}      True if point is inside aabb
-     */
-    AABB.contains = function( aabb, pt ){
-
-        var x = pt.x !== undefined ? pt.x : pt.get(0)
-            ,y = pt.y !== undefined ? pt.y : pt.get(1)
-            ;
-
-        aabb = aabb.get ? aabb.get() : aabb;
-
-        return  (x > (aabb.pos.x - aabb.halfWidth)) && 
-                (x < (aabb.pos.x + aabb.halfWidth)) &&
-                (y > (aabb.pos.y - aabb.halfHeight)) &&
-                (y < (aabb.pos.y + aabb.halfHeight));
-    };
-
-    Physics.aabb = AABB;
 }());
 
 // ---
 // inside: src/math/gjk.js
 
-/**
- * Gilbert–Johnson–Keerthi object collison algorithm
- * For general information about GJK see: 
- *  - http://www.codezealot.org/archives/88
- *  - http://mollyrocket.com/849
- */
 (function(){
 
     // the algorithm doesn't always converge for curved shapes.
@@ -1041,12 +276,13 @@ if (!Date.now){
         }
     };
 
-    /**
+    /** hide
+     * getClosestPoints( simplex ) -> Object
+     * - simplex (Array): The simplex
+     * 
      * Figure out the closest points on the original objects
      * from the last two entries of the simplex
-     * @param  {Array} simplex
-     * @return {Object}
-     */
+     **/
     var getClosestPoints = function getClosestPoints( simplex ){
 
         // see http://www.codezealot.org/archives/153
@@ -1112,15 +348,36 @@ if (!Date.now){
     };
 
     /**
+     * Physics.gjk( support(axis)[, seed, checkOverlapOnly, debugFn] ) -> Object
+     * - support (Function): The support function. Must return an object containing 
+       the witness points (`.a`, `.b`) and the support point (`.pt`).
+       Recommended to use simple objects. 
+       Eg: 
+       ```javascript
+       return {
+            a: { x: 1, y:2 }, 
+            b: { x: 3, y: 4 }, 
+            pt: { x: 2, y: 2 }
+       };
+       ```
+     * - axis (Physics.vector): The axis to use
+     * - seed (Physics.vector): The starting direction for the simplex (defaults to x-axis)
+     * - debugFn (Function): For debugging. Called at every iteration with the current simplex.
+     * + (Object): The algorithm information containing properties:
+       ```javascript
+       {
+            overlap: Boolean,
+            simplex: [] // array containing simplex points as simple x/y objects
+       }
+       ```
+     *
      * Implementation agnostic GJK function.
-     * @param  {Function} support The support function. Must return an object containing 
-     *                            the witness points (.a, .b) and the support point (.pt).
-     *                            Recommended to use simple objects. Eg: return { a: {x: 1, y:2}, b: {x: 3, y: 4}, pt: {x: 2, y: 2} }
-     *                            Signature: function(<Physics.vector> axis).
-     *                            axis: The axis to use
-     * @param {Physics.vector} seed The starting direction for the simplex
-     * @return {Object} The algorithm information containing properties: .overlap (bool), and .simplex (Array)
-     */
+     *
+     * Gilbert–Johnson–Keerthi object collison algorithm
+     * For general information about GJK see: 
+     * - [www.codezealot.org/archives/88](http://www.codezealot.org/archives/88)
+     * - [mollyrocket.com/849](http://mollyrocket.com/849)
+     **/
     var gjk = function gjk( support, seed, checkOverlapOnly, debugFn ){
 
         var overlap = false
@@ -1332,16 +589,21 @@ if (!Date.now){
 (function(){
     
     /**
+     * class Physics.transform
+     * 
      * Vector Transformations class for rotating and translating vectors
-     * @class Transform
-     */
+     **/
 
     /**
+     * new Physics.transform( [vect, angle, origin] )
+     * new Physics.transform( transform )
+     * - vect (Vectorish): Translation vector
+     * - transform (Physics.transform): Transform to copy
+     * - angle (Number): Angle (radians) to use for rotation
+     * - origin (Vectorish): Origin of the rotation
+     * 
      * Transform Constructor / Factory
-     * @param {Physics.vector|Physics.transform} vect (optional) vector to use for translation or a transform to copy
-     * @param {Number} angle (optional) Angle (radians) to use for rotation
-     * @param {Vectorish} origin (optional) Origin of the rotation
-     */
+     **/
     var Transform = function Transform( vect, angle, origin ) {
 
         if (!(this instanceof Transform)){
@@ -1365,9 +627,11 @@ if (!Date.now){
     };
 
     /**
-     * Set the translation portion of the transform
-     * @param {Physics.vector} vect
-     */
+     * Physics.transform#setTranslation( vect ) -> this
+     * - vect (Vectorish): The translation vector
+     * 
+     * Set the translation portion of the transform.
+     **/
     Transform.prototype.setTranslation = function( vect ){
 
         this.v.clone( vect );
@@ -1375,10 +639,12 @@ if (!Date.now){
     };
 
     /**
+     * Physics.transform#setRotation( angle[, origin ] ) -> this
+     * - angle (Number): Angle (radians) to use for rotation
+     * - origin (Vectorish): Origin of the rotation
+     *
      * Set the rotation portion of the transform
-     * @param {Number} angle
-     * @param {Vectorish} origin (optional) Origin of the rotation
-     */
+     **/
     Transform.prototype.setRotation = function( angle, origin ){
 
         this.cosA = Math.cos( angle );
@@ -1394,10 +660,13 @@ if (!Date.now){
     };
 
     /**
+     * Physics.transform#clone( [transform] ) -> this|Physics.transform
+     * - transform (Physics.transform): Transform to copy
+     * + (this): For chaining
+     * + (Physics.transform): New copy of `this` if none is specified as an argument
+     * 
      * Clone another transform. Or clone self into new transform.
-     * @param  {Physics.transform} t (optional) the transform to clone
-     * @return {Physics.transform|this}
-     */
+     **/
     Transform.prototype.clone = function( t ){
 
         if ( t ){
@@ -1435,12 +704,50 @@ if (!Date.now){
         ,typedArrays = !!window.Float64Array
         ;
 
+    /** 
+     * class Physics.vector
+     * 
+     * The vector class and factory function.
+     *
+     * Call `Physics.vector` with the same arguments as
+     * [[new Physics.vector]] to create an instance.
+     *
+     * The vector methods mostly modify the vector instance.
+     * This makes computations faster because creating vectors
+     * is avoided.
+     *
+     * Creating vectors is generally an expensive operation
+     * so try to avoid doing this in the simulation loop.
+     * Instead you can use [[Physics.scratchpad]] to get
+     * temporary vectors for use in performance critical
+     * code.
+     *
+     * _Note_: The coordinate system is left-handed, meaning that
+     * the clockwise angular direction is positive. This has implications
+     * for the cross-product rule.
+     **/
+
+    /** section: Special
+     * class Vectorish
+     *
+     * Any object with `.x` and `.y` properties.
+     *
+     * A `Vectorish` isn't really a class. In this documentation, when
+     * an argument is specified as a `Vectorish` it means either a true
+     * [[Physics.vector]] instance, or an object literal with `.x` and `.y`
+     * properties.
+     **/
+
     /**
-     * Vector Constructor / Factory
-     * @param {Number|Physics.vector} x (optional) Either the x coord. Or a vector to copy.
-     * @param {Number} y (optional) The y coord.
-     */
-    var Vector = function Vector(x, y) {
+     * new Physics.vector( x, y )
+     * new Physics.vector( vect )
+     * - x (Number): The x coordinate
+     * - y (Number): The y coordinate
+     * - vect (Vectorish): A vector-like object to clone
+     * 
+     * Vector Constructor.
+     **/
+    var Vector = function Vector( x, y ) {
 
         // enforce instantiation
         if ( !(this instanceof Vector) ){
@@ -1453,8 +760,14 @@ if (!Date.now){
         // y = _[1]
         // norm = _[3]
         // normsq = _[4]
-        
 
+        /** internal
+         * Physics.vector#_
+         *
+         * Private storage array for data.
+         *
+         * Do not access this directly. Private. Keep out.
+         **/
         if (typedArrays){
             this._ = new Float64Array(5);
         } else {
@@ -1468,40 +781,81 @@ if (!Date.now){
         } else {
 
             this.recalc = true; //whether or not recalculate norms
-            this.set( x || 0.0, y || 0.0 );
+            this.set( x, y );
         }
     };
 
-    /**
-     * Methods
-     */
+    Object.defineProperties( Vector.prototype, {
+        /** 
+         * Physics.vector#x
+         * 
+         * Getter/setter property for the x coordinate.
+         **/
+        x: {
+            get: function(){
+                return +this._[0];
+            },
+            set: function( x ){
+                x = +x || 0;
+                this.recalc = ( x === this._[0] );
+                this._[0] = x;
+            }
+        },
+        /** 
+         * Physics.vector#y
+         * 
+         * Getter/setter property for the y coordinate.
+         **/
+        y: {
+            get: function(){
+                return +this._[1];
+            },
+            set: function( y ){
+                y = +y || 0;
+                this.recalc = ( y === this._[1] );
+                this._[1] = y;
+            }
+        }
+    });
+
+    // 
+    // Methods
+    // 
 
     /**
-     * Sets the components of this Vector.
-     */
-    Vector.prototype.set = function(x, y) {
+     * Physics.vector#set( x, y ) -> this
+     * - x (Number): x coordinate
+     * - y (Number): y coordinate
+     * 
+     * Sets the x and y components of this vector.
+     **/
+    Vector.prototype.set = function( x, y ) {
 
         this.recalc = true;
 
-        this._[0] = x || 0.0;
-        this._[1] = y || 0.0;
+        this._[0] = +x || 0;
+        this._[1] = +y || 0;
         return this;
     };
 
     /**
-     * Get component
-     * @param  {Integer} n The nth component. x is 1, y is 2, ...
-     * @return {Integer} component value
-     */
+     * Physics.vector#get( idx ) -> Number
+     * - idx (Number): The coordinate index (0 or 1)
+     * 
+     * Get the x or y component by index.
+     **/
     Vector.prototype.get = function( n ){
 
         return this._[ n ];
     };
 
     /**
-     * Add Vector to this
-     */
-    Vector.prototype.vadd = function(v) {
+     * Physics.vector#vadd( v ) -> this
+     * - v (Physics.vector): vector to add
+     * 
+     * Add a [[Physics.vector]] to `this`.
+     **/
+    Vector.prototype.vadd = function( v ) {
 
         this.recalc = true;
 
@@ -1511,9 +865,12 @@ if (!Date.now){
     };
 
     /**
-     * Subtract Vector from this
-     */
-    Vector.prototype.vsub = function(v) {
+     * Physics.vector#vsub( v ) -> this
+     * - v (Physics.vector): vector to subtract
+     * 
+     * Subtract a [[Physics.vector]] from `this`.
+     **/
+    Vector.prototype.vsub = function( v ) {
 
         this.recalc = true;
 
@@ -1523,33 +880,46 @@ if (!Date.now){
     };
 
     /**
-     * Add scalars to Vector's components
-     */
-    Vector.prototype.add = function(x, y){
+     * Physics.vector#add( x, y ) -> this
+     * - x (Number): amount to add to the x coordinate
+     * - y (Number): amount to add to the y coordinate
+     * 
+     * Add scalars [[Physics.vector]] to the coordinates.
+     **/
+    Vector.prototype.add = function( x, y ){
         
         this.recalc = true;
 
-        this._[0] += x;
-        this._[1] += y === undefined? x : y;
+        this._[0] += +x || 0;
+        this._[1] += +y || 0;
         return this;
     };
 
     /**
-     * Subtract scalars to Vector's components
-     */
-    Vector.prototype.sub = function(x, y){
+     * Physics.vector#sub( x, y ) -> this
+     * - x (Number): amount to subtract from the x coordinate
+     * - y (Number): amount to subtract from the y coordinate
+     * 
+     * Subtract scalars [[Physics.vector]] from the coordinates.
+     **/
+    Vector.prototype.sub = function( x, y ){
         
         this.recalc = true;
 
         this._[0] -= x;
-        this._[1] -= y === undefined? x : y;
+        this._[1] -= y === undefined? 0 : y;
         return this;
     };
 
-    /* 
-     * Multiply by a scalar
-     */
-    Vector.prototype.mult = function(m) {
+    /**
+     * Physics.vector#mult( m ) -> this
+     * - m (Number): amount to multiply this vector by
+     * 
+     * Multiply this by a scalar quantity.
+     *
+     * Same as scaling the vector by an amount `m`.
+     **/
+    Vector.prototype.mult = function( m ) {
         
         if ( !this.recalc ){
 
@@ -1562,46 +932,60 @@ if (!Date.now){
         return this;
     };
 
-    /* 
-     * Get the dot product
-     */
-    Vector.prototype.dot = function(v) {
+    /** 
+     * Physics.vector#dot( v ) -> Number
+     * - v (Physics.vector): The other vector
+     * 
+     * Compute the dot product of this vector with `v`.
+     **/
+    Vector.prototype.dot = function( v ) {
 
         return (this._[0] * v._[0]) + (this._[1] * v._[1]);
     };
 
     /** 
-     * Get the cross product (in a left handed coordinate system)
-     */
-    Vector.prototype.cross = function(v) {
+     * Physics.vector#cross( v ) -> Number
+     * - v (Physics.vector): The other vector
+     * 
+     * Compute the (left-handed) cross product of this vector with `v`.
+     **/
+    Vector.prototype.cross = function( v ) {
 
         return ( - this._[0] * v._[1]) + (this._[1] * v._[0]);
     };
 
     /**
-     * Scalar projection of this along v
-     */
-    Vector.prototype.proj = function(v){
+     * Physics.vector#proj( v ) -> Number
+     * - v (Physics.vector): The other vector
+     * 
+     * Compute the [scalar projection](http://en.wikipedia.org/wiki/Vector_projection#Scalar_projection_2) of this along `v`.
+     **/
+    Vector.prototype.proj = function( v ){
 
         return this.dot( v ) / v.norm();
     };
 
 
     /**
-     * Vector project this along v
-     */
-    Vector.prototype.vproj = function(v){
+     * Physics.vector#vproj( v ) -> this
+     * - v (Physics.vector): The other vector
+     * 
+     * Compute the [vector projection](http://en.wikipedia.org/wiki/Vector_projection#Vector_projection_2) of this along `v` and copy the result into this vector.
+     **/
+    Vector.prototype.vproj = function( v ){
 
         var m = this.dot( v ) / v.normSq();
         return this.clone( v ).mult( m );
     };
 
     /**
-     * Angle between this and vector. Or this and x axis.
-     * @param  {Vector} v (optional) other vector
-     * @return {Number} Angle in radians
-     */
-    Vector.prototype.angle = function(v){
+     * Physics.vector#angle( [v] ) -> Number
+     * - v (Physics.vector): The other vector
+     * + (Number): The angle in radians between this vector and the x-axis OR `v` if specified
+     * 
+     * Compute the angle between `this` and vector `v` or this and x axis.
+     **/
+    Vector.prototype.angle = function( v ){
 
         var ang;
 
@@ -1634,10 +1018,12 @@ if (!Date.now){
     };
 
     /**
-     * Angle created between three points; left -> this -> right.
-     * @param  {Vector} v (optional) other vector
-     * @return {Number} Angle in radians
-     */
+     * Physics.vector#angle2( left, right ) -> Number
+     * - left (Physics.vector): The position on the left
+     * - right (Physics.vector): The position on the right
+     * 
+     * Compute the angle created between three points; left -> this -> right.
+     **/
     Vector.prototype.angle2 = function( left, right ){
 
         var x1 = left._[0] - this._[0]
@@ -1659,8 +1045,10 @@ if (!Date.now){
     };
 
     /**
-     * Get the norm (length)
-     */
+     * Physics.vector#norm() -> Number
+     * 
+     * Compute the norm (length) of this vector.
+     **/
     Vector.prototype.norm = function() {
 
         if (this.recalc){
@@ -1673,8 +1061,10 @@ if (!Date.now){
     };
 
     /**
-     * Get the norm squared
-     */
+     * Physics.vector#normSq() -> Number
+     * 
+     * Compute the norm (length) squared of this vector.
+     **/
     Vector.prototype.normSq = function() {
 
         if (this.recalc){
@@ -1686,10 +1076,13 @@ if (!Date.now){
         return this._[4];
     };
 
-    /** 
-     * Get distance to other Vector
-     */
-    Vector.prototype.dist = function(v) {
+    /**
+     * Physics.vector#dist( v ) -> Number
+     * - v (Physics.vector): The other vector
+     * 
+     * Compute the distance from this vector to another vector `v`.
+     **/
+    Vector.prototype.dist = function( v ) {
       
         var dx, dy;
         return sqrt(
@@ -1699,9 +1092,12 @@ if (!Date.now){
     };
 
     /**
-     * Get distance squared to other Vector
-     */
-    Vector.prototype.distSq = function(v) {
+     * Physics.vector#distSq( v ) -> Number
+     * - v (Physics.vector): The other vector
+     * 
+     * Compute the distance squared from this vector to another vector `v`.
+     **/
+    Vector.prototype.distSq = function( v ) {
 
         var dx, dy;
         return (
@@ -1711,10 +1107,13 @@ if (!Date.now){
     };
 
     /**
-     * Change vector into a vector perpendicular
-     * @param {Boolean} ccw Set to true if want to go in the negative (counterclockwise) direction
-     * @return {this}
-     */
+     * Physics.vector#perp( [ccw] ) -> this
+     * - ccw (Boolean): flag to indicate that we should rotate counterclockwise
+     * 
+     * Change this vector into a vector that will be perpendicular.
+     *
+     * In other words, rotate by (+-) 90 degrees.
+     **/
     Vector.prototype.perp = function( ccw ) {
 
         var tmp = this._[0]
@@ -1739,8 +1138,10 @@ if (!Date.now){
     };
 
     /**
-     * Normalises this Vector, making it a unit Vector
-     */
+     * Physics.vector#normalize() -> this
+     * 
+     * Normalise this vector, making it a unit vector.
+     **/
     Vector.prototype.normalize = function() {
 
         var m = this.norm();
@@ -1762,9 +1163,11 @@ if (!Date.now){
     };
 
     /**
-     * Apply a transform to this vector
-     * @param  {Physics.transform} t The transform
-     */
+     * Physics.vector#transform( t ) -> this
+     * - t (Physics.transform): The transformation to apply
+     * 
+     * Apply a [[Physics.transform]] to this vector.
+     **/
     Vector.prototype.transform = function( t ){
 
         var sinA = t.sinA
@@ -1784,9 +1187,11 @@ if (!Date.now){
     };
 
     /**
-     * Apply an inverse transform to this vector
-     * @param  {Physics.transform} t The transform
-     */
+     * Physics.vector#transformInv( t ) -> this
+     * - t (Physics.transform): The transformation to apply the inverse of
+     * 
+     * Apply an inverse [[Physics.transform]] to this vector.
+     **/
     Vector.prototype.transformInv = function( t ){
 
         var sinA = t.sinA
@@ -1806,10 +1211,18 @@ if (!Date.now){
     };
 
     /**
-     * Apply the rotation portion of transform to this vector
-     * @param  {Physics.transform|Number} t The transform OR a number representing the angle to rotate by
-     * @param  {Vector} o If number is specified for rotation angle, then this is a vector representing the rotation origin
-     */
+     * Physics.vector#rotate( t ) -> this
+     * Physics.vector#rotate( ang[, o] ) -> this
+     * - t (Physics.transform): The transformation to apply the rotational part of
+     * - ang (Number): The angle (in radians), to rotate by
+     * - o (Vectorish): The point of origin of the rotation
+     * 
+     * Rotate this vector.
+     * 
+     * An angle and rotation origin can be specified, 
+     * or a transform can be specified and only the rotation
+     * portion of that transform will be applied
+     **/
     Vector.prototype.rotate = function( t, o ){
 
         var sinA
@@ -1844,9 +1257,14 @@ if (!Date.now){
     };
 
     /**
-     * Apply an inverse rotation portion of transform to this vector
-     * @param  {Physics.transform} t The transform
-     */
+     * Physics.vector#rotateInv( t ) -> this
+     * - t (Physics.transform): The transformation to apply the inverse rotational part of
+     * 
+     * Apply the inverse rotation of a transform.
+     * 
+     * Only the inverse rotation portion of 
+     * that transform will be applied.
+     **/
     Vector.prototype.rotateInv = function( t ){
 
         return this.set(
@@ -1856,18 +1274,28 @@ if (!Date.now){
     };
 
     /**
-     * Apply the translation portion of transform to this vector
-     * @param  {Physics.transform} t The transform
-     */
+     * Physics.vector#translate( t ) -> this
+     * - t (Physics.transform): The transformation to apply the translational part of
+     * 
+     * Apply the translation of a transform.
+     * 
+     * Only the translation portion of 
+     * that transform will be applied.
+     **/
     Vector.prototype.translate = function( t ){
 
         return this.vadd( t.v );
     };
 
     /**
-     * Apply an inverse translation portion of transform to this vector
-     * @param  {Physics.transform} t The transform
-     */
+     * Physics.vector#translateInv( t ) -> this
+     * - t (Physics.transform): The transformation to apply the inverse translational part of
+     * 
+     * Apply the inverse translation of a transform.
+     * 
+     * Only the inverse translation portion of 
+     * that transform will be applied.
+     **/
     Vector.prototype.translateInv = function( t ){
 
         return this.vsub( t.v );
@@ -1875,14 +1303,28 @@ if (!Date.now){
 
 
     /**
-     * Returns clone of current Vector
-     * Or clones provided Vector to this one
-     */
-    Vector.prototype.clone = function(v) {
+     * Physics.vector#clone( [v] ) -> this|Physics.vector
+     * - v (Vectorish): The vector-like object to clone
+     * + (this): If `v` is specified as an argument
+     * + (Physics.vector): A new vector instance that clones this vector, if no argument is specified
+     * 
+     * Create a clone of this vector, or clone another vector into this instance.
+     *
+     * This is especially useful in vector algorithms 
+     * that use temporary vectors (which most should).
+     * You can create temporary vectors and then do things like...
+     * ```
+     * temp.clone( otherVector );
+     * // compute things with temp...
+     * // then save the result
+     * result.clone( tmp );
+     * ```
+     **/
+    Vector.prototype.clone = function( v ) {
         
         // http://jsperf.com/vector-storage-test
 
-        if (v){
+        if ( v ){
 
             if (!v._){
 
@@ -1906,11 +1348,12 @@ if (!Date.now){
     };
 
     /**
-     * Swap values with other vector
-     * @param  {Vector} v
-     * @return {this}
-     */
-    Vector.prototype.swap = function(v){
+     * Physics.vector#swap( v ) -> this
+     * - v (Physics.vector): The other vector
+     * 
+     * Swap values with other vector.
+     **/
+    Vector.prototype.swap = function( v ){
 
         var _ = this._;
         this._ = v._;
@@ -1923,8 +1366,10 @@ if (!Date.now){
     };
 
     /**
-     * Create a litteral object
-     */
+     * Physics.vector#values() -> Object
+     * 
+     * Get the coordinate values as an object literal.
+     **/
     Vector.prototype.values = function(){
 
         return {
@@ -1935,8 +1380,10 @@ if (!Date.now){
 
 
     /**
-     * Zero the Vector
-     */
+     * Physics.vector#zero() -> this
+     * 
+     * Set the coordinates of this vector to zero.
+     **/
     Vector.prototype.zero = function() {
 
         this._[3] = 0.0;
@@ -1948,8 +1395,10 @@ if (!Date.now){
     };
 
     /**
-     * Make this a Vector in the opposite direction
-     */
+     * Physics.vector#negate() -> this
+     * 
+     * Flip this vector in the opposite direction.
+     **/
     Vector.prototype.negate = function( component ){
 
         if (component !== undefined){
@@ -1964,12 +1413,15 @@ if (!Date.now){
     };
 
     /**
-     * Constrain Vector components to minima and maxima
-     */
-    Vector.prototype.clamp = function(minV, maxV){
-
-        minV = minV.values ? minV.values() : minV;
-        maxV = maxV.values ? maxV.values() : maxV;
+     * Physics.vector#clamp( minV, maxV ) -> this
+     * - minV (Vectorish): The minimum vector
+     * - maxV (Vectorish): The maximum vector
+     * 
+     * Constrain vector components to minima and maxima.
+     * 
+     * The vector analog of [scalar clamping](http://en.wikipedia.org/wiki/Clamping_(graphics)).
+     **/
+    Vector.prototype.clamp = function( minV, maxV ){
 
         this._[0] = min(max(this._[0], minV.x), maxV.x);
         this._[1] = min(max(this._[1], minV.y), maxV.y);
@@ -1978,8 +1430,10 @@ if (!Date.now){
     };
 
     /**
-     * Render string
-     */
+     * Physics.vector#toString() -> String
+     * 
+     * Get a formatted string of this vector's coordinates.
+     **/
     Vector.prototype.toString = function(){
 
         return '('+this._[0] + ', ' + this._[1]+')';
@@ -1987,66 +1441,40 @@ if (!Date.now){
 
 
     /**
-     * Determine if equal
-     * @param  {Vector} v
-     * @return {boolean}
-     */
-    Vector.prototype.equals = function(v){
+     * Physics.vector#equals( v ) -> Boolean
+     * - v (Physics.vector): The other vector
+     * 
+     * Determine if this vector equals another.
+     **/
+    Vector.prototype.equals = function( v ){
 
         return this._[0] === v._[0] &&
             this._[1] === v._[1] &&
             this._[2] === v._[2];
     };
 
-
     /**
-     * Static functions
-     */
-
-    /** 
-     * Return sum of two Vectors
-     */
-    Vector.vadd = function(v1, v2) {
-
-        return new Vector( v1._[0] + v2._[0], v1._[1] + v2._[1] );
-    };
-
-    /** 
-     * Subtract v2 from v1
-     */
-    Vector.vsub = function(v1, v2) {
-
-        return new Vector( v1._[0] - v2._[0], v1._[1] - v2._[1] );
-    };
-
-    /**
-     * Multiply v1 by a scalar m
-     */
-    Vector.mult = function(m, v1){
-
-        return new Vector( v1._[0]*m, v1._[1]*m );
-    };
-
-    /** 
-     * Project v1 onto v2
-     */
-    Vector.vproj = function(v1, v2) {
-
-        return Vector.mult( v1.dot(v2) / v2.normSq(), v2 );
-    };
-
-    /**
-     * Axis vectors for general reference
-     * @type {Array}
-     */
+     * Physics.vector.axis = Array
+     * 
+     * Read-only axis vectors for general reference.
+     *
+     * Example:
+     *
+     * ```javascript
+     * Physics.vector.axis[0]; // The x axis unit vector
+     * Physics.vector.axis[1]; // The y axis unit vector
+     * ```
+     **/
     Vector.axis = [
         new Vector(1.0, 0.0),
         new Vector(0.0, 1.0)
     ];
 
     /**
-     * Zero vector for reference
-     */
+     * Physics.vector.zero = zeroVector
+     * 
+     * Read-only zero vector for reference
+     **/
     Vector.zero = new Vector(0, 0);
 
     // assign
@@ -2056,35 +1484,920 @@ if (!Date.now){
 
 
 // ---
+// inside: src/util/decorator.js
+
+/** related to: factory
+ * Physics.util.decorator( type [, protoDef ] ) -> Function
+ * - type (String): The name of the factory you are creating
+ * - protoDef (Object): The top-level prototype
+ * + (Function): The factory function
+ * 
+ * Facilitates creation of decorator factory functions.
+ *
+ * See the [[factory]] definition for the factory signatures.
+ * [For full documentation and examples, please visit the wiki](https://github.com/wellcaffeinated/PhysicsJS/wiki/Fundamentals#the-factory-pattern).
+ * 
+ * Example:
+ * 
+ * ```javascript
+ * var factory = Physics.util.decorator('factory', {
+ *      // prototype methods...
+ *      method: function( args ){
+ *      }
+ * });
+ *
+ * // define
+ * factory( 'name', 'parent-name', function( parent ){
+ *
+ *      // extend further...
+ *      return {
+ *          // overrides
+ *          init: function( cfg ){
+ *              parent.init.call(this, cfg);
+ *          }
+ *      };
+ * });
+ * 
+ * // instantiate
+ * var options = { key: 'val' };
+ * var instance = factory( 'name', options );
+ * ```
+ **/
+var Decorator = Physics.util.decorator = function Decorator( type, baseProto ){
+
+    var registry = {}
+        ,proto = {}
+        ;
+
+    // transform callback that only extends functions
+    var transformFn = function transformFn( to, val, key, from ){
+
+        var desc = Object.getOwnPropertyDescriptor( from, key );
+        if ( desc.get || desc.set ){
+
+            Object.defineProperty( to, key, desc );
+
+        } else if ( Physics.util.isFunction( desc.value ) ){
+
+            to[ key ] = desc.value;
+        }
+    };
+
+    // extend that supports getters/setters
+    var extend = function extend( to, from ){
+
+        return Physics.util.transform( from, transformFn, to );
+    };
+
+    // http://ejohn.org/blog/objectgetprototypeof/
+    /* jshint -W103 */
+    var getProto = Object.getPrototypeOf;
+    if ( typeof getProto !== 'function' ) {
+        if ( typeof 'test'.__proto__ === 'object' ) {
+            getProto = function(object){
+                return object.__proto__;
+            };
+        } else {
+            getProto = function(object){
+                // May break if the constructor has been tampered with
+                return object.constructor.prototype;
+            };
+        }
+    }
+    /* jshint +W103 */
+
+    var objectCreate = Object.create;
+    if (typeof objectCreate !== 'function') {
+        objectCreate = function (o) {
+            function F() {}
+            F.prototype = o;
+            return new F();
+        };
+    }
+
+    /*
+     * mixin( key, val )
+     * mixin( obj )
+     * - key (String): The method name
+     * - val (Function): The function to assign
+     * - obj (Object): object with many `key: fn` pairs
+     * 
+     * Apply mixin methods to decorator base.
+     */
+    var mixin = function mixin( key, val ){
+
+        if ( typeof key === 'object' ){
+            proto = extend(proto, key);
+            proto.type = type;
+            return;
+        }
+
+        if ( key !== 'type' && Physics.util.isFunction( val ) ){
+            proto[ key ] = val;
+        }
+    };
+
+    // @TODO: not sure of the best way to make the constructor names
+    // transparent and readable in debug consoles...
+    mixin( baseProto );
+
+    /**  section: Special
+     * factory( name[, parentName], decorator[, cfg] )
+     * factory( name, cfg ) -> Object
+     * -  name       (String):  The class name
+     * -  parentName (String): The name of parent class to extend
+     * -  decorator  (Function): The decorator function that should define and return methods to extend (decorate) the base class
+     * -  cfg        (Object): The configuration to pass to the class initializer
+     * 
+     * Factory function for definition and instantiation of subclasses.
+     * 
+     * Use the first signature (once) to define it first.
+     * If defining without the "cfg" parameter, void will be returned. Otherwise the class instance will be returned.
+     *
+     * See [[Physics.util.decorator]] for more information.
+     **/
+    var factory = function factory( name, parentName, decorator, cfg ){
+
+        var instance
+            ,result
+            ,parent = proto
+            ,tmp
+            ;
+
+        // set parent if specified
+        if ( typeof parentName !== 'string' ){
+
+            // ... otherwise reassign parameters
+            cfg = decorator;
+            decorator = parentName;
+
+        } else {
+
+            // extend the specified module
+            parent = registry[ parentName ];
+
+            if ( !parent ){
+
+                throw 'Error: "' + parentName + '" ' + type + ' not defined';
+            }
+
+            parent = parent.prototype;
+        }
+
+        if ( typeof decorator === 'function' ){
+
+            result = registry[ name ];
+
+            if ( result ){
+
+                result.prototype = extend(result.prototype, decorator( getProto(result.prototype) ));
+                
+            } else {
+                // newly defined
+                // store the new class
+                result = registry[ name ] = function constructor( opts ){
+                    if (this.init){
+                        this.init( opts );
+                    }
+                };
+
+                result.prototype = objectCreate( parent );
+                result.prototype = extend(result.prototype, decorator( parent, result.prototype ));
+            }
+
+            result.prototype.type = type;
+            result.prototype.name = name;
+            
+        } else {
+
+            cfg = decorator || {};
+            result = registry[ name ];
+            if (!result){
+
+                throw 'Error: "' + name + '" ' + type + ' not defined';
+            }
+        }
+
+        if ( cfg ) {
+
+            // create a new instance from the provided decorator
+            return new result( cfg );
+        }
+    };
+
+    factory.mixin = mixin;
+
+    return factory;
+};
+
+// ---
+// inside: src/util/helpers.js
+
+/**
+ * Physics.util.indexOf( arr, value ) -> Number
+ * - arr (Array): The array to search
+ * - value (Mixed): The value to find
+ * + (Number): The index of `value` in the array OR `-1` if not found
+ * 
+ * Fast indexOf implementation.
+ **/
+Physics.util.indexOf = function indexOf(arr, value) {
+    var fr = 0, bk = arr.length;
+    while (fr < bk) {
+        bk--;
+        if (arr[ fr ] === value) {
+            return fr;
+        }
+        if (arr[ bk ] === value) {
+            return bk;
+        }
+        fr++;
+    }
+    return -1;
+};
+
+/**
+ * Physics.util.options( def[, target] ) -> Function
+ * - def (Object): Default options to set
+ * - target (Object): Where to copy the options to. Defaults to the returned function.
+ * + (Function): The options function
+ * 
+ * Options helper to keep track of options. Call it with a config object. Access options directly on the function.
+ *
+ * Example:
+ *
+ * ```javascript
+ * this.options = Physics.util.options({ foo: 'bar', opt: 'def' });
+ * this.options({ opt: 'myVal' });
+ *
+ * this.options.foo; // === 'bar'
+ * this.options.def; // === 'myVal'
+ *
+ * // can also change defaults later
+ * this.options.defaults({ foo: 'baz' });
+ *
+ * // can add a change callback
+ * this.options.onChange(function( opts ){
+ *     // some option changed
+ *     // opts is the target
+ * });
+ * ```
+ **/
+Physics.util.options = function( def, target ){
+
+    var _def = {}
+        ,fn
+        ,callbacks = []
+        ;
+
+    // set options
+    fn = function fn( options ){
+
+        Physics.util.extend(target, options, null);
+        for ( var i = 0, l = callbacks.length; i < l; ++i ){
+            callbacks[ i ]( target );
+        }
+        return target;
+    };
+
+    // add defaults
+    fn.defaults = function defaults( def ){
+        Physics.util.extend( _def, def );
+        Physics.util.defaults( target, _def );
+        return _def;
+    };
+
+    fn.onChange = function( cb ){
+        callbacks.push( cb );
+    };
+
+    target = target || fn;
+
+    fn.defaults( def );
+
+    return fn;
+};
+
+
+
+// ---
+// inside: src/util/noconflict.js
+
+(function( window ){
+
+    var _Physics = window.Physics;
+
+    /**
+     * Physics.noConflict() -> Physics
+     * 
+     * Restore the original reference to the global window.Physics variable.
+     * 
+     * Does nothing if PhysicsJS doesn't have a reference in global scope
+     **/
+    Physics.noConflict = function(){
+
+        if ( window.Physics === Physics ) {
+            window.Physics = _Physics;
+        }
+        
+        return Physics;
+    };
+
+})( this );
+
+// ---
+// inside: src/util/pubsub.js
+
+(function(){
+
+    /**
+     * class Physics.util.pubsub
+     * 
+     * Fast pubsub implementation.
+     *
+     * Can be mixed into other classes easily.
+     **/
+    var PubSub = function PubSub(){
+
+        if (!(this instanceof PubSub)){
+            return new PubSub();
+        }
+    };
+
+    PubSub.prototype = {
+
+        /**
+         * Physics.util.pubsub#on( topic, fn( data, event )[, scope, priority] ) -> this
+         * Physics.util.pubsub#on( topicConfig[, scope, priority] ) -> this
+         * - topic (String): The topic name
+         * - topicConfig (Object): A config with key/value pairs of `{ topic: callbackFn, ... }`
+         * - fn (Function): The callback function (if not using Object as previous argument)
+         * - data (Mixed): The data sent from the call to `.emit()`
+         * - event (Object): Event data, holding `.topic`, the topic, and `.handler`, the `fn` callback.
+         * - scope (Object): The scope to bind callback to
+         * - priority (Number): The priority of the callback (higher is earlier)
+         * 
+         * Subscribe callback(s) to a topic(s).
+         **/
+        on: function( topic, fn, scope, priority ){
+
+            var listeners
+                ,orig
+                ,idx
+                ;
+
+            // ensure topics hash is initialized
+            this._topics = this._topics || (this._topics = {});
+
+            // check if we're subscribing to multiple topics
+            // with an object
+            if ( Physics.util.isObject( topic ) ){
+
+                for ( var t in topic ){
+                    
+                    this.on( t, topic[ t ], fn, scope );
+                }
+
+                return this;
+            }
+
+            listeners = this._topics[ topic ] || (this._topics[ topic ] = []);
+            orig = fn;
+
+            if ( Physics.util.isObject( scope ) ){
+                
+                fn = Physics.util.bind( fn, scope );
+                fn._bindfn_ = orig;
+                fn._one_ = orig._one_;
+
+            } else if (!priority) {
+
+                priority = scope;
+            }
+
+            fn._priority_ = priority;
+
+            idx = Physics.util.sortedIndex( listeners, fn, '_priority_' );
+
+            listeners.splice( idx, 0, fn );
+            return this;
+        },
+
+        /**
+         * Physics.util.pubsub#off( topic, fn ) -> this
+         * Physics.util.pubsub#off( topicCfg ) -> this
+         * - topic (String): topic The topic name. Specify `true` to remove all listeners for all topics
+         * - topicCfg (Object): A config with key/value pairs of `{ topic: callbackFn, ... }`
+         * - fn (Function): fn The original callback function. Specify `true` to remove all listeners for specified topic
+         * 
+         * Unsubscribe callback(s) from topic(s).
+         **/
+        off: function( topic, fn ){
+
+            var listeners
+                ,listn
+                ;
+
+            if ( !this._topics ){
+                // nothing subscribed
+                return this;
+            }
+
+            if ( topic === true ){
+                // purge all listeners
+                this._topics = {};
+                return this;
+            }
+
+            // check if we're subscribing to multiple topics
+            // with an object
+            if ( Physics.util.isObject( topic ) ){
+
+                for ( var t in topic ){
+                    
+                    this.off( t, topic[ t ] );
+                }
+
+                return this;
+            }
+
+            listeners = this._topics[ topic ];
+
+            if (!listeners){
+                return this;
+            }
+
+            if ( fn === true ){
+                // purge all listeners for topic
+                this._topics[ topic ] = [];
+                return this;
+            }
+
+            for ( var i = 0, l = listeners.length; i < l; i++ ){
+                
+                listn = listeners[ i ];
+
+                if ( listn._bindfn_ === fn || listn === fn ){
+                    listeners.splice( i, 1 );
+                    break;
+                }
+            }
+
+            return this;
+        },
+
+        /**
+         * Physics.util.pubsub#emit( topic[, data] ) -> this
+         * - topic (String): The topic name
+         * - data (Mixed): The data to send
+         * 
+         * Publish data to a topic.
+         **/
+        emit: function( topic, data ){
+
+            if ( !this._topics ){
+                // nothing subscribed
+                return this;
+            }
+
+            var listeners = this._topics[ topic ]
+                ,l = listeners && listeners.length
+                ,handler
+                ,e
+                ;
+
+            if ( !l ){
+                return this;
+            }
+
+            e = {
+                // event data
+                topic: topic,
+                handler: handler
+            };
+
+            // reverse iterate so priorities work out correctly
+            while ( l-- ){
+                
+                handler = listeners[ l ];
+                handler( data, e );
+
+                // if _one_ flag is set, the unsubscribe
+                if ( handler._one_ ){
+                    listeners.splice( l, 1 );
+                }
+            }
+
+            return this;
+        },
+
+        /**
+         * Physics.util.pubsub#one( topic, fn( data, event )[, scope, priority] ) -> this
+         * Physics.util.pubsub#one( topicConfig[, scope, priority] ) -> this
+         * - topic (String): The topic name
+         * - topicConfig (Object): A config with key/value pairs of `{ topic: callbackFn, ... }`
+         * - fn (Function): The callback function (if not using Object as previous argument)
+         * - data (Mixed): The data sent from the call to `.emit()`
+         * - event (Object): Event data, holding `.topic`, the topic, and `.handler`, the `fn` callback.
+         * - scope (Object): The scope to bind callback to
+         * - priority (Number): The priority of the callback (higher is earlier)
+         * 
+         * Subscribe callback(s) to a topic(s), but only ONCE.
+         **/
+        one: function( topic, fn, scope ){
+
+            // check if we're subscribing to multiple topics
+            // with an object
+            if ( Physics.util.isObject( topic ) ){
+
+                for ( var t in topic ){
+                    
+                    this.one( t, topic[ t ], fn, scope );
+                }
+
+                return this;
+            }
+
+            // set the _one_ flag
+            fn._one_ = true;
+            this.on( topic, fn, scope );
+
+            return this;
+        }
+    };
+    
+    Physics.util.pubsub = PubSub;
+})();
+
+// ---
+// inside: src/util/scratchpad.js
+
+/*
+ * scratchpad
+ * thread-safe management of temporary (voletile)
+ * objects for use in calculations
+ * https://github.com/wellcaffeinated/scratchpad.js
+ */
+Physics.scratchpad = (function(){
+
+    // Errors
+    var SCRATCH_USAGE_ERROR = 'Error: Scratchpad used after .done() called. (Could it be unintentionally scoped?)';
+    var SCRATCH_INDEX_OUT_OF_BOUNDS = 'Error: Scratchpad usage space out of bounds. (Did you forget to call .done()?)';
+    var SCRATCH_MAX_REACHED = 'Error: Too many scratchpads created. (Did you forget to call .done()?)';
+    var ALREADY_DEFINED_ERROR = 'Error: Object is already registered.';
+
+    // cache previously created scratches
+    var scratches = [];
+    var numScratches = 0;
+    var Scratch, Scratchpad;
+    
+    var regIndex = 0;
+
+
+    /** section: Classes
+     * class Scratch
+     *
+     * A scratchpad session.
+     * 
+     * This class keeps track of temporary objects used
+     * in this session and releases them when finished (call to `.done()`).
+     *
+     * Use this to retrieve temporary objects:
+     * - `.vector()`: retrieve a temporary [[Physics.vector]]
+     * - `.transform()`: retrieve a temporary [[Physics.transform]]
+     *
+     * See [[Physics.scratchpad]] for more info.
+     **/
+    Scratch = function Scratch(){
+
+        // private variables
+        this._active = false;
+        this._indexArr = [];
+        
+        if (++numScratches >= Scratchpad.maxScratches){
+            throw SCRATCH_MAX_REACHED;
+        }
+    };
+
+    Scratch.prototype = {
+
+        /**
+         * Scratch#done( [val] ) -> Mixed
+         * - val (Mixed): No effect on this method, just passed on to the return value so you can do things like:
+         return scratch.done( myReturnVal );
+         * + (Mixed): Whatever you specified as `val`
+         * 
+         * Declare that your work is finished.
+         * 
+         * Release temp objects for use elsewhere. Must be called when immediate work is done.
+         **/
+        done: function( val ){
+
+            this._active = false;
+            this._indexArr = [];
+            // add it back to the scratch stack for future use
+            scratches.push( this );
+            return val;
+        }
+    };
+
+
+    // API
+
+    /**
+     * Physics.scratchpad( [fn] ) -> Scratch|Function
+     * - fn (Function): Some function you'd like to wrap in a scratch session. First argument is the scratch instance.
+     * + (Function): The wrapped function (if `fn` arg specified) that can be reused like the original minus the first (scratch) parameter.
+     * + (Scratch): The scratch session.
+     * 
+     * Get a new scratch session to work from or wrap a function in a scratch session.
+     * 
+     * Call `.done()` on it when finished.
+     *
+     * Example:
+     * 
+     * ```javascript
+     * // get a scratch session manually
+     * var myAlg = function( scratch, arg1, arg2, ... ){
+     *     var scratch = Physics.scratchpad()
+     *     ,vec = scratch.vector().set( 0, 0 ) // need to reinitialize... it's recycled!
+     *     ;
+     *     // ...
+     *     return scratch.done( result );
+     * };
+     * // later...
+     * while( awesome ){
+     *     myAlg( arg1, arg2, ... );
+     * }
+     * ```
+     *
+     * Example:
+     * 
+     * ```javascript
+     * // wrap a function in a scratch session
+     * var myAlg = Physics.scratchpad(function( scratch, arg1, arg2, ... ){
+     *     var vec = scratch.vector().set( 0, 0 ); // need to reinitialize... it's recycled!
+     *     //...
+     *     return result;
+     * });
+     * // later...
+     * while( awesome ){
+     *     myAlg( arg1, arg2, ... );
+     * }
+     * ```
+     **/
+    Scratchpad = function Scratchpad( fn ){
+
+        if ( fn ){
+            return Scratchpad.fn( fn );
+        }
+
+        var scratch = scratches.pop() || new Scratch();
+        scratch._active = true;
+        return scratch;
+    };
+
+    // options
+    Scratchpad.maxScratches = 100; // maximum number of scratches
+    Scratchpad.maxIndex = 20; // maximum number of any type of temp objects
+
+    /**
+     * Physics.scratchpad.fn( fn ) -> Function
+     * - fn (Function): Some function you'd like to wrap in a scratch session. First argument is the scratch instance. See [[Physics.scratchpad]].
+     * + (Function): The wrapped function that can be reused like the original minus the first (scratch) parameter.
+     * 
+     * Wrap a function in a scratch session.
+     *
+     * Same as calling `Physics.scratchpad( fn )` with a function specified.
+     **/
+    Scratchpad.fn = function( fn ){
+        
+        var args = [];
+        for ( var i = 0, l = fn.length; i < l; i++ ){
+            args.push( i );
+        }
+
+        args = 'a' + args.join(',a');
+        /* jshint -W054 */
+        var handle = new Function('fn, scratches, Scratch', 'return function('+args+'){ '+
+               'var scratch = scratches.pop() || new Scratch( scratches );'+
+               'scratch._active = true;'+
+               'return scratch.done( fn(scratch, '+args+') );'+
+           '};'
+        );
+        /* jshint +W054 */
+
+        return handle(fn, scratches, Scratch);
+    };
+
+    /**
+     * Physics.scratchpad.register( name, constructor )
+     * - name (String): Name of the object class
+     * - constructor (Function): The object constructor
+     * 
+     * Register a new object to be included in scratchpads.
+     *
+     * Example:
+     *
+     * ```javascript
+     * // register a hypothetical vector class...
+     * Physics.scratchpad.register('vector', Vector);
+     * ```
+     **/
+    Scratchpad.register = function register( name, constructor, options ){
+
+        var proto = Scratch.prototype
+            ,idx = regIndex++
+            ,stackname = '_' + name + 'Stack'
+            ;
+
+        if ( name in proto ) {
+            throw ALREADY_DEFINED_ERROR;
+        }
+
+        proto[ name ] = function(){
+
+            var stack = this[ stackname ] || ( this[ stackname ] = [])
+                ,stackIndex = (this._indexArr[ idx ] | 0) + 1
+                ,instance
+                ;
+
+            this._indexArr[ idx ] = stackIndex;
+
+            // if used after calling done...
+            if (!this._active){
+                throw SCRATCH_USAGE_ERROR;
+            }
+
+            // if too many objects created...
+            if (stackIndex >= Scratchpad.maxIndex){
+                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
+            }
+
+            // return or create new instance
+            instance = stack[ stackIndex ];
+
+            if ( !instance ){
+                stack.push( instance = new constructor() );
+            }
+
+            return instance;
+        };
+
+    };
+
+    // register some classes
+    Scratchpad.register('vector', Physics.vector);
+    Scratchpad.register('transform', Physics.transform);
+
+    return Scratchpad;
+
+})();
+
+// ---
+// inside: src/util/ticker.js
+
+/**
+ * class Physics.util.ticker
+ * 
+ * The Ticker _singleton_ for easily binding callbacks to animation loops (requestAnimationFrame).
+ *
+ * Requires window.requestAnimationFrame... so polyfill it if you need to.
+ **/
+(function(window){
+        
+    var active = false
+        ,ps = Physics.util.pubsub()
+        ,perf = window.performance
+        ;
+
+    function now(){
+        // http://updates.html5rocks.com/2012/05/requestAnimationFrame-API-now-with-sub-millisecond-precision
+        return (perf && perf.now) ?
+            (perf.now() + perf.timing.navigationStart) : 
+            Date.now();
+    }
+
+    /* 
+     * step( time )
+     * - time (Number): The current time
+     * 
+     * Publish a tick to subscribed callbacks
+     */
+    function step( time ){
+
+        if (!active){
+            return;
+        }
+
+        window.requestAnimationFrame( step );
+        ps.emit( 'tick', time );
+    }
+
+    /** 
+     * Physics.util.ticker.start() -> this
+     * 
+     * Start the ticker
+     **/
+    function start(){
+        
+        active = true;
+        step();
+        return this;
+    }
+
+    /**
+     * Physics.util.ticker.stop() -> this
+     *  
+     * Stop the ticker
+     **/
+    function stop(){
+
+        active = false;
+        return this;
+    }
+
+    /**
+     * Physics.util.ticker.on( listener( time ) ) -> this
+     * - listener (Function): The callback function
+     * - time (Number): The current timestamp
+     * 
+     * Subscribe a callback to the ticker.
+     **/
+    function on( listener ){
+
+        ps.on('tick', listener);
+        return this;
+    }
+
+    /**
+     * Physics.util.ticker.off( listener ) -> this
+     * - listener (Function): The callback function previously bound
+     * 
+     * Unsubscribe a callback from the ticker.
+     **/
+    function off( listener ){
+
+        ps.off('tick', listener);
+        return this;
+    }
+
+    /**
+     * Physics.util.ticker.isActive() -> Boolean
+     * + (Boolean): `true` if running, `false` otherwise.
+     * 
+     * Determine if ticker is currently running.
+     **/
+    function isActive(){
+
+        return !!active;
+    }
+
+    // API
+    Physics.util.ticker = {
+        now: now,
+        start: start,
+        stop: stop,
+        on: on,
+        off: off,
+        isActive: isActive
+    };
+
+}(this));
+
+// ---
 // inside: src/core/query.js
 
 (function (window) {
 
-    /**
+    /*
      * Group helpers
      */
     var fnTrue = function(){ return !0; }; // return true
     
     var indexOf = Physics.util.indexOf;
 
-    /*!
-     * Get test function to test on sub property
-     * @param  {Function} fn   The test function
-     * @param  {String}   prop The property name to test
-     * @return {Function}        The wrapped function
-     */
+    /** hide
+     * wrapRule( fn( propVal ), prop ) -> Function
+     * - fn (Function): The test function
+     * - prop (String): The property name to test
+     * - propVal (Mixed): The property value
+     * 
+     * Get test function to test on sub property.
+     **/
     var wrapRule = function wrapRule( fn, prop ){
         return function( thing ){
             return fn( thing[ prop ] );
         };
     };
 
-    /*!
-     * Get an equality test function
-     * @param  {Mixed} toMatch The value to match
-     * @param  {String} prop    (optional) The property name to test
-     * @return {Function}         The test function
-     */
+    /** hide
+     * $eq( toMatch[, prop] ) -> Function
+     * - toMatch (Mixed): The value to match
+     * - prop (String): The property name to test
+     * 
+     * Get an equality test function.
+     **/
     var $eq = function $eq( toMatch, prop ){
         return function( thing ){
             
@@ -2129,12 +2442,13 @@ if (!Date.now){
         };
     };
 
-    /*!
-     * Get a NOT equality test function
-     * @param  {Mixed} toMatch The value to match
-     * @param  {String} prop    (optional) The property name to test
-     * @return {Function}         The test function
-     */
+    /** hide
+     * $ne( toMatch[, prop] ) -> Function
+     * - toMatch (Mixed): The value to match
+     * - prop (String): The property name to test
+     * 
+     * Get a NOT equality test function.
+     **/
     var $ne = function $ne( toMatch, prop ){
         var fn = $eq( toMatch, prop );
         return function( thing ){
@@ -2142,12 +2456,13 @@ if (!Date.now){
         };
     };
 
-    /*!
+    /** hide
+     * $in( toMatch[, prop] ) -> Function
+     * - toMatch (Array): The array to match
+     * - prop (String): The property name to test
+     * 
      * Get a test function for matching ANY in array
-     * @param  {Mixed} toMatch The value array to match
-     * @param  {String} prop    (optional) The property name to test
-     * @return {Function}         The test function
-     */
+     **/
     var $in = function $in( toMatch, prop ){
         return function( thing ){
 
@@ -2180,12 +2495,13 @@ if (!Date.now){
         };
     };
 
-    /*!
+    /** hide
+     * $nin( toMatch[, prop] ) -> Function
+     * - toMatch (Array): The array to match
+     * - prop (String): The property name to test
+     * 
      * Get a test function for matching NOT ANY in array
-     * @param  {Mixed} toMatch The value array to match
-     * @param  {String} prop    (optional) The property name to test
-     * @return {Function}         The test function
-     */
+     **/
     var $nin = function $nin( toMatch, prop ){
         var fn = $in( toMatch, prop );
         return function( thing ){
@@ -2193,11 +2509,12 @@ if (!Date.now){
         };
     };
 
-    /*!
+    /** hide
+     * $at( point ) -> Function
+     * - point (Vectorish): The point to check
+     * 
      * Get a test function to match any body who's aabb intersects point
-     * @param  {Vectorish} point The point to check
-     * @return {Function}       The test function
-     */
+     **/
     var $at = function $at( point ){
         point = Physics.vector( point );
         return function( body ){
@@ -2206,11 +2523,12 @@ if (!Date.now){
         };
     };
 
-    /*!
-     * Get an AND test function
-     * @param  {Function} first First function node
-     * @return {Function}       Test function
-     */
+    /** hide
+     * $and( first ) -> Function
+     * - first (Function): First function node. `first.next` should have the next function, and so on.
+     * 
+     * Get an AND test function.
+     **/
     var $and = function $and( first ){
         return first.next ? function( thing ){
             var fn = first;
@@ -2225,11 +2543,12 @@ if (!Date.now){
         } : first;
     };
 
-    /*!
-     * Get an OR test function
-     * @param  {Function} first First function node
-     * @return {function}       Test function
-     */
+    /** hide
+     * $or( first ) -> Function
+     * - first (Function): First function node. `first.next` should have the next function, and so on.
+     * 
+     * Get an OR test function.
+     **/
     var $or = function $or( first ){
         return first.next ? function( thing ){
             var fn = first;
@@ -2254,12 +2573,62 @@ if (!Date.now){
         ,$at: $at
     };
 
-    /**
-     * Query factory.
-     * Creates a function that can be used to perform searches on collections of objects
-     * @param {Object} rules The mongodb-like search rules
-     * @return {Function} The query function
-     */
+    /** related to: Physics.world#find
+     * Physics.query( rules ) -> Function
+     * - rules (Object): The mongodb-like search rules. (See description).
+     * + (Function): The test function
+     * 
+     * Creates a function that can be used to perform tests on objects.
+     *
+     * The test function will return a [[Boolean]]; `true` if the object matches the tests.
+     *
+     * Query rules are mongodb-like. You can specify a hash of values to match like this:
+     *
+     * ```javascript
+     * {
+     *     foo: 'bar',
+     *     baz: 2,
+     *     some: {
+     *         nested: 'value'
+     *     }
+     * }
+     * ```
+     *
+     * And they will all need to match (it's an AND rule).
+     *
+     * You can also use operators for more versatility. The operators you can use include:
+     *
+     * - $eq: Test if some property is equal to a value (this is done by default, and is thus redundant)
+     * - $ne: Test if some property is _NOT_ equal to a value
+     * - $in: Test if some value (or array of values) is one of the specified array of values
+     * - $nin: Test if some value (or array of values) is _NOT_ one of the specified array of values
+     * - $at: Test if a body's [[Physics.aabb]] includes specified point. It's a primative hit-test.
+     * 
+     * Example:
+     *
+     * ```javascript
+     * var wheelsArray = [];
+     * 
+     * var queryFn = Physics.query({
+     *     name: 'circle', // only circles
+     *     $nin: wheelsArray, // not in the wheelsArray
+     *     labels: { $in: [ 'player', 'monster' ] } // that have player OR monster labels
+     * });
+     *
+     * var obj = {
+     *     name: 'circle',
+     *     labels: [ 'round' ]
+     * };
+     *
+     * queryFn( obj ); // -> false
+     * // give it a player tag
+     * obj.labels.push('player');
+     * queryFn( obj ); // -> true
+     * // put it inside the wheelsArray
+     * wheelsArray.push( obj );
+     * queryFn( obj ); // -> false
+     * ```
+     **/
     var Query = function Query( rules, /* internal use */ $op ){
 
         var op
@@ -2334,25 +2703,65 @@ if (!Date.now){
         priority: 0
     };
 
-    // Service
+    /** related to: Physics.util.decorator
+     * Physics.behavior( name[, options] ) -> Behavior
+     * - name (String): The name of the behavior to create
+     * - options (Object): The configuration for that behavior ( depends on behavior ).
+       Available options and defaults:
+       
+       ```javascript
+        {
+           priority: 0 // the priority of this body
+        }
+       ```
+     *
+     * Factory function for creating Behaviors.
+     *
+     * Visit [the PhysicsJS wiki on Behaviors](https://github.com/wellcaffeinated/PhysicsJS/wiki/Behaviors)
+     * for usage documentation.
+     **/
     Physics.behavior = Decorator('behavior', {
 
-        /**
-         * Initialization
-         * @param  {Object} options Config options passed by initializer
-         * @return {void}
-         */
+        /** section: Classes
+         * class Behavior
+         *
+         * The base class for behaviors created by [[Physics.behavior]] factory function.
+         **/
+
+        /** internal
+         * Behavior#init( options )
+         * - options (Object): The configuration options passed by the factory
+         * 
+         * Initialization. Internal use.
+         **/
         init: function( options ){
             
+            /** related to: Physics.util.options
+             * Behavior#options( options ) -> Object
+             * - options (Object): The options to set as an object
+             * + (Object): The options
+             * 
+             * Set options on this instance. 
+             * 
+             * Access options directly from the options object.
+             * 
+             * Example:
+             *
+             * ```javascript
+             * this.options.someOption;
+             * ```
+             * 
+             **/
             this.options = Physics.util.options( defaults );
             this.options( options );
         },
 
         /**
-         * Apply the behavior to a group of bodies
-         * @param  {Array} arr Array of bodies to apply to OR set to true to apply to all bodies in world
-         * @return {self}
-         */
+         * Behavior#applyTo( arr ) -> this
+         * - arr (Array): Array of bodies to apply this behavior to. Specify `true` for all objects in world.
+         * 
+         * Apply the behavior to a group of bodies.
+         **/
         applyTo: function( arr ){
 
             if ( arr === true ){
@@ -2364,19 +2773,24 @@ if (!Date.now){
         },
 
         /**
+         * Behavior#getTargets() -> Array
+         * + (Array): The array of bodies (by reference!) this behavior is applied to.
+         * 
          * Get the array of bodies (by reference!) this behavior is applied to.
-         * @return {Array} Array of bodies the behavior applies to
-         */
+         **/
         getTargets: function(){
             
             return this._targets || ( this._world ? this._world._bodies : [] );
         },
 
         /**
-         * Set which world to apply to
-         * @param {Object} world The world (or null)
-         * @return {self}
-         */
+         * Behavior#setWorld( world ) -> this
+         * - world (Object): The world (or null)
+         *
+         * Set which world to apply to.
+         *
+         * Usually this is called internally. Shouldn't be a need to call this yourself usually.
+         **/
         setWorld: function( world ){
 
             if ( this.disconnect && this._world ){
@@ -2393,10 +2807,14 @@ if (!Date.now){
         },
 
         /**
-         * Connect to world. Automatically called when added to world by the setWorld method
-         * @param  {Object} world The world to connect to
-         * @return {void}
-         */
+         * Behavior#connect( world )
+         * - world (Physics.world): The world to connect to
+         * 
+         * Connect to a world.
+         *
+         * Extend this when creating behaviors if you need to specify pubsub management.
+         * Automatically called when added to world by the [[Behavior#setWorld]] method.
+         **/
         connect: function( world ){
 
             if (this.behave){
@@ -2405,10 +2823,14 @@ if (!Date.now){
         },
 
         /**
-         * Disconnect from world
-         * @param  {Object} world The world to disconnect from
-         * @return {void}
-         */
+         * Behavior#disconnect( world )
+         * - world (Physics.world): The world to disconnect from
+         * 
+         * Disconnect from a world.
+         *
+         * Extend this when creating behaviors if you need to specify pubsub management.
+         * Automatically called when added to world by the [[Behavior#setWorld]] method.
+         **/
         disconnect: function( world ){
 
             if (this.behave){
@@ -2417,11 +2839,14 @@ if (!Date.now){
         },
 
         /**
-         * Default method run on every world integration
-         * @abstract
-         * @param  {Object} data Object containing event data, including: data.bodies = Array of world bodies to act on, data.dt = the timestep size
-         * @return {void}
-         */
+         * Behavior#behave( data )
+         * - data (Object): The pubsub `integrate:positions` event data
+         * 
+         * Default method run on every world integration.
+         *
+         * You _must_ extend this when creating a behavior,
+         * unless you extend the [[Behavior#connect]] and [[Behavior#disconnect]] methods.
+         **/
         behave: null
     });
 
@@ -2436,8 +2861,9 @@ if (!Date.now){
 
         // is the body hidden (not to be rendered)?
         hidden: false,
-        // is the body fixed and imovable?
-        fixed: false,
+        // is the body `dynamic`, `kinematic` or `static`?
+        // http://www.box2d.org/manual.html#_Toc258082973
+        treatment: 'dynamic',
         // body mass
         mass: 1.0,
         // body restitution. How "bouncy" is it?
@@ -2447,23 +2873,90 @@ if (!Date.now){
         // what is the view object (mixed) that should be used when rendering?
         view: null
     };
-
+    /** related to: Physics.util.decorator
+     * Physics.body( name[, options] ) -> Body
+     * - name (String): The name of the body to create
+     * - options (Object): The configuration for that body ( depends on body ).
+       Available options and defaults:
+       
+       ```javascript
+        {
+            // is the body hidden (not to be rendered)?
+            hidden: false,
+            // is the body `dynamic`, `kinematic` or `static`?
+            // http://www.box2d.org/manual.html#_Toc258082973
+            treatment: 'dynamic',
+            // body mass
+            mass: 1.0,
+            // body restitution. How "bouncy" is it?
+            restitution: 1.0,
+            // what is its coefficient of friction with another surface with COF = 1?
+            cof: 0.8,
+            // what is the view object (mixed) that should be used when rendering?
+            view: null
+        }
+       ```
+     *
+     * Factory function for creating Bodies.
+     *
+     * Visit [the PhysicsJS wiki on Bodies](https://github.com/wellcaffeinated/PhysicsJS/wiki/Bodies)
+     * for usage documentation.
+     **/
     Physics.body = Decorator('body', {
 
-        /**
-         * Initialization
-         * @param  {Object} options Config options passed by initializer
-         * @return {void}
-         */
+        /** section: Classes
+         * class Body
+         *
+         * The base class for behaviors created by [[Physics.body]] factory function.
+         **/
+
+        /** internal
+         * Body#init( options )
+         * - options (Object): The configuration options passed by the factory
+         * 
+         * Initialization. Internal use.
+         **/
         init: function( options ){
 
             var vector = Physics.vector;
 
-            // properties set onto 
+            /** related to: Physics.util.options
+             * Body#options( options ) -> Object
+             * - options (Object): The options to set as an object
+             * + (Object): The options
+             * 
+             * Set options on this instance. 
+             * 
+             * Access options directly from the options object.
+             * 
+             * Example:
+             *
+             * ```javascript
+             * this.options.someOption;
+             * ```
+             * 
+             **/
+            // all options get copied onto the body.
             this.options = Physics.util.options( defaults, this );
             this.options( options );
 
-            // physical properties
+            /** 
+             * Body#state
+             *
+             * The physical state container.
+             *
+             * - ``this.state.pos`` ([[Physics.vector]]) The position vector.
+             * - ``this.state.vel`` ([[Physics.vector]]) The velocity vector.
+             * - ``this.state.acc`` ([[Physics.vector]]) The acceleration vector.
+             * - ``this.state.angular.pos`` ([[Number]]) The angular position (in radians, positive is clockwise starting along the x axis)
+             * - ``this.state.angular.vel`` ([[Number]]) The angular velocity
+             * - ``this.state.angular.acc`` ([[Number]]) The angular acceleration
+             *
+             * Properties from the previous timestep are stored in:
+             * ```javascript
+             * this.state.old; // .pos, .vel, ...
+             * ```
+             **/
             this.state = {
                 pos: vector( this.x, this.y ),
                 vel: vector( this.vx, this.vy ),
@@ -2497,15 +2990,106 @@ if (!Date.now){
                 throw "Error: Bodies must have non-zero mass";
             }
 
-            // shape
+            /** related to: Physics.geometry
+             * Body#geometry
+             * 
+             * The geometry for this body.
+             *
+             * By default it is a `point` geometry which gets overridden.
+             **/
             this.geometry = Physics.geometry('point');
+
+            /** 
+             * Body#mass = 1.0
+             *
+             * The mass.
+             **/
+
+             /** 
+              * Body#restitution = 1.0
+              *
+              * The restitution.
+              *
+              * This is the "bounciness" of the body.
+              * It's a number between `0` and `1`.
+              * 
+              * A restitution of 1 is the bounciest.
+              *
+              * A restitution of 0 is not bouncy.
+              * 
+              * When colliding the restitutions of bodies are
+              * multiplied together to get the restitution between two
+              * bodies.
+              *
+              **/
+
+              /**
+               * Body#cof = 0.8
+               *
+               * The coefficient of friction of the body.
+               *
+               * It's how much "slide" it has during collisions.
+               *
+               * A `cof` of `0` will really slidy.
+               *
+               * A `cof` of `1` has no slide.
+               *
+               * This is a very simplistic implementation at the moment.
+               * What would be better is to have both static and kinetic
+               * friction. But that's not done yet.
+               **/
+
+               /**
+                * Body#treatment = String
+                *
+                * How the body is treated by the simulation.
+                *
+                * The body can be `dynamic`, `kinematic` or `static` as
+                * described by the [analogous box2d docs](http://www.box2d.org/manual.html#_Toc258082973).
+                *
+                * * _dynamic_ bodies are treated "normally". They are integrated, and collide, and all that.
+                * * _kinematic_ bodies are bodies that move at a specified velocity. Other bodies collide with them, but they don't bounce off of other bodies.
+                * * _static_ bodies just stand still. They are like obstacles.
+                **/
+
+                /**
+                 * Body#hidden = false
+                 *
+                 * Determines whether the body should be hidden by the renderer.
+                 **/
+
+                /** related to: Physics.renderer
+                 * Body#view = it_depends
+                 *
+                 * Storage for use by the renderer.
+                 *
+                 * The type of renderer will put different things in the view property.
+                 * Basically, this is how the body "looks". It could be a HTMLElement, or
+                 * an Image, etc...
+                 *
+                 * If your body changes appearance (shape), you should modify this somehow
+                 * otherwise the renderer will keep using this same view. If you're letting
+                 * the renderer create the view for you, just set this to `undefined` if the
+                 * body gets modified in shape during the simulation.
+                 **/
+
+                /** related to: Physics.renderer
+                 * Body#style
+                 *
+                 * The styles the renderer should use for creating the view.
+                 *
+                 * The styles depend on the renderer. See [[Renderer#createView]] for style options.
+                 **/
         },
 
         /**
-         * Set which world to apply to
-         * @param {Object} world The world (or null)
-         * @return {self}
-         */
+         * Body#setWorld( world ) -> this
+         * - world (Object): The world (or null)
+         *
+         * Set which world to apply to.
+         *
+         * Usually this is called internally. Shouldn't be a need to call this yourself usually.
+         **/
         setWorld: function( world ){
 
             if ( this.disconnect && this._world ){
@@ -2522,23 +3106,32 @@ if (!Date.now){
         },
 
         /**
+         * Body#accelerate( acc ) -> this
+         * - acc (Physics.vector): The acceleration vector
+         * 
          * Accelerate the body by adding supplied vector to its current acceleration
-         * @param  {Vector} acc The acceleration vector
-         * @return {this}
-         */
+         **/
         accelerate: function( acc ){
 
-            this.state.acc.vadd( acc );
+            if ( this.treatment === 'dynamic' ){
+                this.state.acc.vadd( acc );
+            }
+            
             return this;
         },
 
         /**
-         * Apply a force at center of mass, or at point "p" relative to the center of mass
-         * @param  {Vector} force The force vector
-         * @param  {Vector} p     (optional) The point vector from the COM at which to apply the force
-         * @return {this}
-         */
+         * Body#applyForce( force[, p] ) -> this
+         * - force (Vectorish): The force vector
+         * - p (Vectorish): The point vector from the COM at which to apply the force
+         * 
+         * Apply a force at center of mass, or at point `p` relative to the center of mass
+         **/
         applyForce: function( force, p ){
+
+            if ( this.treatment !== 'dynamic' ){
+                return this;
+            }
 
             var scratch = Physics.scratchpad()
                 ,r = scratch.vector()
@@ -2567,33 +3160,34 @@ if (!Date.now){
             return this;
         },
 
-        /**
+        /** related to: Physics.aabb
+         * Body#aabb() -> Object
+         * + (Object): The aabb of this body
+         * 
          * Get the Axis aligned bounding box for the body in its current position and rotation
-         * @return {Object} The aabb values
-         */
+         **/
         aabb: function(){
 
-            var scratch = Physics.scratchpad()
-                ,trans = scratch.transform()
-                ,angle = this.state.angular.pos
-                ,aabb = scratch.aabb().set( this.geometry.aabb( angle ) )
+            var angle = this.state.angular.pos
+                ,aabb = this.geometry.aabb( angle )
                 ;
 
-            trans.setRotation( 0 ).setTranslation(this.state.pos);
-            aabb.transform( trans );
+            aabb.x += this.state.pos.x;
+            aabb.y += this.state.pos.y;
 
-            aabb = aabb.get();
-            scratch.done();
             return aabb;
         },
 
         /**
-         * Recalculate properties. Call when body physical properties are changed.
-         * @abstract
-         * @return {this}
-         */
+         * Body#recalc() -> this
+         * 
+         * Recalculate properties.
+         * 
+         * Intended to be overridden by subclasses. Call when body physical properties are changed.
+         **/
         recalc: function(){
             // override to recalculate properties
+            return this;
         }
     });
 
@@ -2603,38 +3197,86 @@ if (!Date.now){
 // inside: src/core/geometry.js
 
 (function(){
-
+    /** related to: Physics.util.decorator
+     * Physics.geometry( name[, options] ) -> Geometry
+     * - name (String): The name of the geometry to create
+     * - options (Object): The configuration for that geometry ( depends on geometry ).
+     *
+     * Factory function for creating Geometries.
+     *
+     * Visit [the PhysicsJS wiki on Geometries](https://github.com/wellcaffeinated/PhysicsJS/wiki/Geometries)
+     * for usage documentation.
+     **/
     Physics.geometry = Decorator('geometry', {
 
-        /**
-         * Initialization
-         * @param  {Object} options Config options passed by initializer
-         * @return {void}
-         */
+        /** section: Classes
+         * class Geometry
+         *
+         * The base class for geometries created by [[Physics.geometry]] factory function.
+         **/
+
+        /** internal
+         * Geometry#init( options )
+         * - options (Object): The configuration options passed by the factory
+         * 
+         * Initialization. Internal use.
+         **/
         init: function( options ){
+
+            /** related to: Physics.util.options
+             * Geometry#options( options ) -> Object
+             * - options (Object): The options to set as an object
+             * + (Object): The options
+             * 
+             * Set options on this instance. 
+             * 
+             * Access options directly from the options object.
+             * 
+             * Example:
+             *
+             * ```javascript
+             * this.options.someOption;
+             * ```
+             * 
+             **/
+            this.options = Physics.util.options();
+            this.options( options );
 
             this._aabb = new Physics.aabb();
         },
         
-        /**
+        /** related to: Physics.aabb
+         * Geometry#aabb( angle ) -> Object
+         * - angle (Number): The angle to rotate the geometry
+         * + (Object): Bounding box values
+         * 
          * Get axis-aligned bounding box for this object (rotated by angle if specified).
-         * @param  {Number} angle (optional) The angle to rotate the geometry.
-         * @return {Object}       Bounding box values
-         */
+         **/
         aabb: function( angle ){
 
-            return this._aabb.get();
+            return Physics.aabb.clone(this._aabb);
         },
 
         /**
+         * Geometry#getFarthestHullPoint( dir[, result] ) -> Physics.vector
+         * - dir (Physics.vector): Direction to look
+         * - result (Physics.vector): A vector to write result to. Speeds up calculations.
+         * + (Physics.vector): The farthest hull point in local coordinates
+         * 
          * Get farthest point on the hull of this geometry
-         * along the direction vector "dir"
-         * returns local coordinates
-         * replaces result if provided
-         * @param {Vector} dir Direction to look
-         * @param {Vector} result (optional) A vector to write result to
-         * @return {Vector} The farthest hull point in local coordinates
-         */
+         * along the direction vector `dir`
+         * returns local coordinates. Replaces result if provided.
+         *
+         * Assume all coordinates are relative to the geometry 
+         * centroid (IE: in the body frame).
+         * 
+         * This should take a direction vector then it should
+         * calculate the location (in that frame of reference)
+         * of the point on the perimeter (hull) if you traveled
+         * in a straight line from the centroid in the provided
+         * direction. The result should be returned/set just like
+         * it is in the other geometries.
+         **/
         getFarthestHullPoint: function( dir, result ){
 
             result = result || Physics.vector();
@@ -2643,15 +3285,20 @@ if (!Date.now){
             return result.set( 0, 0 );
         },
 
-        /**
-         * Get farthest point on the core of this geometry
-         * along the direction vector "dir"
-         * returns local coordinates
-         * replaces result if provided
-         * @param {Vector} dir Direction to look
-         * @param {Vector} result (optional) A vector to write result to
-         * @return {Vector} The farthest core point in local coordinates
-         */
+        /** related to: Geometry#getFarthestHullPoint
+         * Geometry#getFarthestCorePoint( dir[, result] ) -> Physics.vector
+         * - dir (Physics.vector): Direction to look
+         * - result (Physics.vector): A vector to write result to. Speeds up calculations.
+         * + (Physics.vector): The farthest hull point in local coordinates
+         * 
+         * Get farthest point on the core shape of this geometry
+         * along the direction vector `dir`
+         * returns local coordinates. Replaces result if provided.
+         *
+         * This does almost the same thing as [[Geometry#getFarthestHullPoint]]
+         * but shrinks the shape by subtracting "margin" from it.
+         * Return the position of the point on the "core" shape.
+         **/
         getFarthestCorePoint: function( dir, result, margin ){
 
             result = result || Physics.vector();
@@ -2666,15 +3313,17 @@ if (!Date.now){
 // ---
 // inside: src/core/geometry-helpers.js
 
-/**
+/*
  * Geometry helper functions
  */
 
 /**
+ * Physics.geometry.isPolygonConvex( hull ) -> Boolean
+ * - hull (Array): Array of ([[Vectorish]]) vertices
+ * + (Boolean): `true` if the polygon is convex. `false` otherwise.
+ * 
  * Determine if polygon hull is convex
- * @param  {Array}  hull Array of vertices (Vectorish)
- * @return {Boolean}
- */
+ **/
 Physics.geometry.isPolygonConvex = function( hull ){
 
     var scratch = Physics.scratchpad()
@@ -2727,14 +3376,19 @@ Physics.geometry.isPolygonConvex = function( hull ){
 };
 
 /**
+ * Physics.geometry.getPolygonMOI( hull ) -> Number
+ * - hull (Array): Array of ([[Vectorish]]) vertices
+ * + (Number): The polygon's moment of inertia
+ * 
  * Gets the moment of inertia of a convex polygon
- * @see: http://en.wikipedia.org/wiki/List_of_moments_of_inertia
- * assumptions: 
- *  * mass is unitary
- *  * axis of rotation is the origin
- * @param  {Array} hull Array of vertices (vectorish)
- * @return {Number} The polygon MOI
- */
+ *
+ * See [List of moments of inertia](http://en.wikipedia.org/wiki/List_of_moments_of_inertia)
+ * for more information.
+ * 
+ * _Note_: we make the following assumpations: 
+ * * mass is unitary (== 1)
+ * * axis of rotation is the origin
+ **/
 Physics.geometry.getPolygonMOI = function( hull ){
 
     var scratch = Physics.scratchpad()
@@ -2779,11 +3433,13 @@ Physics.geometry.getPolygonMOI = function( hull ){
 };
 
 /**
- * Check if point is inside polygon hull
- * @param  {Vectorish}  pt
- * @param  {Array}  hull Array of vertices (Vectorish)
- * @return {Boolean}
- */
+ * Physics.geometry.isPointInPolygon( pt, hull ) -> Boolean
+ * - pt (Vectorish): The point to test
+ * - hull (Array): Array of ([[Vectorish]]) vertices
+ * + (Boolean): `true` if point `pt` is inside the polygon
+ * 
+ * Check if point is inside polygon hull.
+ **/
 Physics.geometry.isPointInPolygon = function( pt, hull ){
 
     var scratch = Physics.scratchpad()
@@ -2825,10 +3481,12 @@ Physics.geometry.isPointInPolygon = function( pt, hull ){
 };
 
 /**
- * Get the signed area of the polygon
- * @param  {Array} hull Array of vertices
- * @return {Number} Area (positive for clockwise ordering)
- */
+ * Physics.geometry.getPolygonArea( hull ) -> Number
+ * - hull (Array): Array of ([[Vectorish]]) vertices
+ * + (Number): The area (positive for clockwise ordering)
+ * 
+ * Get the signed area of the polygon.
+ **/
 Physics.geometry.getPolygonArea = function getPolygonArea( hull ){
 
     var scratch = Physics.scratchpad()
@@ -2861,10 +3519,12 @@ Physics.geometry.getPolygonArea = function getPolygonArea( hull ){
 };
 
 /**
- * Get the coordinates of the centroid
- * @param  {Array} hull Polygon hull definition
- * @return {Vector} centroid
- */
+ * Physics.geometry.getPolygonCentroid( hull ) -> Physics.vector
+ * - hull (Array): Array of ([[Vectorish]]) vertices
+ * + (Physics.vector): The centroid
+ * 
+ * Get the coordinates of the centroid.
+ **/
 Physics.geometry.getPolygonCentroid = function getPolygonCentroid( hull ){
 
     var scratch = Physics.scratchpad()
@@ -2908,12 +3568,14 @@ Physics.geometry.getPolygonCentroid = function getPolygonCentroid( hull ){
 };
 
 /**
+ * Physics.geometry.nearestPointOnLine( pt, linePt1, linePt2 ) -> Physics.vector
+ * - pt (Vectorish): The point
+ * - linePt1 (Vectorish): The first endpoint of the line
+ * - linePt2 (Vectorish): The second endpoint of the line
+ * + (Vector): The closest point
+ * 
  * Get the closest point on a discrete line to specified point.
- * @param  {Vectorish} pt The point
- * @param  {Vectorish} linePt1 The first endpoint of the line
- * @param  {Vectorish} linePt2 The second endpoint of the line
- * @return {Vector} The closest point
- */
+ **/
 Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, linePt2 ){
 
     var scratch = Physics.scratchpad()
@@ -2956,9 +3618,6 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
 // ---
 // inside: src/core/integrator.js
 
-/**
- * Base integrator definition
- */
 (function(){
 
     var defaults = {
@@ -2969,23 +3628,69 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         drag: 0
     };
 
+    /** related to: Physics.util.decorator
+     * Physics.integrator( name[, options] ) -> Integrator
+     * - name (String): The name of the integrator to create
+     * - options (Object): The configuration for that integrator ( depends on integrator ).
+       Available options and defaults:
+       
+       ```javascript
+        {
+            // drag applied during integration
+            // 0 means vacuum
+            // 0.9 means molasses
+            drag: 0
+        }
+       ```
+     *
+     * Factory function for creating Integrators.
+     *
+     * Visit [the PhysicsJS wiki on Integrators](https://github.com/wellcaffeinated/PhysicsJS/wiki/Integrators)
+     * for usage documentation.
+     **/
     Physics.integrator = Decorator('integrator', {
 
-        /**
-         * Initialization
-         * @param  {Object} options Config options passed by initializer
-         * @return {void}
-         */
+        /** section: Classes
+         * class Integrator
+         *
+         * The base class for geometries created by [[Physics.geometry]] factory function.
+         **/
+
+        /** internal
+         * Integrator#init( options )
+         * - options (Object): The configuration options passed by the factory
+         * 
+         * Initialization. Internal use.
+         **/
         init: function( options ){
             
+            /** related to: Physics.util.options
+             * Integrator#options( options ) -> Object
+             * - options (Object): The options to set as an object
+             * + (Object): The options
+             * 
+             * Set options on this instance. 
+             * 
+             * Access options directly from the options object.
+             * 
+             * Example:
+             *
+             * ```javascript
+             * this.options.someOption;
+             * ```
+             * 
+             **/
             this.options = Physics.util.options( defaults );
         },
 
         /**
-         * Set which world to apply to
-         * @param {Object} world The world (or null)
-         * @return {self}
-         */
+         * Integrator#setWorld( world ) -> this
+         * - world (Object): The world (or null)
+         *
+         * Set which world to apply to.
+         *
+         * Usually this is called internally. Shouldn't be a need to call this yourself usually.
+         **/
         setWorld: function( world ){
 
             if ( this.disconnect && this._world ){
@@ -3002,11 +3707,15 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
-         * Integrate bodies by timestep
-         * @param  {Array} bodies List of bodies to integrate
-         * @param  {Number} dt     Timestep size
-         * @return {this}
-         */
+         * Integrator#integrate( bodies, dt ) -> this
+         * - bodies (Array): List of bodies to integrate
+         * - dt (Number): Timestep size
+         * 
+         * Integrate bodies by timestep.
+         *
+         * Will emit `integrate:velocities` and `integrate:positions`
+         * events on the world.
+         **/
         integrate: function( bodies, dt ){
 
             var world = this._world;
@@ -3033,22 +3742,52 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
-         * Just integrate the velocities
-         * @abstract
-         * @param  {Array} bodies List of bodies to integrate
-         * @param  {Number} dt     Timestep size
-         */
+         * Integrator#connect( world )
+         * - world (Physics.world): The world to connect to
+         * 
+         * Connect to a world.
+         *
+         * Extend this when creating integrators if you need to specify pubsub management.
+         * Automatically called when added to world by the [[Integrator#setWorld]] method.
+         **/
+        connect: null,
+
+        /**
+         * Integrator#disconnect( world )
+         * - world (Physics.world): The world to disconnect from
+         * 
+         * Disconnect from a world.
+         *
+         * Extend this when creating integrators if you need to specify pubsub management.
+         * Automatically called when added to world by the [[Integrator#setWorld]] method.
+         **/
+        disconnect: null,
+
+        /**
+         * Integrator#integrateVelocities( bodies, dt )
+         * - bodies (Array): List of bodies to integrate
+         * - dt (Number): Timestep size
+         * 
+         * Just integrate the velocities.
+         *
+         * Should be overridden when creating integrators.
+         **/
         integrateVelocities: function( bodies, dt ){
 
             throw 'The integrator.integrateVelocities() method must be overriden';
         },
 
         /**
-         * Just integrate the positions
-         * @abstract
-         * @param  {Array} bodies List of bodies to integrate
-         * @param  {Number} dt     Timestep size
-         */
+         * Integrator#integratePositions( bodies, dt )
+         * - bodies (Array): List of bodies to integrate
+         * - dt (Number): Timestep size
+         * 
+         * Just integrate the positions.
+         *
+         * Called after [[Integrator#integrateVelocities]].
+         * 
+         * Should be overridden when creating integrators.
+         **/
         integratePositions: function( bodies, dt ){
 
             throw 'The integrator.integratePositions() method must be overriden';
@@ -3060,9 +3799,6 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
 // ---
 // inside: src/core/renderer.js
 
-/**
- * Base renderer class definition
- */
 (function(){
 
     var defaults = {
@@ -3077,14 +3813,45 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         height: 600
     };
 
-    // Service
+    /** related to: Physics.util.decorator
+     * Physics.renderer( name[, options] ) -> Renderer
+     * - name (String): The name of the renderer to create
+     * - options (Object): The configuration for that renderer ( depends on renderer ).
+       Available options and defaults:
+       
+       ```javascript
+        {
+            // draw meta data (fps, steps, etc)
+            meta: false,
+            // refresh rate of meta info
+            metaRefresh: 200,
+
+            // width of viewport
+            width: 600,
+            // height of viewport
+            height: 600
+        }
+       ```
+     *
+     * Factory function for creating Renderers.
+     *
+     * Visit [the PhysicsJS wiki on Renderers](https://github.com/wellcaffeinated/PhysicsJS/wiki/Renderers)
+     * for usage documentation.
+     **/
     Physics.renderer = Decorator('renderer', {
 
-        /**
-         * Initialization
-         * @param  {Object} options Options passed to the initializer
-         * @return {void}
-         */
+        /** section: Classes
+         * class Renderer
+         *
+         * The base class for renderers created by [[Physics.renderer]] factory function.
+         **/
+
+        /** internal
+         * Renderer#init( options )
+         * - options (Object): The configuration options passed by the factory
+         * 
+         * Initialization. Internal use.
+         **/
         init: function( options ){
 
             var el = typeof options.el === 'string' ? document.getElementById(options.el) : options.el
@@ -3097,10 +3864,13 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
-         * Set which world to apply to
-         * @param {Object} world The world (or null)
-         * @return {self}
-         */
+         * Renderer#setWorld( world ) -> this
+         * - world (Object): The world (or null)
+         *
+         * Set which world to apply to.
+         *
+         * Usually this is called internally. Shouldn't be a need to call this yourself usually.
+         **/
         setWorld: function( world ){
 
             if ( this.disconnect && this._world ){
@@ -3117,11 +3887,12 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
+         * Renderer#render( bodies, meta ) -> this
+         * - bodies (Array): Array of bodies in the world (by reference!)
+         * - meta (Object): meta information
+         * 
          * Render the world bodies and meta. Called by world.render()
-         * @param  {Array} bodies Array of bodies in the world (reference!)
-         * @param  {Object} meta  meta object
-         * @return {this}
-         */
+         **/
         render: function( bodies, meta ){
 
             var body
@@ -3147,7 +3918,7 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             for ( var i = 0, l = bodies.length; i < l; ++i ){
                 
                 body = bodies[ i ];
-                view = body.view || ( body.view = this.createView(body.geometry) );
+                view = body.view || ( body.view = this.createView(body.geometry, body.styles) );
 
                 if ( !body.hidden ){
                     this.drawBody( body, view );
@@ -3158,12 +3929,22 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
-         * Create a view for the specified geometry
-         * @abstract
-         * @param  {Object} geometry The geometry
-         * @return {Mixed} Whatever the renderer needs to render the body.
-         */
-        createView: function( geometry ){
+         * Renderer#createView( geometry, styles ) -> Mixed
+         * - geometry (Geometry): geometry The geometry
+         * - styles (Object|String): The styles configuration
+         * + (Mixed): Whatever the renderer needs to render the body.
+         * 
+         * Create a view for the specified geometry.
+         *
+         * The view is used to render the body. It is a cached version
+         * of the body that gets moved and rotated according to the simulation.
+         *
+         * The styles are used to modify the appearance of the view.
+         * They depend on the renderer.
+         *
+         * Override this when creating renderers.
+         **/
+        createView: function( geometry, styles ){
 
             // example:
             // var el = document.createElement('div');
@@ -3174,10 +3955,22 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
+         * Renderer#drawMeta( meta )
+         * - meta (Object): The meta data
+         * 
          * Draw the meta data.
-         * @abstract
-         * @param  {Object} meta The meta data
-         */
+         *
+         * The meta data will look like this:
+         *
+         * ```javascript
+         * meta = {
+         *     fps: 60, // the frames per second
+         *     ipf: 4 // the number of iterations per frame
+         * };
+         * ```
+         *
+         * Override this when creating renderers.
+         **/
         drawMeta: function( meta ){
             
             // example:
@@ -3187,11 +3980,14 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
-         * Draw specified body using specified view
-         * @abstract
-         * @param  {Object} body The body
-         * @param  {Object} view The view
-         */
+         * Renderer#drawBody( body, view )
+         * - body (Object): The body to draw
+         * - view (Object): The view for the body
+         * 
+         * Draw specified body using specified view.
+         *
+         * Override this when creating renderers.
+         **/
         drawBody: function( body, view ){
 
             // example (pseudocode):
@@ -3209,9 +4005,13 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
 // ---
 // inside: src/core/world.js
 
-/**
- * The world class
- */
+/** related to: Physics
+ * class Physics.world
+ *
+ * The world class and factory function.
+ *
+ * Use [[Physics]] to create worlds.
+ **/
 (function(){
 
     var execCallbacks = function execCallbacks( fns, scope, args ){
@@ -3246,15 +4046,69 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
     };
 
     // begin world definitions
-    /**
+    
+    /** alias of: Physics
+     * new Physics.world([options, fn(world, Physics)])
+     * - options (Object): configuration options (see description)
+     * - fn (Function|Array): Callback function or array of callbacks called with this === world
+     * - world (Physics.world): The current world created
+     * - Physics (Physics): The Physics namespace
+     *
      * World Constructor.
+     *
+     * Use [[Physics]] to create worlds.
+     *
+     * Configuration options and defaults:
+     *
+     * ```javascript
+     * {
+     *     // default timestep
+     *     timestep: 1000.0 / 160,
+     *     // maximum number of iterations per step
+     *     maxIPF: 16,
+     *     // default integrator
+     *     integrator: 'verlet'
+     * }
+     * ```
      * 
      * If called with an array of functions, and any functions 
-     * return a promise-like object, the remaining callbacks will 
-     * be called only when that promise is resolved.
-     * @param {Object}   cfg (optional) Configuration options
-     * @param {Function|Array} fn  (optional) Callback function or array of callbacks called with "this" === world
-     */
+     * return a [promise-like object](http://promises-aplus.github.io/promises-spec/), 
+     * each remaining callback will be called only when that promise is resolved.
+     *
+     * Example:
+     *
+     * ```javascript
+     * // hypothetical resources need to be loaded...
+     * Physics( cfg, [
+     *     function( world ){
+     *         var dfd = $.Deferred()
+     *             ,images = []
+     *             ,toLoad = myImages.length
+     *             ,callback = function(){
+     *                 toLoad--;
+     *                 // wait for all images to be loaded
+     *                 if ( toLoad <= 0 ){
+     *                     dfd.resolve();
+     *                 }
+     *             }
+     *             ;
+     *             
+     *         // load images
+     *         $.each(myImages, function( src ){
+     *             var img = new Image();
+     *             img.onload = callback;
+     *             img.src = src;
+     *         });
+     *         
+     *         return dfd.promise();
+     *     },
+     *     function( world ){
+     *         // won't be executed until images are loaded
+     *         // initialize world... etc...   
+     *     }
+     * ]);
+     * ```
+     **/
     var World = function World( cfg, fn ){
 
         // allow creation of world without "new"
@@ -3268,12 +4122,13 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
     // extend pubsub
     World.prototype = Physics.util.extend({}, Physics.util.pubsub.prototype, {
 
-        /**
+        /** internal, see: new Physics.world
+         * Physics.world#init( [options, fn(world, Physics)] )
+         * - options (Object): configuration options (see constructor)
+         * - fn (Function|Array): Callback function or array of callbacks called with this === world
+         *
          * Initialization
-         * @param {Object}   cfg (optional) Configuration options
-         * @param {Function} fn  (optional) Callback function or array of callbacks called with "this" === world
-         * @return {void}
-         */
+         **/
         init: function( cfg, fn ){
 
             var self = this;
@@ -3318,17 +4173,20 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
-         * Set options
-         * @param  {Object} cfg Config options to set
-         * @return {Object}     Options container
-         */
+         * Physics.world#options( cfg ) -> Object
+         * - options (Object): configuration options (see constructor)
+         * + (Object): Options container
+         *
+         * Set config options. Also access options by `.options.<option>`.
+         **/
         options: null,
 
-        /**
+        /** chainable
+         * Physics.world#add( things ) -> this
+         * - things (Object|Array): The thing, or array of things (body, behavior, integrator, or renderer) to add.
+         * 
          * Multipurpose add method. Add one or many bodies, behaviors, integrators, renderers...
-         * @param {Object|Array} arg The thing to add, or array of things to add
-         * @return {this}
-         */
+         **/
         add: function( arg ){
 
             var i = 0
@@ -3371,11 +4229,12 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
+        /** chainable
+         * Physics.world#remove( things ) -> this
+         * - things (Object|Array): The thing, or array of things (body, behavior, integrator, or renderer) to remove.
+         * 
          * Multipurpose remove method. Remove one or many bodies, behaviors, integrators, renderers...
-         * @param {Object|Array} arg The thing to remove, or array of things to remove
-         * @return {this}
-         */
+         **/
         remove: function( arg ){
 
             var i = 0
@@ -3422,11 +4281,13 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
-         * Determine if object has been added to world
-         * @param  {Object}  thing The object to test
-         * @return {Boolean}       The test result.
-         */
+        /** chainable
+         * Physics.world#has( thing ) -> Boolean
+         * - thing (Object): The thing to test
+         * + (Boolean): `true` if thing is in the world, `false` otherwise.
+         * 
+         * Determine if a thing has been added to world.
+         **/
         has: function( thing ){
 
             var arr
@@ -3465,11 +4326,14 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return (Physics.util.indexOf( arr, thing ) > -1);
         },
 
-        /**
+        /** chainable
+         * Physics.world#integrator( [integrator] ) -> Integrator|this
+         * - integrator (Integrator): The integrator to set on the world
+         * + (Integrator): The currently set integrator if `integrator` not specified
+         * + (this): for chaining if `integrator` specified
+         *
          * Get or Set the integrator
-         * @param {Object} integrator Integrator instance to use
-         * @return {this|Object} This or Integrator
-         */
+         **/
         integrator: function( integrator ){
 
             if ( integrator === undefined ){
@@ -3502,11 +4366,14 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
-         * Get or Set renderer
-         * @param  {Object} renderer The renderer to set
-         * @return {this|Object}          This or Renderer
-         */
+        /** chainable
+         * Physics.world#renderer( [renderer] ) -> Renderer|this
+         * - renderer (Renderer): The renderer to set on the world
+         * + (Renderer): The currently set renderer if `renderer` not specified
+         * + (this): for chaining if `renderer` specified
+         *
+         * Get or Set the renderer
+         **/
         renderer: function( renderer ){
 
             if ( renderer === undefined ){
@@ -3539,11 +4406,14 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
-         * Get or Set timestep
-         * @param  {Number} dt The timestep size
-         * @return {this|Number}    This or the timestep
-         */
+        /** chainable
+         * Physics.world#timeStep( [dt] ) -> Number|this
+         * - dt (Number): The time step for the world
+         * + (Number): The currently set time step if `dt` not specified
+         * + (this): for chaining if `dt` specified
+         *
+         * Get or Set the time step
+         **/
         timeStep: function( dt ){
 
             if ( dt ){
@@ -3558,11 +4428,12 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this._dt;
         },
 
-        /**
-         * Add behavior to the world
-         * @param {Object} behavior The behavior to add
-         * @return {this} 
-         */
+        /** chainable
+         * Physics.world#addBehavior( behavior ) -> this 
+         * - behavior (Behavior): The behavior to add
+         *
+         * Add a behavior to the world
+         **/
         addBehavior: function( behavior ){
 
             var notify;
@@ -3583,20 +4454,23 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
+         * Physics.world#getBehaviors() -> Array
+         * + (Array): Array of behaviors
+         *
          * Get copied list of behaviors in the world
-         * @return {Array} Array of behaviors
-         */
+         **/
         getBehaviors: function(){
 
             // return the copied array
             return [].concat(this._behaviors);
         },
 
-        /**
-         * Remove behavior from the world
-         * @param {Object} behavior The behavior to remove
-         * @return {this} 
-         */
+        /** chainable
+         * Physics.world#removeBehavior( behavior ) -> this 
+         * - behavior (Behavior): The behavior to remove
+         *
+         * Remove a behavior from the world
+         **/
         removeBehavior: function( behavior ){
 
             var behaviors = this._behaviors;
@@ -3622,11 +4496,12 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
-         * Add body to the world
-         * @param {Object} body The body to add
-         * @return {this} 
-         */
+        /** chainable
+         * Physics.world#addBody( body ) -> this 
+         * - body (Body): The behavior to add
+         *
+         * Add a body to the world
+         **/
         addBody: function( body ){
 
             var notify;
@@ -3647,20 +4522,23 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
+         * Physics.world#getBodies() -> Array
+         * + (Array): Array of bodies
+         *
          * Get copied list of bodies in the world
-         * @return {Array} Array of bodies
-         */
+         **/
         getBodies: function(){
 
             // return the copied array
             return [].concat(this._bodies);
         },
 
-        /**
-         * Remove body from the world
-         * @param {Object} body The body to remove
-         * @return {this} 
-         */
+        /** chainable
+         * Physics.world#removeBody( body ) -> this 
+         * - body (Body): The body to remove
+         *
+         * Remove a body from the world
+         **/
         removeBody: function( body ){
 
             var bodies = this._bodies;
@@ -3686,11 +4564,15 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
-         * Find first matching body based on query rules
-         * @param  {Object|Function} rules The query rules or custom function
-         * @return {Object|false}       Body or false if no match
-         */
+        /** see: Physics.query
+         * Physics.world#findOne( rules ) -> Body | false
+         * Physics.world#findOne( filter(body) ) -> Body | false
+         * - rules (Object): Query rules.
+         * - filter (Function): Filter function called to check bodies
+         * - body (Body): Each body in the world
+         * 
+         * Find first matching body based on query rules.
+         **/
         findOne: function( rules ){
 
             var self = this
@@ -3700,11 +4582,15 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return Physics.util.find( self._bodies, fn ) || false;
         },
 
-        /**
-         * Find all matching bodies based on query rules
-         * @param  {Object|Function} rules The query rules or custom function
-         * @return {Array}       Array of matching bodies
-         */
+        /** see: Physics.query
+         * Physics.world#find( rules ) -> Array
+         * Physics.world#find( filter(body) ) -> Array
+         * - rules (Object): Query rules
+         * - filter (Function): Filter function called to check bodies
+         * - body (Body): Each body in the world
+         * 
+         * Find all matching bodies based on query rules.
+         **/
         find: function( rules ){
 
             var self = this
@@ -3714,22 +4600,23 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return Physics.util.filter( self._bodies, fn );
         },
 
-        /**
-         * Do a single iteration
-         * @private
-         * @param  {Number} dt The timestep size
-         * @return {void}
-         */
+        /** internal
+         * Physics.world#iterate( dt )
+         * - dt (Number): The timestep
+         *
+         * Do a single iteration.
+         **/
         iterate: function( dt ){
 
             this._integrator.integrate( this._bodies, dt );
         },
 
-        /**
-         * Do a single step
-         * @param  {Number} now Current unix timestamp
-         * @return {this}
-         */
+        /** chainable
+         * Physics.world#step( now ) -> this
+         * - now (Number): now Current unix timestamp
+         *
+         * Do a single step.
+         **/
         step: function( now ){
             
             if ( this._paused ){
@@ -3768,10 +4655,11 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
+        /** chainable
+         * Physics.world#render() -> this
+         * 
          * Render current world state using the renderer
-         * @return {this}
-         */
+         **/
         render: function(){
 
             if ( !this._renderer ){
@@ -3787,10 +4675,11 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
-         * Pause the world. (step calls do nothing)
-         * @return {this}
-         */
+        /** chainable
+         * Physics.world#pause() -> this
+         * 
+         * Pause the world (step calls do nothing).
+         **/
         pause: function(){
 
             this._paused = true;
@@ -3798,10 +4687,11 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
             return this;
         },
 
-        /**
-         * Unpause the world. (step calls continue as usual)
-         * @return {this}
-         */
+        /** chainable
+         * Physics.world#unpause() -> this
+         * 
+         * Unpause the world (step calls continue as usual).
+         **/
         unpause: function(){
 
             this._paused = false;
@@ -3810,19 +4700,22 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
         },
 
         /**
-         * Determine if world is paused
-         * @return {Boolean} Is the world paused?
-         */
+         * Physics.world#isPaused() -> Boolean
+         * + (Boolean): Returns `true` if world is paused, `false` otherwise.
+         * 
+         * Determine if world is paused.
+         **/
         isPaused: function(){
 
             return !!this._paused;
         },
 
         /**
+         * Physics.world#destroy()
+         * 
          * Destroy the world.
          * (Bwahahahahaha!)
-         * @return {void}
-         */
+         **/
         destroy: function(){
 
             var self = this;
@@ -3899,8 +4792,8 @@ Physics.integrator('verlet', function( parent ){
                 body = bodies[ i ];
                 state = body.state;
 
-                // only integrate if the body isn't fixed
-                if ( !body.fixed ){
+                // only integrate if the body isn't static
+                if ( body.treatment !== 'static' ){
 
                     // Inspired from https://github.com/soulwire/Coffee-Physics
                     // @licence MIT
@@ -3991,8 +4884,8 @@ Physics.integrator('verlet', function( parent ){
                 body = bodies[ i ];
                 state = body.state;
 
-                // only integrate if the body isn't fixed
-                if ( !body.fixed ){
+                // only integrate if the body isn't static
+                if ( body.treatment !== 'static' ){
 
                     // so we need to scale the value by dt so it 
                     // complies with other integration methods
@@ -4044,6 +4937,15 @@ Physics.geometry('point', function( parent ){
 
 
 // ---
+// inside: src/bodies/point.js
+
+/**
+ * Point body
+ * @module bodies/point
+ */
+Physics.body('point', function(){});
+
+// ---
 // inside: src/geometries/circle.js
 
 /**
@@ -4082,16 +4984,15 @@ Physics.geometry('circle', function( parent ){
         aabb: function( angle ){
 
             var r = this.radius
-                ,aabb = this._aabb
                 ;
 
             // circles are symetric... so angle has no effect
-            if ( aabb.halfWidth() === r ){
-                // don't recalculate
-                return aabb.get();
+            if ( this._aabb.hw !== r ){
+                // recalculate
+                this._aabb = Physics.aabb( -r, -r, r, r );
             }
 
-            return aabb.set( -r, -r, r, r ).get();
+            return Physics.aabb.clone( this._aabb );
         },
 
         /**
@@ -4206,14 +5107,14 @@ Physics.geometry('convex-polygon', function( parent ){
         aabb: function( angle ){
 
             if (!angle && this._aabb){
-                return this._aabb.get();
+                return Physics.aabb.clone( this._aabb );
             }
 
             var scratch = Physics.scratchpad()
                 ,p = scratch.vector()
                 ,trans = scratch.transform().setRotation( angle || 0 )
-                ,xaxis = scratch.vector().clone(Physics.vector.axis[0]).rotateInv( trans )
-                ,yaxis = scratch.vector().clone(Physics.vector.axis[1]).rotateInv( trans )
+                ,xaxis = scratch.vector().set( 1, 0 ).rotateInv( trans )
+                ,yaxis = scratch.vector().set( 0, 1 ).rotateInv( trans )
                 ,xmax = this.getFarthestHullPoint( xaxis, p ).proj( xaxis )
                 ,xmin = - this.getFarthestHullPoint( xaxis.negate(), p ).proj( xaxis )
                 ,ymax = this.getFarthestHullPoint( yaxis, p ).proj( yaxis )
@@ -4221,14 +5122,16 @@ Physics.geometry('convex-polygon', function( parent ){
                 ,aabb
                 ;
 
-            aabb = new Physics.aabb( xmin, ymin, xmax, ymax );
+            aabb = Physics.aabb( xmin, ymin, xmax, ymax );
 
             if (!angle){
+                // if we don't have an angle specified (or it's zero)
+                // then we can cache this result
                 this._aabb = aabb;
             }
 
             scratch.done();
-            return aabb.get();
+            return Physics.aabb.clone( aabb );
         },
 
         /**
@@ -4448,15 +5351,6 @@ Physics.body('convex-polygon', function( parent ){
 
 
 // ---
-// inside: src/bodies/point.js
-
-/**
- * Point body
- * @module bodies/point
- */
-Physics.body('point', function(){});
-
-// ---
 // inside: src/behaviors/attractor.js
 
 /**
@@ -4623,9 +5517,9 @@ Physics.behavior('body-collision-detection', function( parent ){
             ,support
             ,collision = false
             ,aabbA = bodyA.aabb()
-            ,dimA = Math.min( aabbA.halfWidth, aabbA.halfHeight )
+            ,dimA = Math.min( aabbA.hw, aabbA.hh )
             ,aabbB = bodyB.aabb()
-            ,dimB = Math.min( aabbB.halfWidth, aabbB.halfHeight )
+            ,dimB = Math.min( aabbB.hw, aabbB.hh )
             ;
 
         // just check the overlap first
@@ -4731,8 +5625,11 @@ Physics.behavior('body-collision-detection', function( parent ){
      */
     var checkPair = function checkPair( bodyA, bodyB ){
 
-        // don't detect two fixed bodies
-        if ( bodyA.fixed && bodyB.fixed ){
+        // filter out bodies that don't collide with each other
+        if ( 
+            ( bodyA.treatment === 'static' || bodyA.treatment === 'kinematic' ) &&
+            ( bodyB.treatment === 'static' || bodyB.treatment === 'kinematic' )
+        ){
             return false;
         }
 
@@ -4943,8 +5840,8 @@ Physics.behavior('body-impulse-response', function( parent ){
          */
         collideBodies: function(bodyA, bodyB, normal, point, mtrans, contact){
 
-            var fixedA = bodyA.fixed
-                ,fixedB = bodyB.fixed
+            var fixedA = bodyA.treatment === 'static' || bodyA.treatment === 'kinematic'
+                ,fixedB = bodyB.treatment === 'static' || bodyB.treatment === 'kinematic'
                 ,scratch = Physics.scratchpad()
                 // minimum transit vector for each body
                 ,mtv = scratch.vector().clone( mtrans )
@@ -5222,7 +6119,7 @@ Physics.behavior('edge-collision-detection', function( parent ){
             ;
 
         // right
-        overlap = (aabb.pos.x + aabb.x) - bounds.max.x;
+        overlap = (aabb.x + aabb.hw) - bounds.max.x;
 
         if ( overlap >= 0 ){
 
@@ -5247,7 +6144,7 @@ Physics.behavior('edge-collision-detection', function( parent ){
         }
 
         // bottom
-        overlap = (aabb.pos.y + aabb.y) - bounds.max.y;
+        overlap = (aabb.y + aabb.hh) - bounds.max.y;
 
         if ( overlap >= 0 ){
 
@@ -5272,7 +6169,7 @@ Physics.behavior('edge-collision-detection', function( parent ){
         }
 
         // left
-        overlap = bounds.min.x - (aabb.pos.x - aabb.x);
+        overlap = bounds.min.x - (aabb.x - aabb.hw);
 
         if ( overlap >= 0 ){
 
@@ -5297,7 +6194,7 @@ Physics.behavior('edge-collision-detection', function( parent ){
         }
 
         // top
-        overlap = bounds.min.y - (aabb.pos.y - aabb.y);
+        overlap = bounds.min.y - (aabb.y - aabb.hh);
 
         if ( overlap >= 0 ){
 
@@ -5361,8 +6258,8 @@ Physics.behavior('edge-collision-detection', function( parent ){
             this.setAABB( this.options.aabb );
             this.restitution = this.options.restitution;
             
-            this._dummy = Physics.body('_dummy', function(){}, { 
-                fixed: true,
+            this.body = Physics.body('point', { 
+                treatment: 'static',
                 restitution: this.options.restitution,
                 cof: this.options.cof
             });
@@ -5379,16 +6276,14 @@ Physics.behavior('edge-collision-detection', function( parent ){
                 throw 'Error: aabb not set';
             }
 
-            aabb = aabb.get && aabb.get() || aabb;
-
             this._edges = {
                 min: {
-                    x: (aabb.pos.x - aabb.x),
-                    y: (aabb.pos.y - aabb.y)
+                    x: (aabb.x - aabb.hw),
+                    y: (aabb.y - aabb.hh)
                 },
                 max: {
-                    x: (aabb.pos.x + aabb.x),
-                    y: (aabb.pos.y + aabb.y)  
+                    x: (aabb.x + aabb.hw),
+                    y: (aabb.y + aabb.hh)  
                 }
             };
         },
@@ -5426,15 +6321,15 @@ Physics.behavior('edge-collision-detection', function( parent ){
                 ,collisions = []
                 ,ret
                 ,bounds = this._edges
-                ,dummy = this._dummy
+                ,dummy = this.body
                 ;
 
             for ( var i = 0, l = bodies.length; i < l; i++ ){
 
                 body = bodies[ i ];
 
-                // don't detect fixed bodies
-                if ( !body.fixed ){
+                // only detect dynamic bodies
+                if ( body.treatment === 'dynamic' ){
                     
                     ret = checkEdgeCollide( body, bounds, dummy );
 
@@ -5468,10 +6363,12 @@ Physics.behavior('interactive', function( parent ){
     var defaults = {
             // the element to monitor
             el: null,
+            // time between move events
+            moveThrottle: 1000 / 100 | 0,
             // minimum velocity clamp
-            minVel: { x: -1, y: -1 },
+            minVel: { x: -5, y: -5 },
             // maximum velocity clamp
-            maxVel: { x: 1, y: 1 }
+            maxVel: { x: 5, y: 5 }
         }
         ,getElementOffset = function( el ){
             var curleft = 0
@@ -5508,7 +6405,10 @@ Physics.behavior('interactive', function( parent ){
          */
         init: function( options ){
             
-            var self = this;
+            var self = this
+                ,prevTreatment
+                ,time
+                ;
 
             // call parent init method
             parent.init.call( this );
@@ -5520,14 +6420,14 @@ Physics.behavior('interactive', function( parent ){
             this.mousePosOld = new Physics.vector();
             this.offset = new Physics.vector();
 
-            this.el = typeof this.options.el === 'string' ? document.getElementById(this.options.el) : this.options.el
+            this.el = typeof this.options.el === 'string' ? document.getElementById(this.options.el) : this.options.el;
 
             if ( !this.el ){
                 throw "No DOM element specified";
             }
 
             // init events
-            function grab( e ){
+            var grab = function grab( e ){
                 var pos = getCoords( e )
                     ,body
                     ;
@@ -5539,11 +6439,15 @@ Physics.behavior('interactive', function( parent ){
                         // we're trying to grab a body
 
                         // fix the body in place
-                        body.fixed = true;
+                        prevTreatment = body.treatment;
+                        body.treatment = 'kinematic';
+                        body.state.vel.zero();
+                        body.state.angular.vel = 0;
                         // remember the currently grabbed body
                         self.body = body;
                         // remember the mouse offset
-                        self.offset.clone( self.mousePos ).vsub( body.state.pos );
+                        self.mousePos.clone( pos );
+                        self.offset.clone( pos ).vsub( body.state.pos );
 
                         pos.body = body;
                         self._world.emit('interact:grab', pos);
@@ -5553,33 +6457,47 @@ Physics.behavior('interactive', function( parent ){
                         self._world.emit('interact:poke', pos);
                     }
                 }
-            }
+            };
 
-            function move( e ){
-                var pos = getCoords( e )
+            var move = Physics.util.throttle(function move( e ){
+                var pos
+                    ,state
                     ;
 
-                self.mousePosOld.clone( self.mousePos );
-                // get new mouse position
-                self.mousePos.set(pos.x, pos.y);
-            }
+                if ( self.body ){
+                    pos = getCoords( e );
+                    time = Date.now();
 
-            function release( e ){
+                    self.mousePosOld.clone( self.mousePos );
+                    // get new mouse position
+                    self.mousePos.set(pos.x, pos.y);
+                }
+            }, self.options.moveThrottle);
+
+            var release = function release( e ){
                 var pos = getCoords( e )
                     ,body
+                    ,dt = Math.max(Date.now() - time, self.options.moveThrottle)
                     ;
+
+                // get new mouse position
+                self.mousePos.set(pos.x, pos.y);
+
+                // release the body
+                if (self.body){
+                    self.body.treatment = prevTreatment;
+                    // calculate the release velocity
+                    self.body.state.vel.clone( self.mousePos ).vsub( self.mousePosOld ).mult( 1 / dt );
+                    // make sure it's not too big
+                    self.body.state.vel.clamp( self.options.minVel, self.options.maxVel );
+                    self.body = false;
+                }
 
                 if ( self._world ){
 
-                    // release the body
-                    if (self.body){
-                        self.body.fixed = false;
-                        self.body = false;
-                    }
-
                     self._world.emit('interact:release', pos);
                 }
-            }
+            };
 
             this.el.addEventListener('mousedown', grab);
             this.el.addEventListener('touchstart', grab);
@@ -5613,7 +6531,7 @@ Physics.behavior('interactive', function( parent ){
             world.off('integrate:positions', this.behave);
         },
 
-        behave: function(){
+        behave: function( data ){
 
             var self = this
                 ,state
@@ -5622,12 +6540,9 @@ Physics.behavior('interactive', function( parent ){
             if ( self.body ){
 
                 // if we have a body, we need to move it the the new mouse position.
-                // we'll also track the velocity of the mouse movement so that when it's released
-                // the body can be "thrown"
+                // we'll do this by adjusting the velocity so it gets there at the next step
                 state = self.body.state;
-                state.pos.clone( self.mousePos ).vsub( self.offset );
-                state.vel.clone( self.body.state.pos ).vsub( self.mousePosOld ).vadd( self.offset ).mult( 1 / 30 );
-                state.vel.clamp( self.options.minVel, self.options.maxVel );
+                state.vel.clone( self.mousePos ).vsub( self.offset ).vsub( state.pos ).mult( 1 / self.options.moveThrottle );
             }
         }
     };
@@ -5721,193 +6636,6 @@ Physics.behavior('newtonian', function( parent ){
 
 
 // ---
-// inside: src/behaviors/rigid-constraint-manager.js
-
-/**
- * Rigid constraints manager.
- * Handles distance constraints
- * @module behaviors/rigid-constraint-manager
- */
-Physics.behavior('rigid-constraint-manager', function( parent ){
-
-    var defaults = {
-
-        // set a default target length
-        targetLength: 20
-    };
-
-    return {
-
-        /**
-         * Initialization
-         * @param  {Object} options Configuration object
-         * @return {void}
-         */
-        init: function( options ){
-
-            parent.init.call( this );
-            this.options.defaults( defaults );
-            this.options( options );
-
-            this._constraints = [];
-        },
-
-        /**
-         * Connect to world. Automatically called when added to world by the setWorld method
-         * @param  {Object} world The world to connect to
-         * @return {void}
-         */
-        connect: function( world ){
-
-            var intg = world.integrator();
-
-            if ( intg && intg.name.indexOf('verlet') < 0 ){
-
-                throw 'The rigid constraint manager needs a world with a "verlet" compatible integrator.';
-            }
-
-            world.on('integrate:positions', this.resolve, this);
-        },
-
-        /**
-         * Disconnect from world
-         * @param  {Object} world The world to disconnect from
-         * @return {void}
-         */
-        disconnect: function( world ){
-
-            world.off('integrate:positions', this.resolve);
-        },
-
-        /**
-         * Remove all constraints
-         * @return {self}
-         */
-        drop: function(){
-
-            // drop the current constraints
-            this._constraints = [];
-            return this;
-        },
-
-        /**
-         * Constrain two bodies to a target relative distance
-         * @param  {Object} bodyA        First body
-         * @param  {Object} bodyB        Second body
-         * @param  {Number} targetLength (optional) Target length. defaults to target length specified in configuration options
-         * @return {object}              The constraint object, which holds .bodyA and .bodyB references to the bodies, .id the string ID of the constraint, .targetLength the target length
-         */
-        constrain: function( bodyA, bodyB, targetLength ){
-
-            var cst;
-
-            if (!bodyA || !bodyB){
-
-                return false;
-            }
-
-            this._constraints.push(cst = {
-                id: Physics.util.uniqueId('rigid-constraint'),
-                bodyA: bodyA,
-                bodyB: bodyB,
-                targetLength: targetLength || this.options.targetLength
-            });
-
-            return cst;
-        },
-
-        /**
-         * Remove a constraint
-         * @param  {Mixed} indexCstrOrId Either the constraint object, the constraint id, or the numeric index of the constraint
-         * @return {self}
-         */
-        remove: function( indexCstrOrId ){
-
-            var constraints = this._constraints
-                ,isObj
-                ;
-
-            if (typeof indexCstrOrId === 'number'){
-
-                constraints.splice( indexCstrOrId, 1 );
-                return this;   
-            }
-
-            isObj = Physics.util.isObject( indexCstrOrId );
-            
-            for ( var i = 0, l = constraints.length; i < l; ++i ){
-                
-                if ( (isObj && constraints[ i ] === indexCstrOrId) ||
-                    ( !isObj && constraints[ i ].id === indexCstrOrId) ){
-
-                    constraints.splice( i, 1 );
-                    return this;
-                }
-            }
-
-            return this;
-        },
-
-        /**
-         * Resolve constraints
-         * @return {void}
-         */
-        resolve: function(){
-
-            var constraints = this._constraints
-                ,scratch = Physics.scratchpad()
-                ,A = scratch.vector()
-                ,BA = scratch.vector()
-                ,con
-                ,len
-                ,corr
-                ,proportion
-                ;
-
-            for ( var i = 0, l = constraints.length; i < l; ++i ){
-            
-                con = constraints[ i ];
-
-                // move constrained bodies to target length based on their
-                // mass proportions
-                A.clone( con.bodyA.state.pos );
-                BA.clone( con.bodyB.state.pos ).vsub( A );
-                len = BA.norm();
-                corr = ( len - con.targetLength ) / len;
-                
-                BA.mult( corr );
-                proportion = con.bodyB.mass / (con.bodyA.mass + con.bodyB.mass);
-
-                if ( !con.bodyA.fixed ){
-
-                    BA.mult( proportion );
-                    con.bodyA.state.pos.vadd( BA );
-                    BA.mult( 1 / proportion );
-                }
-
-                if ( !con.bodyB.fixed ){
-
-                    BA.mult( 1 - proportion );
-                    con.bodyB.state.pos.vsub( BA );
-                }
-            }
-
-            scratch.done();
-        },
-
-        /**
-         * Get an array of all constraints
-         * @return {Array} The array of constraint objects
-         */
-        getConstraints: function(){
-
-            return [].concat(this._constraints);
-        }
-    };
-});
-
-
-// ---
 // inside: src/behaviors/sweep-prune.js
 
 /**
@@ -5929,24 +6657,22 @@ Physics.behavior('sweep-prune', function( parent ){
 
     // add z: 2 to get this to work in 3D
     var dof = { x: 0, y: 1 }; // degrees of freedom
+    var maxDof = 2;
 
-    /**
-     * return hash for a pair of ids
-     * @param  {Number} id1 First id
-     * @param  {Number} id2 Second id
-     * @return {Number}     Hash id
-     */
+    
     function pairHash( id1, id2 ){
+        id1 = id1|0;
+        id2 = id2|0;
 
-        if ( id1 === id2 ){
+        if ( (id1|0) == (id2|0) ){
 
-            return false;
+            return -1;
         }
 
         // valid for values < 2^16
-        return id1 > id2? 
+        return ((id1|0) > (id2|0) ? 
             (id1 << 16) | (id2 & 0xFFFF) : 
-            (id2 << 16) | (id1 & 0xFFFF)
+            (id2 << 16) | (id1 & 0xFFFF))|0
             ;
     }
     
@@ -5976,11 +6702,11 @@ Physics.behavior('sweep-prune', function( parent ){
 
             this.tracked = [];
             this.pairs = []; // pairs selected as candidate collisions by broad phase
-            this.intervalLists = {}; // stores lists of aabb projection intervals to be sorted
+            this.intervalLists = []; // stores lists of aabb projection intervals to be sorted
             
             // init intervalLists
-            for ( var xyz in dof ){
-
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
+                
                 this.intervalLists[ xyz ] = [];
             }
         },
@@ -6046,13 +6772,13 @@ Physics.behavior('sweep-prune', function( parent ){
                 ;
 
             // for each axis...
-            for ( var xyz in dof ){
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                 // get the intervals for that axis
                 list = this.intervalLists[ xyz ];
                 i = 0;
                 len = list.length;
-                axis = dof[ xyz ];
+                axis = xyz;
 
                 // for each interval bound...
                 while ( (++i) < len ){
@@ -6148,17 +6874,15 @@ Physics.behavior('sweep-prune', function( parent ){
                 ,candidates = []
                 ;
 
-            for ( var xyz in dof ){
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                 // is the x coord
-                isX = (xyz === 'x');
+                isX = (xyz === 0);
                 // get the interval list for this axis
                 list = this.intervalLists[ xyz ];
-                i = -1;
-                len = list.length;
-
+                
                 // for each interval bound
-                while ( (++i) < len ){
+                for ( i = 0, len = list.length; i < len; i++ ){
                     
                     bound = list[ i ];
                     tr1 = bound.tracker;
@@ -6169,7 +6893,7 @@ Physics.behavior('sweep-prune', function( parent ){
 
                         j = enclen;
 
-                        while ( (--j) >= 0 ){
+                        for ( j = enclen - 1; j >= 0; j-- ){
 
                             tr2 = encounters[ j ];
 
@@ -6240,7 +6964,8 @@ Physics.behavior('sweep-prune', function( parent ){
                 ,intr
                 ,scratch = Physics.scratchpad()
                 ,pos = scratch.vector()
-                ,aabb = scratch.vector()
+                ,aabb
+                ,span = scratch.vector()
                 ,list = this.tracked
                 ,i = list.length
                 ;
@@ -6251,12 +6976,13 @@ Physics.behavior('sweep-prune', function( parent ){
                 tr = list[ i ];
                 intr = tr.interval;
                 pos.clone( tr.body.state.pos );
-                aabb.clone( tr.body.aabb() );
+                aabb = tr.body.aabb();
+                span.set( aabb.hw, aabb.hh );
 
-                // copy the position (plus or minus) the aabb bounds
+                // copy the position (plus or minus) the aabb half-dimensions
                 // into the min/max intervals
-                intr.min.val.clone( pos ).vsub( aabb );
-                intr.max.val.clone( pos ).vadd( aabb );
+                intr.min.val.clone( pos ).vsub( span );
+                intr.max.val.clone( pos ).vadd( span );
             }
 
             scratch.done();
@@ -6294,7 +7020,7 @@ Physics.behavior('sweep-prune', function( parent ){
             tracker.interval = intr;
             this.tracked.push( tracker );
             
-            for ( var xyz in dof ){
+            for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                 this.intervalLists[ xyz ].push( intr.min, intr.max );
             }
@@ -6324,7 +7050,7 @@ Physics.behavior('sweep-prune', function( parent ){
                     // remove the tracker at this index
                     trackedList.splice(i, 1);
 
-                    for ( var xyz in dof ){
+                    for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
                         count = 0;
                         list = this.intervalLists[ xyz ];
@@ -6484,11 +7210,6 @@ Physics.behavior('verlet-constraints', function( parent ){
 
         /**
          * Constrain three bodies to a target relative angle
-         * @param  {Object} bodyA        First body
-         * @param  {Object} bodyB        Second body
-         * @param  {Object} bodyC        Third body
-         * @param  {Number} targetLength (optional) Target length. defaults to target length specified in configuration options
-         * @return {object}              The constraint object, which holds .bodyA and .bodyB references to the bodies, .id the string ID of the constraint, .targetLength the target length
          */
         angleConstraint: function( bodyA, bodyB, bodyC, stiffness, targetAngle ){
 
@@ -6593,17 +7314,17 @@ Physics.behavior('verlet-constraints', function( parent ){
 
                 corr *= -coef * con.stiffness;
 
-                if ( !con.bodyA.fixed && !con.bodyB.fixed && !con.bodyC.fixed ){
+                if ( con.bodyA.treatment === 'dynamic' && con.bodyB.treatment === 'dynamic' && con.bodyC.treatment === 'dynamic' ){
                     invMassSum = 1 / (con.bodyA.mass + con.bodyB.mass + con.bodyC.mass);
                 }
 
-                if ( !con.bodyA.fixed ){
+                if ( con.bodyA.treatment === 'dynamic' ){
 
-                    if ( !con.bodyB.fixed && !con.bodyC.fixed ){
+                    if ( con.bodyB.treatment === 'dynamic' && con.bodyC.treatment === 'dynamic' ){
                         
                         ang = corr * (con.bodyB.mass + con.bodyC.mass) * invMassSum;
 
-                    } else if ( con.bodyB.fixed ){
+                    } else if ( con.bodyB.treatment !== 'dynamic' ){
 
                         ang = corr * con.bodyC.mass / ( con.bodyC.mass + con.bodyA.mass );
 
@@ -6620,13 +7341,13 @@ Physics.behavior('verlet-constraints', function( parent ){
                     con.bodyA.state.pos.translate( trans );
                 }
 
-                if ( !con.bodyC.fixed ){
+                if ( con.bodyC.treatment === 'dynamic' ){
 
-                    if ( !con.bodyA.fixed && !con.bodyB.fixed ){
+                    if ( con.bodyA.treatment === 'dynamic' && con.bodyB.treatment === 'dynamic' ){
                         
                         ang = -corr * (con.bodyB.mass + con.bodyA.mass) * invMassSum;
 
-                    } else if ( con.bodyB.fixed ){
+                    } else if ( con.bodyB.treatment !== 'dynamic' ){
 
                         ang = -corr * con.bodyA.mass / ( con.bodyC.mass + con.bodyA.mass );
                         
@@ -6643,13 +7364,13 @@ Physics.behavior('verlet-constraints', function( parent ){
                     con.bodyC.state.pos.translate( trans );
                 }
 
-                if ( !con.bodyB.fixed ){
+                if ( con.bodyB.treatment === 'dynamic' ){
 
-                    if ( !con.bodyA.fixed && !con.bodyC.fixed ){
+                    if ( con.bodyA.treatment === 'dynamic' && con.bodyC.treatment === 'dynamic' ){
                         
                         ang = corr * (con.bodyA.mass + con.bodyC.mass) * invMassSum;
 
-                    } else if ( con.bodyA.fixed ){
+                    } else if ( con.bodyA.treatment !== 'dynamic' ){
 
                         ang = corr * con.bodyC.mass / ( con.bodyC.mass + con.bodyB.mass );
                         
@@ -6697,24 +7418,24 @@ Physics.behavior('verlet-constraints', function( parent ){
                 corr = coef * con.stiffness * ( len - con.targetLengthSq ) / len;
                 
                 BA.mult( corr );
-                proportion = (con.bodyA.fixed || con.bodyB.fixed) ? 1 : con.bodyB.mass / (con.bodyA.mass + con.bodyB.mass);
+                proportion = (con.bodyA.treatment !== 'dynamic' || con.bodyB.treatment !== 'dynamic') ? 1 : con.bodyB.mass / (con.bodyA.mass + con.bodyB.mass);
 
-                if ( !con.bodyA.fixed ){
+                if ( con.bodyA.treatment === 'dynamic' ){
 
-                    if ( !con.bodyB.fixed ){
+                    if ( con.bodyB.treatment === 'dynamic' ){
                         BA.mult( proportion );
                     }
 
                     con.bodyA.state.pos.vadd( BA );
 
-                    if ( !con.bodyB.fixed ){
+                    if ( con.bodyB.treatment === 'dynamic' ){
                         BA.mult( 1 / proportion );
                     }
                 }
 
-                if ( !con.bodyB.fixed ){
+                if ( con.bodyB.treatment === 'dynamic' ){
 
-                    if ( !con.bodyA.fixed ){
+                    if ( con.bodyA.treatment === 'dynamic' ){
                         BA.mult( 1 - proportion );
                     }
 
@@ -6802,7 +7523,7 @@ Physics.integrator('improved-euler', function( parent ){
                 state = body.state;
 
                 // only integrate if the body isn't fixed
-                if ( !body.fixed ){
+                if ( body.treatment !== 'static' ){
 
                     // Inspired from https://github.com/soulwire/Coffee-Physics
                     // @licence MIT
@@ -6877,7 +7598,7 @@ Physics.integrator('improved-euler', function( parent ){
                 state = body.state;
 
                 // only integrate if the body isn't fixed
-                if ( !body.fixed ){
+                if ( body.treatment !== 'static' ){
 
 
                     // Store previous location.
@@ -7092,8 +7813,8 @@ Physics.renderer('canvas', function( proto ){
         drawPolygon: function(verts, styles, ctx){
 
             var vert = verts[0]
-                ,x = vert.x === undefined ? vert.get(0) : vert.x
-                ,y = vert.y === undefined ? vert.get(1) : vert.y
+                ,x = vert.x
+                ,y = vert.y
                 ,l = verts.length
                 ;
 
@@ -7106,8 +7827,8 @@ Physics.renderer('canvas', function( proto ){
             for ( var i = 1; i < l; ++i ){
                 
                 vert = verts[ i ];
-                x = vert.x === undefined ? vert.get(0) : vert.x;
-                y = vert.y === undefined ? vert.get(1) : vert.y;
+                x = vert.x;
+                y = vert.y;
                 ctx.lineTo(x, y);
             }
 
@@ -7154,8 +7875,8 @@ Physics.renderer('canvas', function( proto ){
          */
         drawLine: function(from, to, styles, ctx){
 
-            var x = from.x === undefined ? from.get(0) : from.x
-                ,y = from.y === undefined ? from.get(1) : from.y
+            var x = from.x
+                ,y = from.y
                 ;
 
             ctx = ctx || this.ctx;
@@ -7165,8 +7886,8 @@ Physics.renderer('canvas', function( proto ){
 
             ctx.moveTo(x, y);
 
-            x = to.x === undefined ? to.get(0) : to.x;
-            y = to.y === undefined ? to.get(1) : to.y;
+            x = to.x;
+            y = to.y;
             
             ctx.lineTo(x, y);
             
@@ -7182,10 +7903,10 @@ Physics.renderer('canvas', function( proto ){
          */
         createView: function( geometry, styles ){
 
-            var view = new Image()
+            var view
                 ,aabb = geometry.aabb()
-                ,hw = aabb.halfWidth + Math.abs(aabb.pos.x)
-                ,hh = aabb.halfHeight + Math.abs(aabb.pos.y)
+                ,hw = aabb.hw + Math.abs(aabb.x)
+                ,hh = aabb.hh + Math.abs(aabb.y)
                 ,x = hw + 1
                 ,y = hh + 1
                 ,hiddenCtx = this.hiddenCtx
@@ -7194,6 +7915,19 @@ Physics.renderer('canvas', function( proto ){
                 ;
 
             styles = styles || this.options.styles[ name ];
+
+            // must want an image
+            if ( styles.src ){
+                view = new Image();
+                view.src = styles.src;
+                if ( styles.width ){
+                    view.width = styles.width;
+                }
+                if ( styles.height ){
+                    view.height = styles.height;
+                }
+                return view;
+            }
 
             x += styles.lineWidth | 0;
             y += styles.lineWidth | 0;
@@ -7226,9 +7960,8 @@ Physics.renderer('canvas', function( proto ){
 
             hiddenCtx.restore();
 
-            view.src = hiddenCanvas.toDataURL("image/png");
-            view.width = hiddenCanvas.width;
-            view.height = hiddenCanvas.height;
+            view = new Image( hiddenCanvas.width, hiddenCanvas.height );
+            view.src = hiddenCanvas.toDataURL('image/png');
             return view;
         },
 
@@ -7260,28 +7993,30 @@ Physics.renderer('canvas', function( proto ){
          * @param  {Image} view The view for that body
          * @return {void}
          */
-        drawBody: function( body, view ){
+        drawBody: function( body, view, ctx, offset ){
 
-            var ctx = this.ctx
-                ,pos = body.state.pos
-                ,offset = this.options.offset
-                ,aabb = body.aabb()
+            var pos = body.state.pos
+                ,aabb
                 ;
 
+            offset = offset || this.options.offset;
+            ctx = ctx || this.ctx;
+
             ctx.save();
-            ctx.translate(pos.get(0) + offset.get(0), pos.get(1) + offset.get(1));
+            ctx.translate(pos.x + offset.x, pos.y + offset.y);
             ctx.rotate(body.state.angular.pos);
             ctx.drawImage(view, -view.width/2, -view.height/2);
             ctx.restore();
 
             if ( this.options.debug ){
+                aabb = body.aabb();
                 // draw bounding boxes
-                this.drawRect( aabb.pos.x, aabb.pos.y, 2 * aabb.x, 2 * aabb.y, 'rgba(100, 255, 100, 0.3)' );
+                this.drawRect( aabb.x, aabb.y, 2 * aabb.hw, 2 * aabb.hh, 'rgba(0, 0, 255, 0.3)' );
                 
                 // draw also paths
-                body._debugView = body._debugView || this.createView(body.geometry, 'rgba(0, 255, 0, 0.5)');
+                body._debugView = body._debugView || this.createView(body.geometry, 'rgba(255, 0, 0, 0.5)');
                 ctx.save();
-                ctx.translate(pos.get(0) + offset.get(0), pos.get(1) + offset.get(1));
+                ctx.translate(pos.x + offset.x, pos.y + offset.y);
                 ctx.rotate(body.state.angular.pos);
                 ctx.drawImage(body._debugView, -body._debugView.width * 0.5, -body._debugView.height * 0.5);
                 ctx.restore();
@@ -7361,14 +8096,14 @@ Physics.renderer('dom', function( proto ){
         drawBody = function( body, view ){
 
             var pos = body.state.pos;
-            view.style[cssTransform] = 'translate('+pos.get(0)+'px,'+pos.get(1)+'px) rotate('+body.state.angular.pos+'rad)';
+            view.style[cssTransform] = 'translate('+pos.x+'px,'+pos.y+'px) rotate('+body.state.angular.pos+'rad)';
         };
     } else {
         drawBody = function( body, view ){
 
             var pos = body.state.pos;
-            view.style.left = pos.get(0) + px;
-            view.style.top = pos.get(1) + px;
+            view.style.left = pos.x + px;
+            view.style.top = pos.y + px;
         };
     }
 
@@ -7418,10 +8153,10 @@ Physics.renderer('dom', function( proto ){
 
             var aabb = geometry.aabb();
 
-            el.style.width = (aabb.halfWidth * 2) + px;
-            el.style.height = (aabb.halfHeight * 2) + px;
-            el.style.marginLeft = (-aabb.halfWidth) + px;
-            el.style.marginTop = (-aabb.halfHeight) + px;
+            el.style.width = (aabb.hw * 2) + px;
+            el.style.height = (aabb.hh * 2) + px;
+            el.style.marginLeft = (-aabb.hw) + px;
+            el.style.marginTop = (-aabb.hh) + px;
         },
 
         /**
@@ -7538,386 +8273,392 @@ Physics.renderer('dom', function( proto ){
  * A PIXI renderer
  * Renders physics object with PIXI components
  * @module renderers/pixi
+ * @requires pixi
  */
  /* global PIXI */
-Physics.renderer('pixi', function( proto ){
+Physics.renderer('pixi', function( parent ){
 
-	if ( !document ){
-		// must be in node environment
-		return {};
-	}
-	
-	var Pi2 = Math.PI * 2;
+    if ( !document ){
+        // must be in node environment
+        return {};
+    }
+    
+    var Pi2 = Math.PI * 2;
 
-	var defaults = {
+    var defaults = {
 
-		// draw aabbs of bodies for debugging
-		debug: false,
-		// the element to place meta data into
-		metaEl: null,
-		offset: {x: 0, y: 0},
-		// Provide some default colours
-		styles: {
-			// Defines the default canvas colour
-			color: 0x66FF99,
-			
-			'point' : '0xE8900C',
-			
-			'circle' : {
-				strokeStyle: '0xE8900C',
-				lineWidth: 3,
-				fillStyle: '0xD5DE4C',
-				angleIndicator: '0xE8900C'
-			},
-			
-			'convex-polygon' : {
-				strokeStyle: '0xE8900C',
-				lineWidth: 3,
-				fillStyle: '0xD5DE4C',
-				angleIndicator: '0xE8900C'
-			}
-		}
-	};
+        // draw aabbs of bodies for debugging
+        debug: false,
+        // the element to place meta data into
+        metaEl: null,
+        offset: {x: 0, y: 0},
+        // Provide some default colours
+        styles: {
+            // Defines the default canvas colour
+            color: 0x66FF99,
+            
+            'point' : '0xE8900C',
+            
+            'circle' : {
+                strokeStyle: '0xE8900C',
+                lineWidth: 3,
+                fillStyle: '0xD5DE4C',
+                angleIndicator: '0xE8900C'
+            },
+            
+            'convex-polygon' : {
+                strokeStyle: '0xE8900C',
+                lineWidth: 3,
+                fillStyle: '0xD5DE4C',
+                angleIndicator: '0xE8900C'
+            }
+        }
+    };
 
-	// deep copy callback to extend deeper into options
-	var deep = function( a, b ){
+    // deep copy callback to extend deeper into options
+    var deep = function( a, b ){
 
-		if ( Physics.util.isPlainObject( b ) ){
+        if ( Physics.util.isPlainObject( b ) ){
 
-			return Physics.util.extend({}, a, b, deep );
-		}
+            return Physics.util.extend({}, a, b, deep );
+        }
 
-		return b !== undefined ? b : a;
-	};
+        return b !== undefined ? b : a;
+    };
 
-	return {
+    return {
 
-		/**
-		 * Initialization
-		 * @param  {Object} options Config options passed by initializer
-		 * @return {void}
-		 */
-		init: function( options ){
+        /**
+         * Initialization
+         * @param  {Object} options Config options passed by initializer
+         * @return {void}
+         */
+        init: function( options ){
 
-			if (typeof PIXI === 'undefined') {
-				throw "PIXI obj not present - cannot continue ";
-			}
-				
-			// call proto init
-			proto.init.call(this, options);
+            if (typeof PIXI === 'undefined') {
+                throw "PIXI obj not present - cannot continue ";
+            }
+                
+            // call parent init
+            parent.init.call(this, options);
 
-			// further options
-			this.options = Physics.util.extend({}, defaults, this.options, deep);
-			this.options.offset = Physics.vector( this.options.offset );
+            // further options
+            this.options = Physics.util.extend({}, defaults, this.options, deep);
+            this.options.offset = Physics.vector( this.options.offset );
 
-			// Hook in PIXI stage here
-			this.stage = new PIXI.Stage(this.options.styles.color);
-			this.renderer = new PIXI.autoDetectRenderer(this.options.width, this.options.height);
-			
-			// Create empty meta object for use later
-			this.meta = {};
-			
-			// add the renderer view element to the DOM according to its type
-			if(this.el.nodeName == 'CANVAS')
-	                	this.renderer = new PIXI.autoDetectRenderer(this.options.width, this.options.height, this.el);
-	                else{
-	                	this.renderer = new PIXI.autoDetectRenderer(this.options.width, this.options.height);
-	
-	                	if (this.el !== null) {
-	                    		this.el.appendChild(this.renderer.view);
-	        		} else {
-	                		document.body.appendChild(this.renderer.view);
-	        		 }
-	            	};
-		},
-		
-		/**
-		* Loads textures defined in a spritesheet
-		* @param  {Array} assetsToLoad Array of spritesheets to load
-		* @param  {Function} callback Function to call when loading is complete
-		* @return {void}
-		*/
-		loadSpritesheets: function ( assetsToLoad, callback ){
-			if (!assetsToLoad instanceof Array) {
-				throw "Spritesheets must be defined in arrays";
-			}
-			
-			var loader = new PIXI.AssetLoader(assetsToLoad);
-			
-			// Start loading resources!
-			loader.load();
-			var self = this;
-			
-			loader.on('onComplete', function(evt){
-				self.assetsLoaded = true;
-				callback();
-			});
-		},
+            // Hook in PIXI stage here
+            this.stage = new PIXI.Stage(this.options.styles.color);
+            this.renderer = new PIXI.autoDetectRenderer(this.options.width, this.options.height);
+            
+            // Create empty meta object for use later
+            this.meta = {};
+            
+            // add the renderer view element to the DOM according to its type
+            if ( this.el.nodeName === 'CANVAS' ){
+                this.renderer = new PIXI.autoDetectRenderer(this.options.width, this.options.height, this.el);
+            } else {
+                this.renderer = new PIXI.autoDetectRenderer(this.options.width, this.options.height);
 
-		/**
-		 * Draw a PIXI.DisplayObject to the stage
-		 * @param  {DisplayObject} body      The body to render
-		 * @return {void}
-		 */
-		drawBody: function( body ){
-			if (body.view !== null){
-				// Draw a body here
-				var view = body.view;
-				var x = body.state.pos.get(0);
-				var y = body.state.pos.get(1);
-				var angle = body.state.angular.pos;
-				
-				view.position.x = x;
-				view.position.y = y;
-				view.rotation = angle;
-				
-				this.renderer.render(this.stage);
-			}
-		},
-		/**
-		 * Create a circle for use in PIXI stage
-		 * @param  {Number} x      The x coord
-		 * @param  {Number} y      The y coord
-		 * @param  {Number} r      The circle radius
-		 * @param  {Object|String} styles The styles configuration
-		 * @return {PIXI.Graphics} A graphic object representing a stage
-		 */
-		createCircle: function(x, y, r, style){
-			
-			var graphics = new PIXI.Graphics();
-			graphics.beginFill(style.fillStyle);
-			graphics.lineStyle(style.lineWidth, style.strokeStyle);
-			graphics.drawCircle(x, y, r);
-			// Center the graphics to the circle
-			graphics.pivot.x = (x / 2) + (r / 2);
-			graphics.pivot.y = (y / 2) + (r / 2);
-			return graphics;
-		},
-		/**
-		 * Creates a polygon for PIXI
-		 * @param  {Array} verts  Array of vectorish vertices
-		 * @param  {Object|String} styles The styles configuration
-		 * @param  {Canvas2DContext} ctx    (optional) The canvas context
-		 * @return {PIXI.Graphics} a graphic object representing a polygon
-		 */
-		createPolygon: function(verts, styles){
-		
-			var vert = verts[0]
-				,x = vert.x === undefined ? vert.get(0) : vert.x
-				,y = vert.y === undefined ? vert.get(1) : vert.y
-				,l = verts.length
-				;
-			var start = {
-				x: x,
-				y: y
-			};
-			var graphics = new PIXI.Graphics();
-			
-			graphics.beginFill(styles.fillStyle);
-			graphics.lineStyle(styles.lineWidth, styles.strokeStyle);
-		
-			graphics.moveTo(x, y);
-			
-			for ( var i = 1; i < l; ++i ){
-				
-				vert = verts[ i ];
-				x = vert.x === undefined ? vert.get(0) : vert.x;
-				y = vert.y === undefined ? vert.get(1) : vert.y;
-				graphics.lineTo(x, y);
-			}
-			
-			if (l > 2){
-				graphics.lineTo(start.x, start.y);
-			}
-			
-			graphics.endFill();
-			return graphics;
-		},
-		/**
-		 * Draw a line onto specified canvas context
-		 * @param  {Vectorish} from   Starting point
-		 * @param  {Vectorish} to     Ending point
-		 * @param  {Object|String} styles The styles configuration
-		 * @return {PIXI.Graphics} a graphics object representing a line
-		 */
-		createLine: function(from, to, styles){
-		
-			var x = from.x === undefined ? from.get(0) : from.x
-				,y = from.y === undefined ? from.get(1) : from.y
-				;
-		
-			var graphics = new PIXI.Graphics();
-			graphics.beginFill(styles.fillStyle);
-			graphics.lineStyle(styles.lineWidth, styles.strokeStyle);
-		
-			graphics.moveTo(x, y);
-		
-			x = to.x === undefined ? to.get(0) : to.x;
-			y = to.y === undefined ? to.get(1) : to.y;
-			
-			graphics.lineTo(x, y);
-			
-			graphics.endFill();
-			return graphics;
-		},
-		/**
-		 * Create a view for specified geometry.
-		 * @param  {Geometry} geometry The geometry
-		 * @return {PIXI.DisplayObject}    An image cache of the geometry
-		 */
-		createView: function( geometry ){
+                if ( this.el !== null ) {
+                    this.el.appendChild(this.renderer.view);
+                } else {
+                    document.body.appendChild(this.renderer.view);
+                }
+            }
+        },
+        
+        /**
+        * Loads textures defined in a spritesheet
+        * @param  {Array} assetsToLoad Array of spritesheets to load
+        * @param  {Function} callback Function to call when loading is complete
+        * @return {void}
+        */
+        loadSpritesheets: function ( assetsToLoad, callback ){
+            if (!assetsToLoad instanceof Array) {
+                throw "Spritesheets must be defined in arrays";
+            }
+            
+            var loader = new PIXI.AssetLoader(assetsToLoad);
+            
+            // Start loading resources!
+            loader.load();
+            var self = this;
+            
+            loader.on('onComplete', function(evt){
+                self.assetsLoaded = true;
+                callback();
+            });
+        },
 
-			var view = null
-				,aabb = geometry.aabb()
-				,hw = aabb.halfWidth + Math.abs(aabb.pos.x)
-				,hh = aabb.halfHeight + Math.abs(aabb.pos.y)
-				,x = hw + 1
-				,y = hh + 1
-				,name = geometry.name
-				;
-			
-			var styles = styles || this.options.styles[ name ];
-			
-			x += styles.lineWidth | 0;
-			y += styles.lineWidth | 0;
-			
-			if (name === 'circle'){
-			
-				view = this.createCircle(x, y, geometry.radius, styles);
-			
-			} else if (name === 'convex-polygon'){
-			
-				view = this.createPolygon(geometry.vertices, styles);
-			}
-			
-			if (styles.angleIndicator){
-				
-				view.beginFill(styles.angleIndicator);
-				view.moveTo((x / 2), (5 + styles.lineWidth));
-				view.lineTo((x / 2) + (geometry.radius / 2), geometry.radius);
-				// Center the graphics to the circle
-				view.endFill();
-				
-			}
-			if (view) {
-				this.stage.addChild(view);
-				return view;
-			} else {
-				throw "Invalid view name passed.";
-			}
+        /**
+         * Draw a PIXI.DisplayObject to the stage
+         * @param  {DisplayObject} body      The body to render
+         * @return {void}
+         */
+        drawBody: function( body, view ){
+            if ( view ){
+                // Draw a body here
+                var x = body.state.pos.x;
+                var y = body.state.pos.y;
+                var angle = body.state.angular.pos;
+                
+                view.position.x = x;
+                view.position.y = y;
+                view.rotation = angle;
+            }
+        },
 
-		},
+        render: function( bodies, meta ){
 
-		/**
-		 * Draw the meta data
-		 * @param  {Object} meta The meta data
-		 * @return {void}
-		 */
-		drawMeta: function( meta ){
-			if (!this.meta.loaded){
-				// define the font style here
-				var fontStyles = {
-					font: "18px Snippet", 
-					fill: "white", 
-					align: "left"
-				};
-				this.meta.fps = new PIXI.Text('FPS: ' + meta.fps.toFixed(2), fontStyles);
-				this.meta.fps.position.x = 15;
-				this.meta.fps.position.y = 5;
-				
-				this.meta.ipf = new PIXI.Text('IPF: ' + meta.ipf, fontStyles);
-				this.meta.ipf.position.x = 15;
-				this.meta.ipf.position.y = 30;
-				
-				this.stage.addChild(this.meta.fps);
-				this.stage.addChild(this.meta.ipf);
-				this.meta.loaded = true;
-			} else {
-				this.meta.fps.setText('FPS: ' + meta.fps.toFixed(2));
-				this.meta.ipf.setText('IPF: ' + meta.ipf);
-			}
-		},
+            parent.render.call(this, bodies, meta);
+            this.renderer.render(this.stage);
+        },
 
-		/**
-		 * Callback to be run before rendering
-		 * @private
-		 * @return {void}
-		 */
-		beforeRender: function(){
 
-			// Do pre-rendering things here (clear stage?)
-		},
-		/**
-		 * Create a view for specified geometry.
-		 * @param  {String} type The type of PIXI.DisplayObject to make
-		 * @param  {Object} options The specific options to apply to the view
-		 * @return {PIXI.DisplayObject} An object that is renderable
-		 */
-		createDisplay: function( type, options ){
-			var view = null
-				,texture = null
-				;
-			switch (type){
-				// Create a sprite object
-				case 'sprite':
-					texture = PIXI.Texture.fromImage(options.texture);
-					view = new PIXI.Sprite(texture);
-					if (options.anchor ) {
-						view.anchor.x = options.anchor.x;
-						view.anchor.y = options.anchor.y;
-					}
-					// If a container is specified, use add to that container
-					if (options.container) {
-						options.container.addChild(view);
-					} else {
-						// Otherwise just add the view to the stage
-						this.stage.addChild(view);
-					}
-					return view;
-				// Create a movieclip object
-				case 'movieclip':
-					if (!this.assetsLoaded) {
-						throw "No assets have been loaded. Use loadSpritesheet() first";
-					}
-					var tex = []
-						,i = 0
-						;
-					// Populate our movieclip
-					for (i; i < options.frames.length; i++) {
-						texture = PIXI.Texture.fromFrame(options.frames[i]);
-						tex.push(texture);
-					}
-					view = new PIXI.MovieClip(tex);
-					if (options.anchor ) {
-						view.anchor.x = options.anchor.x;
-						view.anchor.y = options.anchor.y;
-					}
-					// If a container is specified, use add to that container
-					if (options.container) {
-						options.container.addChild(view);
-					} else {
-						// Otherwise just add the view to the stage
-						this.stage.addChild(view);
-					}
-					return view;
-				// Create a default case
-				default: 
-					throw 'Invalid PIXI.DisplayObject passed';
-			}
-		},
-		/**
-		* Helper function
-		* Centers the anchor to {x: 0.5, y: 0.5} of a view
-		* @param  {PIXI.DisplayObject} view The view to center the anchor
-		* @return {void}
-		*/
-		centerAnchor: function( view ) {
-			if (view !== null){
-				view.anchor.x = 0.5;
-				view.anchor.y = 0.5;
-			}
-		}
-	};
+        /**
+         * Create a circle for use in PIXI stage
+         * @param  {Number} x      The x coord
+         * @param  {Number} y      The y coord
+         * @param  {Number} r      The circle radius
+         * @param  {Object|String} styles The styles configuration
+         * @return {PIXI.Graphics} A graphic object representing a stage
+         */
+        createCircle: function(x, y, r, style){
+            
+            var graphics = new PIXI.Graphics();
+            graphics.beginFill(style.fillStyle);
+            graphics.lineStyle(style.lineWidth, style.strokeStyle);
+            graphics.drawCircle(x, y, r);
+            // Center the graphics to the circle
+            graphics.pivot.x = (x / 2) + (r / 2);
+            graphics.pivot.y = (y / 2) + (r / 2);
+            return graphics;
+        },
+        /**
+         * Creates a polygon for PIXI
+         * @param  {Array} verts  Array of vectorish vertices
+         * @param  {Object|String} styles The styles configuration
+         * @param  {Canvas2DContext} ctx    (optional) The canvas context
+         * @return {PIXI.Graphics} a graphic object representing a polygon
+         */
+        createPolygon: function(verts, styles){
+        
+            var vert = verts[0]
+                ,x = vert.x
+                ,y = vert.y
+                ,l = verts.length
+                ;
+            var start = {
+                x: x,
+                y: y
+            };
+            var graphics = new PIXI.Graphics();
+            
+            graphics.beginFill(styles.fillStyle);
+            graphics.lineStyle(styles.lineWidth, styles.strokeStyle);
+        
+            graphics.moveTo(x, y);
+            
+            for ( var i = 1; i < l; ++i ){
+                
+                vert = verts[ i ];
+                x = vert.x;
+                y = vert.y;
+                graphics.lineTo(x, y);
+            }
+            
+            if (l > 2){
+                graphics.lineTo(start.x, start.y);
+            }
+            
+            graphics.endFill();
+            return graphics;
+        },
+        /**
+         * Draw a line onto specified canvas context
+         * @param  {Vectorish} from   Starting point
+         * @param  {Vectorish} to     Ending point
+         * @param  {Object|String} styles The styles configuration
+         * @return {PIXI.Graphics} a graphics object representing a line
+         */
+        createLine: function(from, to, styles){
+        
+            var x = from.x
+                ,y = from.y
+                ;
+        
+            var graphics = new PIXI.Graphics();
+            graphics.beginFill(styles.fillStyle);
+            graphics.lineStyle(styles.lineWidth, styles.strokeStyle);
+        
+            graphics.moveTo(x, y);
+        
+            x = to.x;
+            y = to.y;
+            
+            graphics.lineTo(x, y);
+            
+            graphics.endFill();
+            return graphics;
+        },
+        /**
+         * Create a view for specified geometry.
+         * @param  {Geometry} geometry The geometry
+         * @return {PIXI.DisplayObject}    An image cache of the geometry
+         */
+        createView: function( geometry ){
+
+            var view = null
+                ,aabb = geometry.aabb()
+                ,hw = aabb.hw + Math.abs(aabb.x)
+                ,hh = aabb.hh + Math.abs(aabb.y)
+                ,x = hw + 1
+                ,y = hh + 1
+                ,name = geometry.name
+                ;
+            
+            var styles = styles || this.options.styles[ name ];
+            
+            x += styles.lineWidth | 0;
+            y += styles.lineWidth | 0;
+            
+            if (name === 'circle'){
+            
+                view = this.createCircle(x, y, geometry.radius, styles);
+            
+            } else if (name === 'convex-polygon'){
+            
+                view = this.createPolygon(geometry.vertices, styles);
+            }
+            
+            if (styles.angleIndicator){
+                
+                view.beginFill(styles.angleIndicator);
+                view.moveTo((x / 2), (5 + styles.lineWidth));
+                view.lineTo((x / 2) + (geometry.radius / 2), geometry.radius);
+                // Center the graphics to the circle
+                view.endFill();
+                
+            }
+            if (view) {
+                this.stage.addChild(view);
+                return view;
+            } else {
+                throw "Invalid view name passed.";
+            }
+
+        },
+
+        /**
+         * Draw the meta data
+         * @param  {Object} meta The meta data
+         * @return {void}
+         */
+        drawMeta: function( meta ){
+            if (!this.meta.loaded){
+                // define the font style here
+                var fontStyles = {
+                    font: "18px Snippet", 
+                    fill: "white", 
+                    align: "left"
+                };
+                this.meta.fps = new PIXI.Text('FPS: ' + meta.fps.toFixed(2), fontStyles);
+                this.meta.fps.position.x = 15;
+                this.meta.fps.position.y = 5;
+                
+                this.meta.ipf = new PIXI.Text('IPF: ' + meta.ipf, fontStyles);
+                this.meta.ipf.position.x = 15;
+                this.meta.ipf.position.y = 30;
+                
+                this.stage.addChild(this.meta.fps);
+                this.stage.addChild(this.meta.ipf);
+                this.meta.loaded = true;
+            } else {
+                this.meta.fps.setText('FPS: ' + meta.fps.toFixed(2));
+                this.meta.ipf.setText('IPF: ' + meta.ipf);
+            }
+        },
+
+        /**
+         * Callback to be run before rendering
+         * @private
+         * @return {void}
+         */
+        beforeRender: function(){
+
+            // Do pre-rendering things here (clear stage?)
+        },
+        /**
+         * Create a view for specified geometry.
+         * @param  {String} type The type of PIXI.DisplayObject to make
+         * @param  {Object} options The specific options to apply to the view
+         * @return {PIXI.DisplayObject} An object that is renderable
+         */
+        createDisplay: function( type, options ){
+            var view = null
+                ,texture = null
+                ;
+            switch (type){
+                // Create a sprite object
+                case 'sprite':
+                    texture = PIXI.Texture.fromImage(options.texture);
+                    view = new PIXI.Sprite(texture);
+                    if (options.anchor ) {
+                        view.anchor.x = options.anchor.x;
+                        view.anchor.y = options.anchor.y;
+                    }
+                    // If a container is specified, use add to that container
+                    if (options.container) {
+                        options.container.addChild(view);
+                    } else {
+                        // Otherwise just add the view to the stage
+                        this.stage.addChild(view);
+                    }
+                    return view;
+                // Create a movieclip object
+                case 'movieclip':
+                    if (!this.assetsLoaded) {
+                        throw "No assets have been loaded. Use loadSpritesheet() first";
+                    }
+                    var tex = []
+                        ,i = 0
+                        ;
+                    // Populate our movieclip
+                    for (i; i < options.frames.length; i++) {
+                        texture = PIXI.Texture.fromFrame(options.frames[i]);
+                        tex.push(texture);
+                    }
+                    view = new PIXI.MovieClip(tex);
+                    if (options.anchor ) {
+                        view.anchor.x = options.anchor.x;
+                        view.anchor.y = options.anchor.y;
+                    }
+                    // If a container is specified, use add to that container
+                    if (options.container) {
+                        options.container.addChild(view);
+                    } else {
+                        // Otherwise just add the view to the stage
+                        this.stage.addChild(view);
+                    }
+                    return view;
+                // Create a default case
+                default: 
+                    throw 'Invalid PIXI.DisplayObject passed';
+            }
+        },
+        /**
+        * Helper function
+        * Centers the anchor to {x: 0.5, y: 0.5} of a view
+        * @param  {PIXI.DisplayObject} view The view to center the anchor
+        * @return {void}
+        */
+        centerAnchor: function( view ) {
+            if (view !== null){
+                view.anchor.x = 0.5;
+                view.anchor.y = 0.5;
+            }
+        }
+    };
 });
 
 

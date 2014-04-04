@@ -5,7 +5,7 @@
   <div class="top">
     <h1 class="title">{{ site.title }}</h1>
     {% if site.show.details and site.show.branding == false %}
-    <a id="nav-toggle" href="#details" class="btn-details" data-offcanvas="toggle">details...</a>
+    <a id="nav-toggle" href="#details" class="btn-details" data-offcanvas="toggle">show comments</a>
     {% endif %}
     <ul>
       <li><a href="{{ site.ml_url }}" class="btn-index">back to labs</a></li>
@@ -16,7 +16,7 @@
   </div>
   {% if site.show.branding and site.show.details %}
   <div class="bottom">
-    <a id="nav-toggle" href="#details" class="btn-details" data-offcanvas="toggle">details...</a>
+    <a id="nav-toggle" href="#details" class="btn-details" data-offcanvas="toggle">show comments</a>
   </div>
   {% endif %}
 </nav>

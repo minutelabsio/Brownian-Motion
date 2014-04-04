@@ -16,5 +16,5 @@ library_path: "library" # changeme
 show :
   branding: true
   details: true
-  comments: false
+  comments: true
 
