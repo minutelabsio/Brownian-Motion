@@ -193,7 +193,7 @@ define(
                         el: 'physics',
                         width: viewWidth,
                         height: viewHeight,
-                        // meta: true,
+                        meta: true,
                         // debug:true,
                         styles: {
                             'circle': {

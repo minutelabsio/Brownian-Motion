@@ -41,6 +41,14 @@ html, body, #wrap-outer {
     z-index: 1;
 }
 
+#sim .pjs-meta {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1em;
+    background: #fff;
+}
+
 #sim .physics-layer-tiny {
     z-index: 1;
 }
