@@ -41,16 +41,25 @@ html, body, #wrap-outer {
 }
 
 /* line 44, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#sim .pjs-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 1em;
+  background: #fff;
+}
+
+/* line 52, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-tiny {
   z-index: 1;
 }
 
-/* line 47, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 55, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-paths {
   z-index: 2;
 }
 
-/* line 50, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 58, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-main {
   z-index: 3;
 }
