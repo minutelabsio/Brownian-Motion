@@ -35,6 +35,10 @@ require.config({
         // physics
         'physicsjs': 'vendor/physicsjs-full-0.6.0rc1',
         // 'physicsjs': 'vendor/physicsjs/physicsjs-full',
+        
+        // Mouse/Touch events
+        'hammerjs': 'vendor/hammer',
+        'hammer.jquery': 'vendor/hammer.jquery',
 
         // controls
         'dat': 'vendor/dat.gui',
@@ -47,12 +51,12 @@ require.config({
     map: {
         
         '*' : {
-            'jquery': 'modules/adapters/jquery', // jQuery noconflict adapter
+            // 'jquery': 'modules/adapters/jquery', // jQuery noconflict adapter
             'site-config': 'config/site-config.json'
-        },
+        }//,
 
-        'modules/adapters/jquery': {
-            'jquery': 'jquery'
-        }
+        // 'modules/adapters/jquery': {
+        //     'jquery': 'jquery'
+        // }
     }
 });

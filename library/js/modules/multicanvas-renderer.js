@@ -14,9 +14,18 @@ define(
 
                     parent.init.call( this, options );
 
-                    this.layers = {};
+                    this._layers = {};
                     this.addLayer( 'main', this.el );
                     this.resize( this.options.width, this.options.height );
+                },
+
+                layer: function( name ){
+
+                    if ( name in this._layers ){
+                        return this._layers[ name ];
+                    }
+
+                    return null;
                 },
 
                 addLayer: function( id, el, opts ){
@@ -38,7 +47,7 @@ define(
                         }
                         ;
 
-                    if ( id in this.layers ){
+                    if ( id in this._layers ){
                         throw 'Layer "'+id+'" already added.';
                     }
 
@@ -137,7 +146,7 @@ define(
                     };
 
                     // remember layer
-                    this.layers[ id ] = layer;
+                    this._layers[ id ] = layer;
 
                     return layer;
                 },
@@ -146,9 +155,9 @@ define(
 
                     var layer;
 
-                    for ( var id in this.layers ){
+                    for ( var id in this._layers ){
                         
-                        layer = this.layers[ id ];
+                        layer = this._layers[ id ];
                         if ( layer.options.autoResize ){
                             layer.el.width = width;
                             layer.el.height = height;
@@ -178,9 +187,9 @@ define(
                         this.drawMeta( meta );
                     }
 
-                    for ( var id in this.layers ){
+                    for ( var id in this._layers ){
                         
-                        this.layers[ id ].render();
+                        this._layers[ id ].render();
                     }
 
                     return this;
