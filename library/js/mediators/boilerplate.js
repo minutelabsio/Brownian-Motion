@@ -1,6 +1,7 @@
 define(
     [
         'jquery',
+        'hammer.jquery',
         'moddef',
         'physicsjs',
         'dat',
@@ -8,6 +9,7 @@ define(
     ],
     function(
         $,
+        _hjq,
         M,
         Physics,
         dat,
@@ -15,6 +17,71 @@ define(
     ) {
 
         'use strict';
+
+        $.fn.slider = function( opts ){
+            var options = $.extend({
+                min: 0
+                ,max: 1
+                ,value: 0.5
+            }, opts);
+
+            return $(this).each(function(){
+                var $this = $(this).addClass('slider')
+                    ,factor = options.max - options.min
+                    ,val = (options.value - options.min) / factor
+                    ,$handle = $('<div>').appendTo($this).addClass('handle')
+                    ,$meter = $('<div>').appendTo($this).addClass('meter')
+                    ;
+
+                function set( x ){
+                    var width = $this.width();
+                    x = Math.max(0, Math.min(width, x));
+                    val = x / width;
+
+                    $handle.css('left', x);
+                    $meter.css('width', (val * 100) + '%');
+
+                    $this.trigger('change', val * factor + options.min);
+                }
+
+                $this.css({
+                    position: this.style.position || 'relative'
+                });
+
+                $meter.css({
+                    display: 'block'
+                    ,position: 'absolute'
+                    ,top: '0'
+                    ,left: '0'
+                    ,bottom: '0'
+                });
+
+                $handle.css({
+                    position: 'absolute'
+                    ,top: '50%'
+                    ,marginLeft: -$handle.outerWidth() * 0.5
+                    ,marginTop: -$handle.outerHeight() * 0.5
+                });
+
+                $this.hammer().on('touch drag', Physics.util.throttle(function( e ){
+                    var offset = $this.offset()
+                        ,x = e.gesture.center.pageX - offset.left
+                        ,y = e.gesture.center.pageY - offset.top
+                        ;
+
+                    set( x );
+
+                    e.preventDefault();
+
+                }, 20));
+
+                $this.on('mousedown', function(){
+                    return false;
+                });
+
+                set( val * $this.width() );
+            });
+        };
 
         var MPColors = [
             'rgb(18, 84, 151)' // blue-dark
@@ -81,7 +148,7 @@ define(
                 ,bodies = layer.bodies
                 ,ctx = layer.ctx
                 ,pos
-                ,view
+                ,view 
                 ;
 
             if ( clear !== false ){
@@ -93,7 +160,7 @@ define(
                 body = bodies[ i ];
                 if ( !body.hidden ){
                     pos = body.state.pos;
-                    view = body.view || ( body.view = self.createView(body.geometry, body.styles || styles[ body.geometry.name ]) );
+                    view = layer.circleView || body.view;
                     ctx.drawImage(view, pos.x-view.width/2, pos.y-view.height/2);
                 }
             }
@@ -120,6 +187,9 @@ define(
                 this.velSigma = 0.1;
                 this.tinyDensity = 4e-4;
                 this.largeDensity = 9e-6;
+                this.largeSize = 25;
+                this.ratio = 0.2;
+                this.massRatio = 0.03;
                 this.maxParticles = 300;
                 this.tinyParticles = [];
                 this.largeParticles = [];
@@ -151,10 +221,10 @@ define(
 
                 self.on({
                     'settings:tiny-opacity': function( e, val ){
-                        self.renderer.layers.tiny.el.style.opacity = '' + (Math.exp(val)-1)/(Math.E-1);
+                        self.renderer.layer('tiny').el.style.opacity = '' + (Math.exp(val)-1)/(Math.E-1);
                     },
                     'settings:paths': function( e, val ){
-                        var layer = self.renderer.layers.paths;
+                        var layer = self.renderer.layer('paths');
                         if ( val === false ){
                             layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);   
                             self.world.remove( self.posTracker );
@@ -180,8 +250,46 @@ define(
                                 bodies[ i ].state.vel.mult( scale );
                             }
                         });
-                    }, 100)
+                    }, 100),
+                    'settings:ratio': function( e, val ){
+                        var r = val * self.largeSize;
+                        self.renderer.layer('tiny').circleView = (this.tinyParticleView = self.renderer.createView(Physics.geometry('circle',{radius: r}), 'grey'));
+                        var body;
+                        for ( var i = 0, l = self.tinyParticles.length; i < l; ++i ){
+                            body = self.tinyParticles[ i ];
+                            body.geometry.radius = r;
+                            body.recalc();
+                        }
+                    },
+
+                    'settings:mass-ratio': function( e, val ){
+                        var body;
+                        for ( var i = 0, l = self.largeParticles.length; i < l; ++i ){
+                            body = self.largeParticles[ i ];
+                            body.mass = 1 / val;
+                        }
+                    }
                 });
+
+                $(function(){
+                    var controls = $('#controls').hammer();
+
+                    controls.on('touch', '#ctrl-draw-paths', function(){
+                        var $this = $(this)
+                            ,on = !$this.hasClass('on')
+                            ;
+
+                        $this.toggleClass('on', on);
+                        self.emit('settings:paths', on);
+                    });
+                });
+
+                window.addEventListener('resize', Physics.util.throttle(function(){
+                    self.emit('resize', {
+                        width: window.innerWidth,
+                        height: window.innerHeight
+                    });
+                }, 50), false);
             },
 
             initPhysics: function( world ){
@@ -228,17 +336,17 @@ define(
                 });
             
                 // resize events
-                window.addEventListener('resize', function () {
+                self.on('resize', function ( e, dim ) {
             
-                    viewWidth = window.innerWidth;
-                    viewHeight = window.innerHeight;
+                    viewWidth = dim.width;
+                    viewHeight = dim.height;
             
                     renderer.resize( viewWidth, viewHeight );
             
                     viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
                     edgeBounce.setAABB(viewportBounds);
             
-                }, true);
+                });
                 
                 world.add([
                     Physics.behavior('body-collision-detection'),
@@ -259,26 +367,31 @@ define(
                 Physics.util.ticker.start();
 
                 // add controls boundary
-                world.add(Physics.body('convex-polygon', {
+                var ctrls = Physics.body('convex-polygon', {
                     hidden: true,
                     x: viewWidth * 0.5,
                     y: viewHeight * 0.5,
                     vertices: [
                         { x: 0, y: 0 },
-                        { x: 0, y: 200 },
-                        { x: 400, y: 200 },
+                        { x: 0, y: 280 },
+                        { x: 400, y: 280 },
                         { x: 400, y: 0 }
                     ],
                     treatment: 'static'
-                }));
+                });
+
+                world.add( ctrls );
+
+                self.on('resize', function( e, dim ){
+                    ctrls.state.pos.set( dim.width * 0.5, dim.height * 0.5 );
+                });
 
                 for ( var i = 0, l = Math.min(this.maxParticles, parseInt(this.tinyDensity * viewWidth * viewHeight)); i < l; ++i ){
                     
                     this.addTinyParticle({
                         x: Math.random() * viewWidth,
                         y: Math.random() * viewHeight,
-                        radius: 5,
-                        view: this.tinyParticleView || (this.tinyParticleView = renderer.createView(Physics.geometry('circle',{radius: 5}), 'grey'))
+                        radius: 5
                     });
                 }
 
@@ -295,7 +408,9 @@ define(
                     tags: { $in: [ 'tiny' ] }
                 })).render = fastRender;
 
-                renderer.layers.main.addToStack( world.find({
+                renderer.layer('tiny').circleView = (this.tinyParticleView = self.renderer.createView(Physics.geometry('circle',{radius: self.ratio * self.largeSize }), 'grey'));
+
+                renderer.layer( 'main' ).addToStack( world.find({
                     tags: { $in: [ 'large' ] }
                 })).render = fastRender;
 
@@ -374,16 +489,16 @@ define(
                     y: 50,
                     vx: gauss(0, this.velSigma/10),
                     vy: gauss(0, this.velSigma/10),
-                    radius: 25,
+                    radius: this.largeSize,
                     restitution: 1,
                     cof: 0,
-                    mass: 30,
+                    mass: 1 / this.massRatio,
                     color: '#125497'
                 }, opts);
 
                 p = Physics.body('circle', opts);
                 p.tags = [ 'large' ];
-                p.view = this.renderer.createView( p.geometry, opts.color);
+                p.view = this.renderer.createView( p.geometry, opts.color );
                 this.largeParticles.push( p );
                 this.world.add( p );
                 this.emit('add:large', p);
@@ -392,29 +507,37 @@ define(
             initControls: function(){
 
                 var self = this
-                    ,gui = new dat.GUI()
-                    ,settings = {
-
-                    }
                     ;
 
-                function addSetting( id, name, def, min, max ){
+                $('#ctrl-opacity').on('change', function( e, val ){
+                    self.emit('settings:tiny-opacity', val);
+                }).slider({
+                    value: 0
+                });
 
-                    var ctrl;
-                    settings[ name ] = def;
-                    ctrl = gui.add( settings, name, min, max );
-                    ctrl.onChange(function(){
+                $('#ctrl-energy').on('change', function( e, val ){
+                    self.emit('settings:energy', val);
+                }).slider({
+                    value: 1,
+                    min: 0.1,
+                    max: 10
+                });
 
-                        self.emit('settings:' + id, settings[ name ]);
-                    });
-                    self.emit('settings:' + id, settings[ name ]);
-                    return ctrl;
-                }
+                $('#ctrl-ratio').on('change', function( e, val ){
+                    self.emit('settings:ratio', val);
+                }).slider({
+                    value: this.ratio,
+                    min: 0.1,
+                    max: 0.6
+                });
 
-                addSetting('paths', 'Draw Paths', false);
-                addSetting('tiny-opacity', 'Particle Fade', 0.01, 0, 1).step(0.1);
-                addSetting('energy', 'Energy', 1, 0.1, 10).step(0.1);
-
+                $('#ctrl-mass-ratio').on('change', function( e, val ){
+                    self.emit('settings:mass-ratio', val);
+                }).slider({
+                    value: this.massRatio,
+                    min: 0.001,
+                    max: 1
+                });
             },
 
             /**
