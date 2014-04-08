@@ -196,7 +196,7 @@ define(
                 this.largeSize = window.Modernizr.touch ? 50 : 25;
                 this.ratio = 0.2;
                 this.massRatio = 0.06;
-                this.maxParticles = window.Modernizr.touch ? 70 : 240;
+                this.maxParticles = window.Modernizr.touch ? 60 : 240;
 
                 this.tinyParticles = [];
                 this.largeParticles = [];
@@ -427,7 +427,7 @@ define(
                     });
                 }
 
-                for ( var i = 0, l = Math.max(1, parseInt(this.largeDensity * viewWidth * viewHeight / this.largeSize)); i < l; ++i ){
+                for ( var i = 0, l = Math.max(3, parseInt(this.largeDensity * viewWidth * viewHeight / this.largeSize)); i < l; ++i ){
                     
                     this.addLargeParticle({
                         x: Math.random() * viewWidth,
@@ -581,9 +581,11 @@ define(
                 var self = this
                     ;
 
-                Physics({ timestep: window.Modernizr.touch ? 10 : 8 }, self.initPhysics.bind(self));
-                self.initControls();
-                self.emit('settings:paths', $('#ctrl-draw-paths').hasClass('on'));
+                if ( window.innerWidth > 500 ){
+                    Physics({ timestep: window.Modernizr.touch ? 10 : 8 }, self.initPhysics.bind(self));
+                    self.initControls();
+                    self.emit('settings:paths', $('#ctrl-draw-paths').hasClass('on'));
+                }
             }
 
         }, ['events']);

@@ -136,3 +136,18 @@ html, body, #wrap-outer {
 #sim .physics-layer-main {
     z-index: 3;
 }
+
+@media screen and (max-width: 500px){
+    #viewport * {
+        display: none;
+    }
+
+    #viewport:after {
+        content: 'Sorry but your screen is too small. Try viewing the site on a larger screen.';
+        position: absolute;
+        top: 200px;
+        padding: 2em;
+        font-size: 2em;
+        line-height: 1.5;
+    }
+}
