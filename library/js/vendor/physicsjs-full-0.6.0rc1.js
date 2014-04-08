@@ -1,5 +1,5 @@
 /**
- * PhysicsJS v1.0.0-rc1 - 2014-04-04
+ * PhysicsJS v1.0.0-rc1 - 2014-04-08
  * A modular, extendable, and easy-to-use physics engine for javascript
  * http://wellcaffeinated.net/PhysicsJS
  *
@@ -58,15 +58,6 @@ var Physics = function Physics(){
  * the [lodash API](http://lodash.com/docs).
  **/
 Physics.util = {};
-
-/**
- * == Classes ==
- *
- * This section contains classes that are used in PhysicsJS
- * but aren't available through the main namespace directly.
- * Usually this means they were created by a factory function
- * using a [[Physics.util.decorator]].
- **/
 
 /**
  * == Special ==
@@ -360,16 +351,10 @@ var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La
             pt: { x: 2, y: 2 }
        };
        ```
-     * - axis (Physics.vector): The axis to use
+     * - axis (Physics.vector): The axis to search
      * - seed (Physics.vector): The starting direction for the simplex (defaults to x-axis)
+     * - checkOverlapOnly (Boolean): only check whether there is an overlap, don't calculate the depth
      * - debugFn (Function): For debugging. Called at every iteration with the current simplex.
-     * + (Object): The algorithm information containing properties:
-       ```javascript
-       {
-            overlap: Boolean,
-            simplex: [] // array containing simplex points as simple x/y objects
-       }
-       ```
      *
      * Implementation agnostic GJK function.
      *
@@ -377,6 +362,14 @@ var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La
      * For general information about GJK see: 
      * - [www.codezealot.org/archives/88](http://www.codezealot.org/archives/88)
      * - [mollyrocket.com/849](http://mollyrocket.com/849)
+     *
+     * The algorithm information returned:
+     * ```javascript
+     * {
+     *     overlap: Boolean,
+     *     simplex: [] // array containing simplex points as simple x/y objects
+     * }
+     * ```
      **/
     var gjk = function gjk( support, seed, checkOverlapOnly, debugFn ){
 
@@ -838,7 +831,7 @@ var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La
         return this;
     };
 
-    /**
+    /** deprecated: 0.6.0..1.0.0
      * Physics.vector#get( idx ) -> Number
      * - idx (Number): The coordinate index (0 or 1)
      * 
@@ -1484,6 +1477,31 @@ var b=a.valueOf,c=typeof b=="function"&&(c=L(b))&&L(c);return c?a==c||L(a)==c:La
 
 
 // ---
+// inside: src/util/noconflict.js
+
+(function( window ){
+
+    var _Physics = window.Physics;
+
+    /**
+     * Physics.noConflict() -> Physics
+     * 
+     * Restore the original reference to the global window.Physics variable.
+     * 
+     * Does nothing if PhysicsJS doesn't have a reference in global scope
+     **/
+    Physics.noConflict = function(){
+
+        if ( window.Physics === Physics ) {
+            window.Physics = _Physics;
+        }
+        
+        return Physics;
+    };
+
+})( this );
+
+// ---
 // inside: src/util/decorator.js
 
 /** related to: factory
@@ -1601,7 +1619,7 @@ var Decorator = Physics.util.decorator = function Decorator( type, baseProto ){
     // transparent and readable in debug consoles...
     mixin( baseProto );
 
-    /**  section: Special
+    /**  belongs to: Physics.util.decorator
      * factory( name[, parentName], decorator[, cfg] )
      * factory( name, cfg ) -> Object
      * -  name       (String):  The class name
@@ -1781,34 +1799,238 @@ Physics.util.options = function( def, target ){
 
 
 // ---
-// inside: src/util/noconflict.js
+// inside: src/util/scratchpad.js
 
-(function( window ){
+/*
+ * scratchpad
+ * thread-safe management of temporary (voletile)
+ * objects for use in calculations
+ * https://github.com/wellcaffeinated/scratchpad.js
+ */
+Physics.scratchpad = (function(){
 
-    var _Physics = window.Physics;
+    // Errors
+    var SCRATCH_USAGE_ERROR = 'Error: Scratchpad used after .done() called. (Could it be unintentionally scoped?)';
+    var SCRATCH_INDEX_OUT_OF_BOUNDS = 'Error: Scratchpad usage space out of bounds. (Did you forget to call .done()?)';
+    var SCRATCH_MAX_REACHED = 'Error: Too many scratchpads created. (Did you forget to call .done()?)';
+    var ALREADY_DEFINED_ERROR = 'Error: Object is already registered.';
 
-    /**
-     * Physics.noConflict() -> Physics
+    // cache previously created scratches
+    var scratches = [];
+    var numScratches = 0;
+    var Scratch, Scratchpad;
+    
+    var regIndex = 0;
+
+
+    /** belongs to: Physics.scratchpad
+     * class Scratch
+     *
+     * A scratchpad session.
      * 
-     * Restore the original reference to the global window.Physics variable.
-     * 
-     * Does nothing if PhysicsJS doesn't have a reference in global scope
+     * This class keeps track of temporary objects used
+     * in this session and releases them when finished (call to `.done()`).
+     *
+     * Use this to retrieve temporary objects:
+     * - `.vector()`: retrieve a temporary [[Physics.vector]]
+     * - `.transform()`: retrieve a temporary [[Physics.transform]]
+     *
+     * See [[Physics.scratchpad]] for more info.
      **/
-    Physics.noConflict = function(){
+    Scratch = function Scratch(){
 
-        if ( window.Physics === Physics ) {
-            window.Physics = _Physics;
-        }
+        // private variables
+        this._active = false;
+        this._indexArr = [];
         
-        return Physics;
+        if (++numScratches >= Scratchpad.maxScratches){
+            throw SCRATCH_MAX_REACHED;
+        }
     };
 
-})( this );
+    Scratch.prototype = {
+
+        /**
+         * Scratch#done( [val] ) -> Mixed
+         * - val (Mixed): No effect on this method, just passed on to the return value so you can do things like:
+         return scratch.done( myReturnVal );
+         * + (Mixed): Whatever you specified as `val`
+         * 
+         * Declare that your work is finished.
+         * 
+         * Release temp objects for use elsewhere. Must be called when immediate work is done.
+         **/
+        done: function( val ){
+
+            this._active = false;
+            this._indexArr = [];
+            // add it back to the scratch stack for future use
+            scratches.push( this );
+            return val;
+        }
+    };
+
+
+    // API
+
+    /**
+     * Physics.scratchpad( [fn] ) -> Scratch|Function
+     * - fn (Function): Some function you'd like to wrap in a scratch session. First argument is the scratch instance.
+     * + (Function): The wrapped function (if `fn` arg specified) that can be reused like the original minus the first (scratch) parameter.
+     * + (Scratch): The scratch session.
+     * 
+     * Get a new scratch session to work from or wrap a function in a scratch session.
+     * 
+     * Call `.done()` on it when finished.
+     *
+     * Example:
+     * 
+     * ```javascript
+     * // get a scratch session manually
+     * var myAlg = function( scratch, arg1, arg2, ... ){
+     *     var scratch = Physics.scratchpad()
+     *     ,vec = scratch.vector().set( 0, 0 ) // need to reinitialize... it's recycled!
+     *     ;
+     *     // ...
+     *     return scratch.done( result );
+     * };
+     * // later...
+     * while( awesome ){
+     *     myAlg( arg1, arg2, ... );
+     * }
+     * ```
+     *
+     * Example:
+     * 
+     * ```javascript
+     * // wrap a function in a scratch session
+     * var myAlg = Physics.scratchpad(function( scratch, arg1, arg2, ... ){
+     *     var vec = scratch.vector().set( 0, 0 ); // need to reinitialize... it's recycled!
+     *     //...
+     *     return result;
+     * });
+     * // later...
+     * while( awesome ){
+     *     myAlg( arg1, arg2, ... );
+     * }
+     * ```
+     **/
+    Scratchpad = function Scratchpad( fn ){
+
+        if ( fn ){
+            return Scratchpad.fn( fn );
+        }
+
+        var scratch = scratches.pop() || new Scratch();
+        scratch._active = true;
+        return scratch;
+    };
+
+    // options
+    Scratchpad.maxScratches = 100; // maximum number of scratches
+    Scratchpad.maxIndex = 20; // maximum number of any type of temp objects
+
+    /**
+     * Physics.scratchpad.fn( fn ) -> Function
+     * - fn (Function): Some function you'd like to wrap in a scratch session. First argument is the scratch instance. See [[Physics.scratchpad]].
+     * + (Function): The wrapped function that can be reused like the original minus the first (scratch) parameter.
+     * 
+     * Wrap a function in a scratch session.
+     *
+     * Same as calling `Physics.scratchpad( fn )` with a function specified.
+     **/
+    Scratchpad.fn = function( fn ){
+        
+        var args = [];
+        for ( var i = 0, l = fn.length; i < l; i++ ){
+            args.push( i );
+        }
+
+        args = 'a' + args.join(',a');
+        /* jshint -W054 */
+        var handle = new Function('fn, scratches, Scratch', 'return function('+args+'){ '+
+               'var scratch = scratches.pop() || new Scratch( scratches );'+
+               'scratch._active = true;'+
+               'return scratch.done( fn(scratch, '+args+') );'+
+           '};'
+        );
+        /* jshint +W054 */
+
+        return handle(fn, scratches, Scratch);
+    };
+
+    /**
+     * Physics.scratchpad.register( name, constructor )
+     * - name (String): Name of the object class
+     * - constructor (Function): The object constructor
+     * 
+     * Register a new object to be included in scratchpads.
+     *
+     * Example:
+     *
+     * ```javascript
+     * // register a hypothetical vector class...
+     * Physics.scratchpad.register('vector', Vector);
+     * ```
+     **/
+    Scratchpad.register = function register( name, constructor, options ){
+
+        var proto = Scratch.prototype
+            ,idx = regIndex++
+            ,stackname = '_' + name + 'Stack'
+            ,useFactory = options && options.useFactory
+            ;
+
+        if ( name in proto ) {
+            throw ALREADY_DEFINED_ERROR;
+        }
+
+        proto[ name ] = function(){
+
+            var stack = this[ stackname ] || ( this[ stackname ] = [])
+                ,stackIndex = (this._indexArr[ idx ] | 0) + 1
+                ,instance
+                ;
+
+            this._indexArr[ idx ] = stackIndex;
+
+            // if used after calling done...
+            if (!this._active){
+                throw SCRATCH_USAGE_ERROR;
+            }
+
+            // if too many objects created...
+            if (stackIndex >= Scratchpad.maxIndex){
+                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
+            }
+
+            // return or create new instance
+            instance = stack[ stackIndex ];
+
+            if ( !instance ){
+                stack.push( instance = useFactory ? constructor() : new constructor() );
+            }
+
+            return instance;
+        };
+
+    };
+
+    // register some classes
+    Scratchpad.register('vector', Physics.vector);
+    Scratchpad.register('transform', Physics.transform);
+    Scratchpad.register('object', function(){ return {}; }, { useFactory: true });
+
+    return Scratchpad;
+
+})();
 
 // ---
 // inside: src/util/pubsub.js
 
 (function(){
+
+    Physics.scratchpad.register('event', function(){ return {}; }, { useFactory: true });
 
     /**
      * class Physics.util.pubsub
@@ -1964,17 +2186,17 @@ Physics.util.options = function( def, target ){
                 ,l = listeners && listeners.length
                 ,handler
                 ,e
+                ,scratch = Physics.scratchpad()
                 ;
 
             if ( !l ){
-                return this;
+                return scratch.done(this);
             }
 
-            e = {
-                // event data
-                topic: topic,
-                handler: handler
-            };
+            e = scratch.event();
+            // event data
+            e.topic = topic;
+            e.handler = handler;
 
             // reverse iterate so priorities work out correctly
             while ( l-- ){
@@ -1988,7 +2210,7 @@ Physics.util.options = function( def, target ){
                 }
             }
 
-            return this;
+            return scratch.done(this);
         },
 
         /**
@@ -2027,231 +2249,6 @@ Physics.util.options = function( def, target ){
     };
     
     Physics.util.pubsub = PubSub;
-})();
-
-// ---
-// inside: src/util/scratchpad.js
-
-/*
- * scratchpad
- * thread-safe management of temporary (voletile)
- * objects for use in calculations
- * https://github.com/wellcaffeinated/scratchpad.js
- */
-Physics.scratchpad = (function(){
-
-    // Errors
-    var SCRATCH_USAGE_ERROR = 'Error: Scratchpad used after .done() called. (Could it be unintentionally scoped?)';
-    var SCRATCH_INDEX_OUT_OF_BOUNDS = 'Error: Scratchpad usage space out of bounds. (Did you forget to call .done()?)';
-    var SCRATCH_MAX_REACHED = 'Error: Too many scratchpads created. (Did you forget to call .done()?)';
-    var ALREADY_DEFINED_ERROR = 'Error: Object is already registered.';
-
-    // cache previously created scratches
-    var scratches = [];
-    var numScratches = 0;
-    var Scratch, Scratchpad;
-    
-    var regIndex = 0;
-
-
-    /** section: Classes
-     * class Scratch
-     *
-     * A scratchpad session.
-     * 
-     * This class keeps track of temporary objects used
-     * in this session and releases them when finished (call to `.done()`).
-     *
-     * Use this to retrieve temporary objects:
-     * - `.vector()`: retrieve a temporary [[Physics.vector]]
-     * - `.transform()`: retrieve a temporary [[Physics.transform]]
-     *
-     * See [[Physics.scratchpad]] for more info.
-     **/
-    Scratch = function Scratch(){
-
-        // private variables
-        this._active = false;
-        this._indexArr = [];
-        
-        if (++numScratches >= Scratchpad.maxScratches){
-            throw SCRATCH_MAX_REACHED;
-        }
-    };
-
-    Scratch.prototype = {
-
-        /**
-         * Scratch#done( [val] ) -> Mixed
-         * - val (Mixed): No effect on this method, just passed on to the return value so you can do things like:
-         return scratch.done( myReturnVal );
-         * + (Mixed): Whatever you specified as `val`
-         * 
-         * Declare that your work is finished.
-         * 
-         * Release temp objects for use elsewhere. Must be called when immediate work is done.
-         **/
-        done: function( val ){
-
-            this._active = false;
-            this._indexArr = [];
-            // add it back to the scratch stack for future use
-            scratches.push( this );
-            return val;
-        }
-    };
-
-
-    // API
-
-    /**
-     * Physics.scratchpad( [fn] ) -> Scratch|Function
-     * - fn (Function): Some function you'd like to wrap in a scratch session. First argument is the scratch instance.
-     * + (Function): The wrapped function (if `fn` arg specified) that can be reused like the original minus the first (scratch) parameter.
-     * + (Scratch): The scratch session.
-     * 
-     * Get a new scratch session to work from or wrap a function in a scratch session.
-     * 
-     * Call `.done()` on it when finished.
-     *
-     * Example:
-     * 
-     * ```javascript
-     * // get a scratch session manually
-     * var myAlg = function( scratch, arg1, arg2, ... ){
-     *     var scratch = Physics.scratchpad()
-     *     ,vec = scratch.vector().set( 0, 0 ) // need to reinitialize... it's recycled!
-     *     ;
-     *     // ...
-     *     return scratch.done( result );
-     * };
-     * // later...
-     * while( awesome ){
-     *     myAlg( arg1, arg2, ... );
-     * }
-     * ```
-     *
-     * Example:
-     * 
-     * ```javascript
-     * // wrap a function in a scratch session
-     * var myAlg = Physics.scratchpad(function( scratch, arg1, arg2, ... ){
-     *     var vec = scratch.vector().set( 0, 0 ); // need to reinitialize... it's recycled!
-     *     //...
-     *     return result;
-     * });
-     * // later...
-     * while( awesome ){
-     *     myAlg( arg1, arg2, ... );
-     * }
-     * ```
-     **/
-    Scratchpad = function Scratchpad( fn ){
-
-        if ( fn ){
-            return Scratchpad.fn( fn );
-        }
-
-        var scratch = scratches.pop() || new Scratch();
-        scratch._active = true;
-        return scratch;
-    };
-
-    // options
-    Scratchpad.maxScratches = 100; // maximum number of scratches
-    Scratchpad.maxIndex = 20; // maximum number of any type of temp objects
-
-    /**
-     * Physics.scratchpad.fn( fn ) -> Function
-     * - fn (Function): Some function you'd like to wrap in a scratch session. First argument is the scratch instance. See [[Physics.scratchpad]].
-     * + (Function): The wrapped function that can be reused like the original minus the first (scratch) parameter.
-     * 
-     * Wrap a function in a scratch session.
-     *
-     * Same as calling `Physics.scratchpad( fn )` with a function specified.
-     **/
-    Scratchpad.fn = function( fn ){
-        
-        var args = [];
-        for ( var i = 0, l = fn.length; i < l; i++ ){
-            args.push( i );
-        }
-
-        args = 'a' + args.join(',a');
-        /* jshint -W054 */
-        var handle = new Function('fn, scratches, Scratch', 'return function('+args+'){ '+
-               'var scratch = scratches.pop() || new Scratch( scratches );'+
-               'scratch._active = true;'+
-               'return scratch.done( fn(scratch, '+args+') );'+
-           '};'
-        );
-        /* jshint +W054 */
-
-        return handle(fn, scratches, Scratch);
-    };
-
-    /**
-     * Physics.scratchpad.register( name, constructor )
-     * - name (String): Name of the object class
-     * - constructor (Function): The object constructor
-     * 
-     * Register a new object to be included in scratchpads.
-     *
-     * Example:
-     *
-     * ```javascript
-     * // register a hypothetical vector class...
-     * Physics.scratchpad.register('vector', Vector);
-     * ```
-     **/
-    Scratchpad.register = function register( name, constructor, options ){
-
-        var proto = Scratch.prototype
-            ,idx = regIndex++
-            ,stackname = '_' + name + 'Stack'
-            ;
-
-        if ( name in proto ) {
-            throw ALREADY_DEFINED_ERROR;
-        }
-
-        proto[ name ] = function(){
-
-            var stack = this[ stackname ] || ( this[ stackname ] = [])
-                ,stackIndex = (this._indexArr[ idx ] | 0) + 1
-                ,instance
-                ;
-
-            this._indexArr[ idx ] = stackIndex;
-
-            // if used after calling done...
-            if (!this._active){
-                throw SCRATCH_USAGE_ERROR;
-            }
-
-            // if too many objects created...
-            if (stackIndex >= Scratchpad.maxIndex){
-                throw SCRATCH_INDEX_OUT_OF_BOUNDS;
-            }
-
-            // return or create new instance
-            instance = stack[ stackIndex ];
-
-            if ( !instance ){
-                stack.push( instance = new constructor() );
-            }
-
-            return instance;
-        };
-
-    };
-
-    // register some classes
-    Scratchpad.register('vector', Physics.vector);
-    Scratchpad.register('transform', Physics.transform);
-
-    return Scratchpad;
-
 })();
 
 // ---
@@ -2722,7 +2719,7 @@ Physics.scratchpad = (function(){
      **/
     Physics.behavior = Decorator('behavior', {
 
-        /** section: Classes
+        /** belongs to: Physics.behavior
          * class Behavior
          *
          * The base class for behaviors created by [[Physics.behavior]] factory function.
@@ -2904,10 +2901,10 @@ Physics.scratchpad = (function(){
      **/
     Physics.body = Decorator('body', {
 
-        /** section: Classes
+        /** belongs to: Physics.body
          * class Body
          *
-         * The base class for behaviors created by [[Physics.body]] factory function.
+         * The base class for bodies created by [[Physics.body]] factory function.
          **/
 
         /** internal
@@ -3209,7 +3206,7 @@ Physics.scratchpad = (function(){
      **/
     Physics.geometry = Decorator('geometry', {
 
-        /** section: Classes
+        /** belongs to: Physics.geometry
          * class Geometry
          *
          * The base class for geometries created by [[Physics.geometry]] factory function.
@@ -3650,10 +3647,10 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
      **/
     Physics.integrator = Decorator('integrator', {
 
-        /** section: Classes
+        /** belongs to: Physics.integrator
          * class Integrator
          *
-         * The base class for geometries created by [[Physics.geometry]] factory function.
+         * The base class for integrators created by [[Physics.integrator]] factory function.
          **/
 
         /** internal
@@ -3840,7 +3837,7 @@ Physics.geometry.nearestPointOnLine = function nearestPointOnLine( pt, linePt1, 
      **/
     Physics.renderer = Decorator('renderer', {
 
-        /** section: Classes
+        /** belongs to: Physics.renderer
          * class Renderer
          *
          * The base class for renderers created by [[Physics.renderer]] factory function.
@@ -4760,24 +4757,22 @@ Physics.integrator('verlet', function( parent ){
 
 
     return {
+        /** 
+         * class Verlet < Integrator
+         *
+         * `Physics.integrator('verlet')`.
+         *
+         * The improved euler integrator.
+         **/
 
-        /**
-         * Initialization
-         * @param  {Object} options Configuration options
-         * @return {void}
-         */
+        // extended
         init: function( options ){
 
             // call parent init
             parent.init.call(this, options);
         },
 
-        /**
-         * Velocity integration
-         * @param  {Array} bodies Array of bodies to integrate
-         * @param  {Number} dt     Timestep size
-         * @return {void}
-         */
+        // extended
         integrateVelocities: function( bodies, dt ){
 
             // half the timestep
@@ -4865,12 +4860,7 @@ Physics.integrator('verlet', function( parent ){
             }
         },
 
-        /**
-         * Position integration
-         * @param  {Array} bodies Array of bodies to integrate
-         * @param  {Number} dt     Timestep size
-         * @return {void}
-         */
+        // extended
         integratePositions: function( bodies, dt ){
 
             // half the timestep
@@ -4926,32 +4916,51 @@ Physics.integrator('verlet', function( parent ){
 // ---
 // inside: src/geometries/point.js
 
-/**
- * Point geometry
- * @module geometries/point
- */
-Physics.geometry('point', function( parent ){
-
-    // alias of default
-});
+/** alias of: Geometry 
+ * class PointGeometry < Geometry
+ *
+ * Physics.geometry('point')
+ *
+ * The point geometry is just an alias for the base class.
+ **/
+Physics.geometry('point', function( parent ){});
 
 
 // ---
 // inside: src/bodies/point.js
 
-/**
- * Point body
- * @module bodies/point
- */
+/** alias of: Body 
+ * class PointBody < Body
+ *
+ * Physics.body('point')
+ *
+ * The point body is just an alias for the base class.
+ **/
 Physics.body('point', function(){});
 
 // ---
 // inside: src/geometries/circle.js
 
-/**
- * Circle geometry
- * @module geometries/circle
- */
+/** 
+ * class CircleGeometry < Geometry
+ *
+ * Physics.geometry('circle')
+ *
+ * The circle geometry has a circular shape.
+ *
+ * Additional options include:
+ * - radius: the radius
+ *
+ * Example:
+ *
+ * ```javascript
+ * var round = Physics.body('circle', {
+ *     x: 30,
+ *     y: 20,
+ *     radius: 5
+ * });
+ * ```
+ **/
 Physics.geometry('circle', function( parent ){
 
     var defaults = {
@@ -4961,26 +4970,24 @@ Physics.geometry('circle', function( parent ){
 
     return {
 
-        /**
-         * Initialization
-         * @param  {Object} options Configuration options
-         * @return {void}
-         */
+        // extended
         init: function( options ){
 
+            var self = this;
             // call parent init method
             parent.init.call(this, options);
 
-            options = Physics.util.extend({}, defaults, options);
-            this.radius = options.radius;
+            this.options.defaults( defaults );
+            this.options.onChange(function( opts ){
+                this.radius = opts.radius;
+            });
+            this.options( options );
+
             this._aabb = Physics.aabb();
+            this.radius = this.options.radius;
         },
                 
-        /**
-         * Get axis-aligned bounding box for this object (rotated by angle if specified).
-         * @param  {Number} angle (optional) The angle to rotate the geometry.
-         * @return {Object}       Bounding box values
-         */
+        // extended
         aabb: function( angle ){
 
             var r = this.radius
@@ -4995,15 +5002,7 @@ Physics.geometry('circle', function( parent ){
             return Physics.aabb.clone( this._aabb );
         },
 
-        /**
-         * Get farthest point on the hull of this geometry
-         * along the direction vector "dir"
-         * returns local coordinates
-         * replaces result if provided
-         * @param {Vector} dir Direction to look
-         * @param {Vector} result (optional) A vector to write result to
-         * @return {Vector} The farthest hull point in local coordinates
-         */
+        // extended
         getFarthestHullPoint: function( dir, result ){
 
             result = result || Physics.vector();
@@ -5011,15 +5010,7 @@ Physics.geometry('circle', function( parent ){
             return result.clone( dir ).normalize().mult( this.radius );
         },
 
-        /**
-         * Get farthest point on the core of this geometry
-         * along the direction vector "dir"
-         * returns local coordinates
-         * replaces result if provided
-         * @param {Vector} dir Direction to look
-         * @param {Vector} result (optional) A vector to write result to
-         * @return {Vector} The farthest core point in local coordinates
-         */
+        // extended
         getFarthestCorePoint: function( dir, result, margin ){
 
             result = result || Physics.vector();
@@ -5038,10 +5029,32 @@ Physics.geometry('circle', function( parent ){
 // ---
 // inside: src/geometries/convex-polygon.js
 
-/**
- * Convex polygon geometry
- * @module geometries/convex-polygon
- */
+/** 
+ * class ConvexPolygonGeometry < Geometry
+ *
+ * Physics.geometry('convex-polygon')
+ *
+ * Geometry for convex polygons.
+ *
+ * Additional config options:
+ * 
+ * - vertices: Array of [[Vectorish]] objects representing the polygon vertices in clockwise (or counterclockwise) order.
+ *
+ * Example:
+ *
+ * ```javascript
+ * var pentagon = Physics.geometry('convex-polygon', {
+ *     // the centroid is automatically calculated and used to position the shape
+ *     vertices: [
+ *         { x: 0, y: -30 },
+ *         { x: -29, y: -9 },
+ *         { x: -18, y: 24 },
+ *         { x: 18, y: 24 },
+ *         { x: 29, y: -9 }
+ *     ]
+ * });
+ * ```
+ **/
 Physics.geometry('convex-polygon', function( parent ){
 
     var ERROR_NOT_CONVEX = 'Error: The vertices specified do not match that of a _convex_ polygon.';
@@ -5052,25 +5065,30 @@ Physics.geometry('convex-polygon', function( parent ){
 
     return {
 
-        /**
-         * Initialization
-         * @param  {Object} options Configuration options
-         * @return {void}
-         */
+        // extended
         init: function( options ){
+
+            var self = this;
 
             // call parent init method
             parent.init.call(this, options);
-            options = Physics.util.extend({}, defaults, options);
 
-            this.setVertices( options.vertices || [] );
+            this.options.defaults( defaults );
+            this.options.onChange(function( opts ){
+                self.setVertices( opts.vertices || [] );
+            });
+            this.options( options );
+
+            self.setVertices( this.options.vertices || [] );
+
         },
 
         /**
-         * Set the vertices of the polygon shape. Vertices will be converted to be relative to the calculated centroid
-         * @param {Array} hull The hull definition. Array of vectorish objects
-         * @return {self}
-         */
+         * ConvexPolygonGeometry#setVertices( hull ) -> this
+         * - hull (Array): Vertices represented by an array of [[Vectorish]] objects, in either clockwise or counterclockwise order
+         *
+         * Set the vertices of this polygon.
+         **/
         setVertices: function( hull ){
 
             var scratch = Physics.scratchpad()
@@ -5099,11 +5117,7 @@ Physics.geometry('convex-polygon', function( parent ){
             return this;
         },
         
-        /**
-         * Get axis-aligned bounding box for this object (rotated by angle if specified).
-         * @param  {Number} angle (optional) The angle to rotate the geometry.
-         * @return {Object}       Bounding box values
-         */
+        // extended
         aabb: function( angle ){
 
             if (!angle && this._aabb){
@@ -5134,15 +5148,7 @@ Physics.geometry('convex-polygon', function( parent ){
             return Physics.aabb.clone( aabb );
         },
 
-        /**
-         * Get farthest point on the hull of this geometry
-         * along the direction vector "dir"
-         * returns local coordinates
-         * replaces result if provided
-         * @param {Vector} dir Direction to look
-         * @param {Vector} result (optional) A vector to write result to
-         * @return {Vector} The farthest hull point in local coordinates
-         */
+        // extended
         getFarthestHullPoint: function( dir, result, data ){
 
             var verts = this.vertices
@@ -5213,15 +5219,7 @@ Physics.geometry('convex-polygon', function( parent ){
             }
         },
 
-        /**
-         * Get farthest point on the core of this geometry
-         * along the direction vector "dir"
-         * returns local coordinates
-         * replaces result if provided
-         * @param {Vector} dir Direction to look
-         * @param {Vector} result (optional) A vector to write result to
-         * @return {Vector} The farthest core point in local coordinates
-         */
+        // extended
         getFarthestCorePoint: function( dir, result, margin ){
 
             var norm
@@ -5257,11 +5255,29 @@ Physics.geometry('convex-polygon', function( parent ){
 // ---
 // inside: src/bodies/circle.js
 
-/**
- * Circle body definition
- * @module bodies/circle
+/*
  * @requires geometries/circle
  */
+/** 
+ * class CircleBody < Body
+ *
+ * Physics.body('circle')
+ *
+ * The circle body has a circular shape.
+ *
+ * Additional options include:
+ * - radius: the radius
+ *
+ * Example:
+ *
+ * ```javascript
+ * var round = Physics.body('circle', {
+ *     x: 30,
+ *     y: 20,
+ *     radius: 5
+ * });
+ * ```
+ **/
 Physics.body('circle', function( parent ){
 
     var defaults = {
@@ -5270,11 +5286,7 @@ Physics.body('circle', function( parent ){
 
     return {
 
-        /**
-         * Initialization
-         * @param  {Object} options Configuration options
-         * @return {void}
-         */
+        // extended
         init: function( options ){
 
             // call parent init method
@@ -5289,10 +5301,7 @@ Physics.body('circle', function( parent ){
             this.recalc();
         },
 
-        /**
-         * Recalculate properties. Call when body physical properties are changed.
-         * @return {this}
-         */
+        // extended
         recalc: function(){
             parent.recalc.call(this);
             // moment of inertia
@@ -5305,11 +5314,38 @@ Physics.body('circle', function( parent ){
 // ---
 // inside: src/bodies/convex-polygon.js
 
-/**
- * Convex Polygon Body
- * @module bodies/convex-polygon
+/*
  * @requires geometries/convex-polygon
  */
+ /** 
+  * class ConvexPolygonBody < Body
+  *
+  * Physics.body('convex-polygon')
+  *
+  * Body for convex polygons. The position of the body is the centroid of the polygon.
+  *
+  * Additional config options:
+  * 
+  * - vertices: Array of [[Vectorish]] objects representing the polygon vertices in clockwise (or counterclockwise) order.
+  *
+  * Example:
+  *
+  * ```javascript
+  * var pentagon = Physics.body('convex-polygon', {
+  *     // place the centroid of the polygon at (300, 200)
+  *     x: 300,
+  *     y: 200,
+  *     // the centroid is automatically calculated and used to position the shape
+  *     vertices: [
+  *         { x: 0, y: -30 },
+  *         { x: -29, y: -9 },
+  *         { x: -18, y: 24 },
+  *         { x: 18, y: 24 },
+  *         { x: 29, y: -9 }
+  *     ]
+  * });
+  * ```
+  **/
 Physics.body('convex-polygon', function( parent ){
 
     var defaults = {
@@ -5318,11 +5354,7 @@ Physics.body('convex-polygon', function( parent ){
 
     return {
 
-        /**
-         * Initialization
-         * @param  {Object} options Configuration options
-         * @return {void}
-         */
+        // extended
         init: function( options ){
 
             // call parent init method
@@ -5337,10 +5369,7 @@ Physics.body('convex-polygon', function( parent ){
             this.recalc();
         },
 
-        /**
-         * Recalculate properties. Call when body physical properties are changed.
-         * @return {this}
-         */
+        // extended
         recalc: function(){
             parent.recalc.call(this);
             // moment of inertia
@@ -6664,7 +6693,7 @@ Physics.behavior('sweep-prune', function( parent ){
         id1 = id1|0;
         id2 = id2|0;
 
-        if ( (id1|0) == (id2|0) ){
+        if ( (id1|0) === (id2|0) ){
 
             return -1;
         }
@@ -6690,6 +6719,9 @@ Physics.behavior('sweep-prune', function( parent ){
                 channel: 'collisions:candidates' //default channel
             });
             this.options( options );
+
+            this.encounters = [];
+            this.candidates = [];
 
             this.clear();
         },
@@ -6844,12 +6876,52 @@ Physics.behavior('sweep-prune', function( parent ){
                 c = this.pairs[ hash ] = {
                     bodyA: tr1.body,
                     bodyB: tr2.body,
-                    flag: 0
+                    flag: 1
                 };
             }
 
             return c;
         },
+
+        // getPair: function(tr1, tr2, doCreate){
+
+        //     var hash = Math.min(tr1.id, tr2.id) // = pairHash( tr1.id, tr2.id )
+        //         ,other = Math.max(tr1.id, tr2.id)
+        //         ,first
+        //         ,c
+        //         ;
+
+        //     if ( hash === false ){
+        //         return null;
+        //     }
+
+        //     first = this.pairs[ hash ];
+
+        //     if ( !first ){
+        //         if ( !doCreate ){
+        //             return null;
+        //         }
+
+        //         first = this.pairs[ hash ] = [];
+        //     }
+
+        //     c = first[ other ];
+
+        //     if ( !c ){
+
+        //         if ( !doCreate ){
+        //             return null;
+        //         }
+
+        //         c = first[ other ] = {
+        //             bodyA: tr1.body,
+        //             bodyB: tr2.body,
+        //             flag: 1
+        //         };
+        //     }
+
+        //     return c;
+        // },
 
         /**
          * Check each axis for overlaps of bodies AABBs
@@ -6868,11 +6940,13 @@ Physics.behavior('sweep-prune', function( parent ){
                 ,j
                 ,c
                 // determine which axis is the last we need to check
-                ,collisionFlag = ( dof.z || dof.y || dof.x )
-                ,encounters = []
+                ,collisionFlag = 1 << (dof.z + 1) << (dof.y + 1) << (dof.x + 1)
+                ,encounters = this.encounters
                 ,enclen = 0
-                ,candidates = []
+                ,candidates = this.candidates
                 ;
+
+            encounters.length = candidates.length = 0;
 
             for ( var xyz = 0; xyz < maxDof; ++xyz ){
 
@@ -6921,11 +6995,15 @@ Physics.behavior('sweep-prune', function( parent ){
                                 c = this.getPair( tr1, tr2, isX );
 
                                 if ( c ){
-                                    
-                                    // if it's the x axis, set the flag
-                                    // to = 1.
+
+                                    if ( c.flag > collisionFlag ){
+                                        c.flag = 1;
+                                    }
+
+                                    // if it's greater than the axis index, set the flag
+                                    // to = 0.
                                     // if not, increment the flag by one.
-                                    c.flag = isX? 0 : c.flag + 1;
+                                    c.flag = c.flag << (xyz + 1);
 
                                     // c.flag will equal collisionFlag 
                                     // if we've incremented the flag
@@ -7491,24 +7569,22 @@ Physics.behavior('verlet-constraints', function( parent ){
 Physics.integrator('improved-euler', function( parent ){
 
     return {
+        /** 
+         * class ImprovedEuler < Integrator
+         *
+         * `Physics.integrator('improved-euler')`.
+         *
+         * The improved euler integrator.
+         **/
 
-        /**
-         * Initialization
-         * @param  {Object} options Configuration options
-         * @return {void}
-         */
+        // extended
         init: function( options ){
 
             // call parent init
             parent.init.call(this, options);
         },
-
-        /**
-         * Velocity integration
-         * @param  {Array} bodies Array of bodies to integrate
-         * @param  {Number} dt     Timestep size
-         * @return {void}
-         */
+ 
+        // extended
         integrateVelocities: function( bodies, dt ){
 
             // half the timestep squared
@@ -7573,12 +7649,7 @@ Physics.integrator('improved-euler', function( parent ){
             }
         },
 
-        /**
-         * Position integration
-         * @param  {Array} bodies Array of bodies to integrate
-         * @param  {Number} dt     Timestep size
-         * @return {void}
-         */
+        // extended
         integratePositions: function( bodies, dt ){
 
             // half the timestep squared
@@ -8273,7 +8344,6 @@ Physics.renderer('dom', function( proto ){
  * A PIXI renderer
  * Renders physics object with PIXI components
  * @module renderers/pixi
- * @requires pixi
  */
  /* global PIXI */
 Physics.renderer('pixi', function( parent ){

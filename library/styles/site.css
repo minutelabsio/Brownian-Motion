@@ -103,8 +103,26 @@ html, body, #wrap-outer {
 #controls .labels .slider {
   margin: 10px 1em;
 }
+/* line 97, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#controls #ctrl-move {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #1a1a1a;
+  color: #ededed;
+  padding: 0.5em;
+  cursor: move;
+}
+/* line 107, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#controls .center {
+  text-align: center;
+}
+/* line 109, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#controls .center button {
+  display: inline-block;
+}
 
-/* line 98, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 115, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim canvas {
   position: absolute;
   top: 0;
@@ -112,7 +130,7 @@ html, body, #wrap-outer {
   z-index: 1;
 }
 
-/* line 105, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 122, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .pjs-meta {
   position: absolute;
   bottom: 0;
@@ -121,17 +139,17 @@ html, body, #wrap-outer {
   background: #fff;
 }
 
-/* line 113, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 130, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-tiny {
   z-index: 1;
 }
 
-/* line 116, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 133, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-paths {
   z-index: 2;
 }
 
-/* line 119, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 136, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-main {
   z-index: 3;
 }
