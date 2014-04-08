@@ -18,6 +18,28 @@ define(
 
         'use strict';
 
+        function drawPoints(ctx, points) {
+            var i, b, c, d;
+            // if (points.length < 6) return;
+            // if (points.length < 6) {
+            //     b = points[0];
+            //     ctx.beginPath();
+            //     ctx.arc(b.x, b.y, ctx.lineWidth / 2, 0, Math.PI * 2, !0);
+            //     ctx.closePath();
+            //     ctx.fill();
+            //     return
+            // }
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (i = 1; i < points.length - 2; i++) {
+                c = (points[i].x + points[i + 1].x) / 2
+                d = (points[i].y + points[i + 1].y) / 2;
+                ctx.quadraticCurveTo(points[i].x, points[i].y, c, d)
+            }
+            ctx.quadraticCurveTo(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            ctx.stroke();
+        }
+
         $.fn.slider = function( opts ){
             var options = $.extend({
                 min: 0
@@ -296,6 +318,9 @@ define(
                         drag = true;
                         center = $('#controls').position();
                     });
+                    controls.on('touchmove', function(e){
+                        e.preventDefault();
+                    });
                     controls.on('drag', function( e ){
                         if ( drag ){
                             self.emit('move-controls', {
@@ -467,21 +492,23 @@ define(
                     }
 
                     ctx.lineCap = 'round';
-
+                    ctx.shadowBlur = 2;
+                    
                     for ( var i = 0, l = bodies.length; i < l; ++i ){
                         
                         body = bodies[ i ];
                         list = body.positionBuffer;
-                        styles.strokeStyle = body.color;
+                        ctx.strokeStyle = ctx.shadowColor = body.color;
 
                         if ( list ){
                             if ( clearNext ) {
                                 list.length = 0;
                             } else {
-                                for ( var j = 0, ll = list.length - 1; j < ll; ++j ){
-                                    // TODO: optimize this
+
+                                for ( var j = 0, ll = list.length - 1; j < ll; j++ ){
                                     renderer.drawLine( list[ j ], list[ j + 1 ], styles, ctx );
                                 }
+                                // drawPoints( ctx, list );
                                 pt = list.pop();
                                 list.length = 0;
                                 list.push( pt );
