@@ -23,7 +23,7 @@ html, body, #wrap-outer {
   height: 12px;
   background: #fff;
   z-index: 1;
-  cursor: ew-resize;
+  cursor: pointer;
 }
 /* line 33, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 .slider .handle {
@@ -108,21 +108,22 @@ html, body, #wrap-outer {
   position: absolute;
   bottom: 0;
   right: 0;
-  background: #1a1a1a;
-  color: #ededed;
-  padding: 0.5em;
+  background: #1a1a1a url('../images/icon-move.png?1396990796') no-repeat center center;
+  background-size: 50%;
+  color: rgba(0, 0, 0, 0);
+  padding: 1em 0.5em;
   cursor: move;
 }
-/* line 107, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 108, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #controls .center {
   text-align: center;
 }
-/* line 109, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 110, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #controls .center button {
   display: inline-block;
 }
 
-/* line 115, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 116, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim canvas {
   position: absolute;
   top: 0;
@@ -130,7 +131,7 @@ html, body, #wrap-outer {
   z-index: 1;
 }
 
-/* line 122, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 123, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .pjs-meta {
   position: absolute;
   bottom: 0;
@@ -139,28 +140,28 @@ html, body, #wrap-outer {
   background: #fff;
 }
 
-/* line 130, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 131, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-tiny {
   z-index: 1;
 }
 
-/* line 133, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 134, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-paths {
   z-index: 2;
 }
 
-/* line 136, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+/* line 137, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 #sim .physics-layer-main {
   z-index: 3;
 }
 
 @media screen and (max-width: 500px) {
-  /* line 141, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+  /* line 142, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
   #viewport * {
     display: none;
   }
 
-  /* line 145, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+  /* line 146, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
   #viewport:after {
     content: 'Sorry but your screen is too small. Try viewing the site on a larger screen.';
     position: absolute;
