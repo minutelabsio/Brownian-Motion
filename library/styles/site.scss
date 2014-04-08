@@ -93,6 +93,23 @@ html, body, #wrap-outer {
             margin: 10px 1em;
         }
     }
+
+    #ctrl-move {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: $deep-grey-dark;
+        color: $grey-light;
+        padding: 0.5em;
+        cursor: move;
+    }
+
+    .center {
+        text-align: center;
+        button {
+            display: inline-block;
+        }
+    }
 }
 
 #sim canvas {

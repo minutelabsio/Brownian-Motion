@@ -149,7 +149,12 @@ define(
                 ,ctx = layer.ctx
                 ,pos
                 ,view 
+                ,r
                 ;
+
+            if ( layer.el.style.opacity === '0' ){
+                return layer;
+            }
 
             if ( clear !== false ){
                 layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);
@@ -161,7 +166,8 @@ define(
                 if ( !body.hidden ){
                     pos = body.state.pos;
                     view = layer.circleView || body.view;
-                    ctx.drawImage(view, pos.x-view.width/2, pos.y-view.height/2);
+                    r = view.width * 0.5;
+                    ctx.drawImage(view, pos.x - r, pos.y - r);
                 }
             }
             return layer;
@@ -185,12 +191,13 @@ define(
                 // standard deviation of velocities
                 self.energyScale = 1;
                 this.velSigma = 0.1;
-                this.tinyDensity = 4e-4;
-                this.largeDensity = 9e-6;
-                this.largeSize = 25;
+                this.tinyDensity = 3e-3;
+                this.largeDensity = 2e-4;
+                this.largeSize = window.Modernizr.touch ? 50 : 25;
                 this.ratio = 0.2;
-                this.massRatio = 0.03;
-                this.maxParticles = 300;
+                this.massRatio = 0.06;
+                this.maxParticles = window.Modernizr.touch ? 70 : 240;
+
                 this.tinyParticles = [];
                 this.largeParticles = [];
 
@@ -281,6 +288,24 @@ define(
 
                         $this.toggleClass('on', on);
                         self.emit('settings:paths', on);
+                    });
+
+                    var center, drag = false;
+                    controls.on('touch', '#ctrl-move', function( e ){
+                        e.preventDefault();
+                        drag = true;
+                        center = $('#controls').position();
+                    });
+                    controls.on('drag', function( e ){
+                        if ( drag ){
+                            self.emit('move-controls', {
+                                x: center.left + e.gesture.deltaX,
+                                y: center.top + e.gesture.deltaY
+                            });
+                        }
+                    });
+                    controls.on('dragend', function( e ){
+                        drag = false;
                     });
                 });
 
@@ -382,11 +407,18 @@ define(
 
                 world.add( ctrls );
 
-                self.on('resize', function( e, dim ){
-                    ctrls.state.pos.set( dim.width * 0.5, dim.height * 0.5 );
+                var $ctrls = $('#controls');
+                self.on('move-controls', function( e, pos ){
+                    $ctrls.css('left', pos.x).css('top', pos.y);
+                    ctrls.state.pos.clone( pos );
                 });
 
-                for ( var i = 0, l = Math.min(this.maxParticles, parseInt(this.tinyDensity * viewWidth * viewHeight)); i < l; ++i ){
+                self.on('resize', function( e, dim ){
+                    var pos = $ctrls.position();
+                    ctrls.state.pos.set( pos.left, pos.top );
+                });
+
+                for ( var i = 0, l = Math.min(this.maxParticles, parseInt(this.tinyDensity * viewWidth * viewHeight / (this.ratio * this.largeSize))); i < l; ++i ){
                     
                     this.addTinyParticle({
                         x: Math.random() * viewWidth,
@@ -395,7 +427,7 @@ define(
                     });
                 }
 
-                for ( var i = 0, l = Math.max(1, parseInt(this.largeDensity * viewWidth * viewHeight)); i < l; ++i ){
+                for ( var i = 0, l = Math.max(1, parseInt(this.largeDensity * viewWidth * viewHeight / this.largeSize)); i < l; ++i ){
                     
                     this.addLargeParticle({
                         x: Math.random() * viewWidth,
@@ -549,9 +581,9 @@ define(
                 var self = this
                     ;
 
-                Physics({ timestep: 10 }, self.initPhysics.bind(self));
+                Physics({ timestep: window.Modernizr.touch ? 10 : 8 }, self.initPhysics.bind(self));
                 self.initControls();
-
+                self.emit('settings:paths', $('#ctrl-draw-paths').hasClass('on'));
             }
 
         }, ['events']);
