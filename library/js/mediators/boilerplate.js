@@ -215,10 +215,10 @@ define(
                 this.velSigma = 0.1;
                 this.tinyDensity = 3e-3;
                 this.largeDensity = 2e-4;
-                this.largeSize = window.Modernizr.touch ? 50 : 25;
-                this.ratio = 0.2;
+                this.largeSize = window.Modernizr.touch ? 50 : 35;
+                this.ratio = 0.15;
                 this.massRatio = 0.06;
-                this.maxParticles = window.Modernizr.touch ? 60 : 240;
+                this.maxParticles = window.Modernizr.touch ? 100 : 500;
 
                 this.tinyParticles = [];
                 this.largeParticles = [];
@@ -340,6 +340,59 @@ define(
                         height: window.innerHeight
                     });
                 }, 50), false);
+
+                var timesteps;
+                var first;
+                var avg = 0;
+                var avgIdx = 0;
+                self.on('speed-monitor', function(e, time){
+                    if ( !first ){
+                        first = time;
+                        timesteps = 0;
+                    } else if ( timesteps >= 10 ){
+                        
+                        avgIdx += avgIdx > 10 ? -5 : 1;
+                        avg = avg * (avgIdx-1) + (time - first) / timesteps;
+                        avg /= avgIdx;
+                        
+                        if ( avg > 1000/30 ){
+                            self.emit('sluggish', {
+                                avg: avg,
+                                time: Date.now()
+                            });
+                            avgIdx = 0;
+                            avg = 0;
+                        }
+
+                        first = false;
+                        timesteps = 0;
+                    }
+                    timesteps++;
+                });
+
+                var lastSluggish = 0;
+                self.on('sluggish', function( e, data ){
+                    // console.log('sluggish', data.avg, data.time);
+                    if ( (data.time - lastSluggish) < 3000 || data.avg > 100 ){
+                        // console.log('removing some bodies')
+                        var toRm = self.world.find({
+                            tags: { $in: ['tiny'] }
+                        });
+
+                        if ( toRm.length > 0.4 * self.tinyDensity * window.innerWidth * window.innerHeight / (self.ratio * self.largeSize) ){
+
+                            toRm = toRm.slice( -30 );
+
+                            self.world.remove( toRm ); // try removing 10 bodies
+                            self.renderer.layer('tiny').removeFromStack( toRm );
+                            lastSluggish = 0;
+                        } else {
+                            $('body').addClass('slow');
+                        }
+                    } else {
+                        lastSluggish = data.time;
+                    }
+                });
             },
 
             initPhysics: function( world ){
@@ -407,10 +460,10 @@ define(
                 ]);
             
                 // subscribe to ticker to advance the simulation
-                Physics.util.ticker.on(function (time, dt) {
+                Physics.util.ticker.on(function (time) {
             
                     world.step(time);
-                    self.emit('step');
+                    self.emit('speed-monitor', time);
                 });
             
                 // start the ticker
