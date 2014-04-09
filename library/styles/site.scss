@@ -138,6 +138,18 @@ html, body, #wrap-outer {
     z-index: 3;
 }
 
+body.slow #viewport:after {
+    content: 'The Lab is a bit sluggish. You might want to try this on a desktop computer with Google Chrome';
+    font-size: 1.5em;
+    background: #fff;
+    color: $red-dark;
+    padding: 1em 2em;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+}
+
 @media screen and (max-width: 500px){
     #viewport * {
         display: none;

@@ -108,7 +108,7 @@ html, body, #wrap-outer {
   position: absolute;
   bottom: 0;
   right: 0;
-  background: #1a1a1a url('../images/icon-move.png?1396990796') no-repeat center center;
+  background: #1a1a1a url('../images/icon-move.png?1396992993') no-repeat center center;
   background-size: 50%;
   color: rgba(0, 0, 0, 0);
   padding: 1em 0.5em;
@@ -155,13 +155,26 @@ html, body, #wrap-outer {
   z-index: 3;
 }
 
+/* line 141, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+body.slow #viewport:after {
+  content: 'The Lab is a bit sluggish. You might want to try this on a desktop computer with Google Chrome';
+  font-size: 1.5em;
+  background: #fff;
+  color: #a72a22;
+  padding: 1em 2em;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+}
+
 @media screen and (max-width: 500px) {
-  /* line 142, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+  /* line 154, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
   #viewport * {
     display: none;
   }
 
-  /* line 146, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+  /* line 158, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
   #viewport:after {
     content: 'Sorry but your screen is too small. Try viewing the site on a larger screen.';
     position: absolute;
