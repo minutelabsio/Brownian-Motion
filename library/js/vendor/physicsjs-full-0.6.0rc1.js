@@ -1,5 +1,5 @@
 /**
- * PhysicsJS v1.0.0-rc1 - 2014-04-08
+ * PhysicsJS v1.0.0-rc1 - 2014-04-09
  * A modular, extendable, and easy-to-use physics engine for javascript
  * http://wellcaffeinated.net/PhysicsJS
  *
@@ -1863,7 +1863,12 @@ Physics.scratchpad = (function(){
         done: function( val ){
 
             this._active = false;
-            this._indexArr = [];
+            var s;
+            for ( var i = 0; i < regIndex; ++i ){
+                
+                this[ i ] = 0;
+            }
+            
             // add it back to the scratch stack for future use
             scratches.push( this );
             return val;
@@ -1987,12 +1992,11 @@ Physics.scratchpad = (function(){
 
         proto[ name ] = function(){
 
-            var stack = this[ stackname ] || ( this[ stackname ] = [])
-                ,stackIndex = (this._indexArr[ idx ] | 0) + 1
-                ,instance
+            var stack = this[ stackname ] || (this[ stackname ] = [])
+                ,stackIndex = this[ idx ] | 0
                 ;
 
-            this._indexArr[ idx ] = stackIndex;
+            this[ idx ] = stackIndex + 1;
 
             // if used after calling done...
             if (!this._active){
@@ -2005,13 +2009,8 @@ Physics.scratchpad = (function(){
             }
 
             // return or create new instance
-            instance = stack[ stackIndex ];
-
-            if ( !instance ){
-                stack.push( instance = useFactory ? constructor() : new constructor() );
-            }
-
-            return instance;
+            return stack[ stackIndex ] || 
+                    (stack[ stackIndex ] = useFactory ? constructor() : new constructor() );
         };
 
     };
@@ -2019,7 +2018,6 @@ Physics.scratchpad = (function(){
     // register some classes
     Scratchpad.register('vector', Physics.vector);
     Scratchpad.register('transform', Physics.transform);
-    Scratchpad.register('object', function(){ return {}; }, { useFactory: true });
 
     return Scratchpad;
 
