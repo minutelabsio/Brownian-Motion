@@ -345,15 +345,9 @@ define(
                 var first;
                 var avg = 0;
                 var avgIdx = 0;
-                self.on('speed-monitor', function(e, time){
-                    if ( !first ){
-                        first = time;
-                        timesteps = 0;
-                    } else if ( timesteps >= 10 ){
+                self.on('speed-monitor', function(e, dt){
+                    if ( avgIdx >= 10 ){
                         
-                        avgIdx += avgIdx > 10 ? -5 : 1;
-                        avg = avg * (avgIdx-1) + (time - first) / timesteps;
-                        avg /= avgIdx;
                         
                         if ( avg > 1000/30 ){
                             self.emit('sluggish', {
@@ -363,14 +357,14 @@ define(
                             avgIdx = 0;
                             avg = 0;
                         }
-
-                        first = false;
-                        timesteps = 0;
                     }
-                    timesteps++;
+                    avgIdx += avgIdx > 10 ? -5 : 1;
+                    avg = avg * (avgIdx-1) + (dt);
+                    avg /= avgIdx;
                 });
 
                 var lastSluggish = 0;
+                var msg = false;
                 self.on('sluggish', function( e, data ){
                     // console.log('sluggish', data.avg, data.time);
                     if ( (data.time - lastSluggish) < 3000 || data.avg > 100 ){
@@ -387,7 +381,13 @@ define(
                             self.renderer.layer('tiny').removeFromStack( toRm );
                             lastSluggish = 0;
                         } else {
-                            $('body').addClass('slow');
+                            if ( !msg ){
+                                $('body').addClass('slow');
+                                msg = true;
+                                setTimeout(function(){
+                                    $('body').removeClass('slow');
+                                }, 8000)
+                            }
                         }
                     } else {
                         lastSluggish = data.time;
@@ -461,9 +461,10 @@ define(
             
                 // subscribe to ticker to advance the simulation
                 Physics.util.ticker.on(function (time) {
-            
+                    var dt = Date.now();
                     world.step(time);
-                    self.emit('speed-monitor', time);
+                    dt = Date.now() - dt;
+                    self.emit('speed-monitor', dt);
                 });
             
                 // start the ticker
