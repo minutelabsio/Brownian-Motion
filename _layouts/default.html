@@ -23,6 +23,7 @@
     var Lab = { title: '{{ site.title }}', id: '{{ site.id }}' };
     var require = { urlArgs: 'v={{ site.version }}' };
   </script>
+  <script src="{{ site.library_path }}/js/vendor/raf.js"></script>
   <script src="{{ site.ml_library }}/js/vendor/require.js" data-main="{{ site.library_path }}/js/page-boilerplate"></script>
 </head>
 <body>
