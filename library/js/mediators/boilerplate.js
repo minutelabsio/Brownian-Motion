@@ -300,6 +300,15 @@ define(
                     }
                 });
 
+                self.on('settings:tiny-opacity', function( e, val ){
+                    if ( val > 0.2 ){
+                        setTimeout(function(){
+                            $('#video-msg').show();
+                        }, 2000);
+                        self.off(e.topic, e.handler);
+                    }
+                });
+
                 $(function(){
                     var controls = $('#controls').hammer();
 
@@ -310,6 +319,11 @@ define(
 
                         $this.toggleClass('on', on);
                         self.emit('settings:paths', on);
+                    });
+                    controls.on('touch', '#ctrl-download', function(){
+                        var img = self.getImage();
+                        this.href = img;
+                        this.download = 'minutelabs-brownian-motion.png';
                     });
 
                     var center, drag = false;
@@ -332,6 +346,10 @@ define(
                     controls.on('dragend', function( e ){
                         drag = false;
                     });
+
+                    $('#viewport').hammer().on('touch', '.ctrl-close', function(){
+                        $(this).parent().hide();
+                    });
                 });
 
                 window.addEventListener('resize', Physics.util.throttle(function(){
@@ -346,9 +364,11 @@ define(
                 var avg = 0;
                 var avgIdx = 0;
                 self.on('speed-monitor', function(e, dt){
-                    if ( avgIdx >= 10 ){
-                        
-                        
+                    avgIdx += avgIdx > 10 ? -5 : 1;
+                    avg = avg * (avgIdx-1) + (dt);
+                    avg /= avgIdx;
+
+                    if ( avgIdx >= 10 || dt > 1000/7 ){
                         if ( avg > 1000/30 ){
                             self.emit('sluggish', {
                                 avg: avg,
@@ -358,9 +378,6 @@ define(
                             avg = 0;
                         }
                     }
-                    avgIdx += avgIdx > 10 ? -5 : 1;
-                    avg = avg * (avgIdx-1) + (dt);
-                    avg /= avgIdx;
                 });
 
                 var lastSluggish = 0;
@@ -368,10 +385,11 @@ define(
                 self.on('sluggish', function( e, data ){
                     // console.log('sluggish', data.avg, data.time);
                     if ( (data.time - lastSluggish) < 3000 || data.avg > 100 ){
-                        // console.log('removing some bodies')
                         var toRm = self.world.find({
                             tags: { $in: ['tiny'] }
                         });
+
+                        // console.log('removing some bodies. Total:', toRm.length);
 
                         if ( toRm.length > 0.4 * self.tinyDensity * window.innerWidth * window.innerHeight / (self.ratio * self.largeSize) ){
 
@@ -651,6 +669,28 @@ define(
                     min: 0.001,
                     max: 1
                 });
+            },
+
+            getImage: function(){
+                var layers = ['tiny', 'paths', 'main']
+                    ,el
+                    ,ctx = this.renderer.hiddenCtx
+                    ,canvas = this.renderer.hiddenCanvas
+                    ,opacity
+                    ,w = this.renderer.el.width
+                    ,h = this.renderer.el.height
+                    ;
+                canvas.width = w;
+                canvas.height = h;
+                for ( var i = 0, l = layers.length; i < l; ++i ){
+                    
+                    el = this.renderer.layer( layers[i] ).el;
+                    opacity = parseFloat(el.style.opacity, 10);
+                    ctx.globalAlpha = isNaN(opacity) ? 1 : opacity;
+                    ctx.drawImage(el, 0, 0);
+                }
+                ctx.globalAlpha = 1;
+                return canvas.toDataURL('image/png')
             },
 
             /**
