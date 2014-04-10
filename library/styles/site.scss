@@ -98,15 +98,15 @@ html, body, #wrap-outer {
         position: absolute;
         bottom: 0;
         right: 0;
-        background: $deep-grey-dark image-url('icon-move.png') no-repeat center center;
+        background: $deep-grey image-url('icon-move.png') no-repeat center center;
         background-size: 50%;
         color: rgba(0,0,0,0);//$grey-light;
         padding: 1em 0.5em;
         cursor: move;
+        @include border-radius( 3px 0 0 0 );
     }
 
-    .center {
-        text-align: center;
+    .btns {
         button {
             display: inline-block;
         }
@@ -136,6 +136,38 @@ html, body, #wrap-outer {
 }
 #sim .physics-layer-main {
     z-index: 3;
+}
+
+#video-msg {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    border: 1px solid $deep-blue;
+    width: 18em;
+    @include border-radius( 3px );
+    padding: 2em 4em;
+
+    .ctrl-close {
+        position: absolute;
+        top: 0;
+        left: 0;
+        text-align: center;
+        line-height: 1em;
+        width: 1em;
+        height: 1em;
+        font-size: 2em;
+        background: $blue-dark;
+        text-decoration: none;
+        color: #fff;
+        @include border-radius( 0 0 3px 0 );
+
+        &:hover {
+            background: $red-dark;
+        }
+    }
 }
 
 body.slow #viewport:after {

@@ -108,18 +108,19 @@ html, body, #wrap-outer {
   position: absolute;
   bottom: 0;
   right: 0;
-  background: #1a1a1a url('../images/icon-move.png?1396992993') no-repeat center center;
+  background: #434343 url('../images/icon-move.png?1396992993') no-repeat center center;
   background-size: 50%;
   color: rgba(0, 0, 0, 0);
   padding: 1em 0.5em;
   cursor: move;
-}
-/* line 108, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
-#controls .center {
-  text-align: center;
+  -webkit-border-radius: 3px 0 0 0;
+  -moz-border-radius: 3px 0 0 0;
+  -ms-border-radius: 3px 0 0 0;
+  -o-border-radius: 3px 0 0 0;
+  border-radius: 3px 0 0 0;
 }
 /* line 110, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
-#controls .center button {
+#controls .btns button {
   display: inline-block;
 }
 
@@ -156,6 +157,47 @@ html, body, #wrap-outer {
 }
 
 /* line 141, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#video-msg {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
+  border: 1px solid #0050e0;
+  width: 18em;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  padding: 2em 4em;
+}
+/* line 153, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#video-msg .ctrl-close {
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  line-height: 1em;
+  width: 1em;
+  height: 1em;
+  font-size: 2em;
+  background: #125497;
+  text-decoration: none;
+  color: #fff;
+  -webkit-border-radius: 0 0 3px 0;
+  -moz-border-radius: 0 0 3px 0;
+  -ms-border-radius: 0 0 3px 0;
+  -o-border-radius: 0 0 3px 0;
+  border-radius: 0 0 3px 0;
+}
+/* line 167, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+#video-msg .ctrl-close:hover {
+  background: #a72a22;
+}
+
+/* line 173, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
 body.slow #viewport:after {
   content: 'The Lab is a bit sluggish. You might want to try this on a desktop computer with Google Chrome';
   font-size: 1.5em;
@@ -169,12 +211,12 @@ body.slow #viewport:after {
 }
 
 @media screen and (max-width: 500px) {
-  /* line 154, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+  /* line 186, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
   #viewport * {
     display: none;
   }
 
-  /* line 158, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
+  /* line 190, /Users/wellcaffeinated/Documents/github/minutelabs/Brownian Motion/library/styles/site.scss */
   #viewport:after {
     content: 'Sorry but your screen is too small. Try viewing the site on a larger screen.';
     position: absolute;
