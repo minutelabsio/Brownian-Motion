@@ -1,0 +1,3 @@
+/** @license MIT License (c) copyright 2013 original author or authors */
+
+(function(e){e(["require","./when"],function(e){function r(e,t){return i(e,this,t)}function i(e,n,r){return t.all(r||[],function(t){return e.apply(n,t)})}function s(e){return i(e,this,n.call(arguments,1))}function o(e){var t=n.call(arguments,1);return function(){return i(e,this,t.concat(n.call(arguments)))}}function u(e){var r=n.call(arguments,1);return function(){var s,o,u;return s=this,o=n.call(arguments),u=i(e,s,o),t.reduce(r,function(e,t){return t.call(s,e)},u)}}var t,n;return t=e("./when"),n=[].slice,{apply:r,call:s,lift:o,bind:o,compose:u}})})(typeof define=="function"&&define.amd?define:function(e){module.exports=e(require)});
