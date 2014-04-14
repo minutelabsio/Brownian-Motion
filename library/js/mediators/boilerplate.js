@@ -32,9 +32,9 @@ define(
             ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
             for (i = 1; i < points.length - 2; i++) {
-                c = (points[i].x + points[i + 1].x) / 2
+                c = (points[i].x + points[i + 1].x) / 2;
                 d = (points[i].y + points[i + 1].y) / 2;
-                ctx.quadraticCurveTo(points[i].x, points[i].y, c, d)
+                ctx.quadraticCurveTo(points[i].x, points[i].y, c, d);
             }
             ctx.quadraticCurveTo(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
             ctx.stroke();
@@ -115,7 +115,7 @@ define(
             ,'rgb(139, 129, 23)' // yellow-dark
 
             // external
-            
+
             ,'#542437'
             ,'#53777A'
             ,'#ECD078'
@@ -150,7 +150,7 @@ define(
                         ;
 
                     for ( var i = 0, l = bodies.length; i < l; ++i ){
-                        
+
                         body = bodies[ i ];
                         list = body.positionBuffer || (body.positionBuffer = []);
                         if ( list.length > 100 ){
@@ -170,7 +170,7 @@ define(
                 ,bodies = layer.bodies
                 ,ctx = layer.ctx
                 ,pos
-                ,view 
+                ,view
                 ,r
                 ;
 
@@ -183,7 +183,7 @@ define(
             }
 
             for ( var i = 0, l = bodies.length; i < l; ++i ){
-                
+
                 body = bodies[ i ];
                 if ( !body.hidden ){
                     pos = body.state.pos;
@@ -193,7 +193,7 @@ define(
                 }
             }
             return layer;
-        }
+        };
 
         /**
          * Page-level Mediator
@@ -255,7 +255,7 @@ define(
                     'settings:paths': function( e, val ){
                         var layer = self.renderer.layer('paths');
                         if ( val === false ){
-                            layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);   
+                            layer.ctx.clearRect(0, 0, layer.el.width, layer.el.height);
                             self.world.remove( self.posTracker );
                         } else {
                             self.world.add( self.posTracker );
@@ -275,7 +275,7 @@ define(
 
                         self.world.one('step', function(){
                             for ( var i = 0, l = bodies.length; i < l; ++i ){
-                                
+
                                 bodies[ i ].state.vel.mult( scale );
                             }
                         });
@@ -404,7 +404,7 @@ define(
                                 msg = true;
                                 setTimeout(function(){
                                     $('body').removeClass('slow');
-                                }, 8000)
+                                }, 8000);
                             }
                         }
                     } else {
@@ -422,7 +422,7 @@ define(
                         el: 'physics',
                         width: viewWidth,
                         height: viewHeight,
-                        meta: true,
+                        // meta: true,
                         // debug:true,
                         styles: {
                             'circle': {
@@ -433,6 +433,8 @@ define(
                             }
                         }
                     })
+                    ,i
+                    ,l
                     ,edgeBounce
                     // bounds of the window
                     ,viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight)
@@ -440,7 +442,7 @@ define(
 
                 this.world = world;
                 this.renderer = renderer;
-                
+
                 // add the renderer
                 world.add(renderer);
 
@@ -448,27 +450,27 @@ define(
                 world.on('step', function () {
                     world.render();
                 });
-                
+
                 // constrain objects to these bounds
                 edgeBounce = Physics.behavior('edge-collision-detection', {
                     aabb: viewportBounds,
                     restitution: 1,
                     cof: 0
                 });
-            
+
                 // resize events
                 self.on('resize', function ( e, dim ) {
-            
+
                     viewWidth = dim.width;
                     viewHeight = dim.height;
-            
+
                     renderer.resize( viewWidth, viewHeight );
-            
+
                     viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
                     edgeBounce.setAABB(viewportBounds);
-            
+
                 });
-                
+
                 world.add([
                     Physics.behavior('body-collision-detection'),
                     Physics.behavior('sweep-prune'),
@@ -476,7 +478,7 @@ define(
                     self.posTracker = Physics.behavior('position-tracker'),
                     edgeBounce
                 ]);
-            
+
                 // subscribe to ticker to advance the simulation
                 Physics.util.ticker.on(function (time) {
                     var dt = Date.now();
@@ -484,7 +486,7 @@ define(
                     dt = Date.now() - dt;
                     self.emit('speed-monitor', dt);
                 });
-            
+
                 // start the ticker
                 Physics.util.ticker.start();
 
@@ -515,8 +517,8 @@ define(
                     ctrls.state.pos.set( pos.left, pos.top );
                 });
 
-                for ( var i = 0, l = Math.min(this.maxParticles, parseInt(this.tinyDensity * viewWidth * viewHeight / (this.ratio * this.largeSize))); i < l; ++i ){
-                    
+                for ( i = 0, l = Math.min(this.maxParticles, parseInt(this.tinyDensity * viewWidth * viewHeight / (this.ratio * this.largeSize))); i < l; ++i ){
+
                     this.addTinyParticle({
                         x: Math.random() * viewWidth,
                         y: Math.random() * viewHeight,
@@ -524,8 +526,8 @@ define(
                     });
                 }
 
-                for ( var i = 0, l = Math.max(3, parseInt(this.largeDensity * viewWidth * viewHeight / this.largeSize)); i < l; ++i ){
-                    
+                for ( i = 0, l = Math.max(3, parseInt(this.largeDensity * viewWidth * viewHeight / this.largeSize)); i < l; ++i ){
+
                     this.addLargeParticle({
                         x: Math.random() * viewWidth,
                         y: Math.random() * viewHeight,
@@ -565,9 +567,9 @@ define(
 
                     ctx.lineCap = 'round';
                     ctx.shadowBlur = 2;
-                    
+
                     for ( var i = 0, l = bodies.length; i < l; ++i ){
-                        
+
                         body = bodies[ i ];
                         list = body.positionBuffer;
                         ctx.strokeStyle = ctx.shadowColor = body.color;
@@ -683,14 +685,14 @@ define(
                 canvas.width = w;
                 canvas.height = h;
                 for ( var i = 0, l = layers.length; i < l; ++i ){
-                    
+
                     el = this.renderer.layer( layers[i] ).el;
                     opacity = parseFloat(el.style.opacity, 10);
                     ctx.globalAlpha = isNaN(opacity) ? 1 : opacity;
                     ctx.drawImage(el, 0, 0);
                 }
                 ctx.globalAlpha = 1;
-                return canvas.toDataURL('image/png')
+                return canvas.toDataURL('image/png');
             },
 
             /**
@@ -714,7 +716,3 @@ define(
         return new Mediator();
     }
 );
-
-
-
-

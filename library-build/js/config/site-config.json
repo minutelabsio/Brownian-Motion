@@ -1,0 +1,19 @@
+{
+    "api": {
+        "APINAME": {
+            "base": "http://domain.com/path/to/api",
+            "dataType": "json",
+
+            "services": {
+                "SERVICEID": {
+                    "path": "/path",
+                    "params": {
+                        "aParam": "val"
+                    }
+                },
+
+                "SERVICEID2": "/path/{param}"
+            }
+        }
+    }
+}
