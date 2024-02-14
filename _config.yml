@@ -1,6 +1,6 @@
 permalink: /:year-:month-:day/:title
 markdown: rdiscount
-exclude: ["README.md", "CNAME", "LICENSE", "build", "config.rb", "Gruntfile.js", "package.json", "jshint.json"]
+exclude: ["README.md", "CNAME", "LICENSE", "build", "config.rb", "Gruntfile.js", "package.json", "jshint.json", "library/js"]
 
 title : "Brownian Motion"
 id : "" # changeme
