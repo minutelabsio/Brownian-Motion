@@ -8,9 +8,9 @@ description : "Play with the majestic motion of Brownian particles"
 thumb: "thumb.gif"
 version: "0.0.1"
 
-ml_url: "//minutelabs.io"
-ml_library: "//labs.minutelabs.io/library"
-ml_assets: "//labs.minutelabs.io/assets"
+ml_url: "https://minutelabs.io"
+ml_library: "https://labs.minutelabs.io/library"
+ml_assets: "https://labs.minutelabs.io/assets"
 library_path: "library-build" # changeme
 
 show :
